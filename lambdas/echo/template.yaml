@@ -1,0 +1,23 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Echo Lambda function for SimC Cloud (Container Image)
+
+Resources:
+  EchoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Image
+      ImageUri: 135888417806.dkr.ecr.us-east-2.amazonaws.com/echo-lambda:latest
+      MemorySize: 128
+      Timeout: 10
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /echo
+            Method: post
+
+Outputs:
+  EchoApiUrl:
+    Description: "API Gateway endpoint URL for Echo Lambda"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/echo"

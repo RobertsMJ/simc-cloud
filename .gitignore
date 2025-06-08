@@ -1,0 +1,58 @@
+# Go
+/bin/
+/build/
+/dist/
+/out/
+/coverage/
+*.test
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.a
+*.o
+*.log
+*.tmp
+*.swp
+vendor/
+# Go workspace file
+go.work
+go.work.sum
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+yarn.lock
+.pnpm-debug.log
+
+# Vite/Vue
+dist/
+*.local
+.env
+.env.*
+!.env.example
+.vitepress/dist
+.cache/
+.vscode/
+.idea/
+.DS_Store
+
+# Misc
+*.sublime-workspace
+*.sublime-project
+*.tgz
+*.bak
+*.orig
+*.rej
+
+# VS Code settings
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
