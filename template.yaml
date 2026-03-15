@@ -1,0 +1,26 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: Monolith-esque API.
+
+Resources:
+  # this defines your API Gateway resource
+  # we leave it empty for now
+  MonolithAPI:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: dev
+  RunSimulationFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Image
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            RestApiId: !Ref MonolithAPI
+            Path: /simulate
+            Method: post
+    Metadata:
+      DockerTag: run-sim
+      DockerContext: ./backend
+      Dockerfile: Dockerfile.run-sim

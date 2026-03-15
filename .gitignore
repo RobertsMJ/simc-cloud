@@ -56,3 +56,6 @@ dist/
 !.vscode/extensions.json
 !.vscode/launch.json
 !.vscode/tasks.json
+
+# AWS
+.aws-sam/
