@@ -8,10 +8,11 @@ import (
 	"strings"
 
 	"github.com/RobertsMJ/simc-cloud-backend/logger"
+	"github.com/RobertsMJ/simc-cloud-backend/simc"
 )
 
 type Simulator interface {
-	Run(ctx context.Context, input string) (string, error)
+	Run(ctx context.Context, input *simc.Input) (simc.Output, error)
 }
 
 type simulator struct{}
@@ -20,20 +21,30 @@ func NewSimulator() Simulator {
 	return &simulator{}
 }
 
-func (s *simulator) Run(ctx context.Context, input string) (string, error) {
+func (s *simulator) Run(ctx context.Context, input *simc.Input) (simc.Output, error) {
+	if input == nil {
+		return simc.Output(""), fmt.Errorf("input cannot be nil")
+	}
 	// Prepare simc command arguments
-	args := parseSimcArgs(input)
+	inputStr, err := simc.Marshal(input)
+	if err != nil {
+		return simc.Output(""), fmt.Errorf("failed to marshal input: %w", err)
+	}
+	args := parseSimcArgs(string(inputStr))
+
+	args = append(args, "json2=stdout")
+	args = append(args, "report_details=0")
 
 	// Write args to a temp file
 	argsFile, err := os.CreateTemp("", "simc-args.txt")
 	if err != nil {
-		return "", fmt.Errorf("failed to create temp file: %w", err)
+		return simc.Output(""), fmt.Errorf("failed to create temp file: %w", err)
 	}
 	defer os.Remove(argsFile.Name())
 
 	_, err = argsFile.WriteString(strings.Join(args, "\n"))
 	if err != nil {
-		return "", fmt.Errorf("failed to write simulation args to temp file: %w", err)
+		return simc.Output(""), fmt.Errorf("failed to write simulation args to temp file: %w", err)
 	}
 
 	// Execute simc command with context for timeout handling
@@ -43,12 +54,11 @@ func (s *simulator) Run(ctx context.Context, input string) (string, error) {
 	// Capture both stdout and stderr
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		return "", fmt.Errorf("simc execution failed: %w, output: %s", err, string(output))
+		return simc.Output(""), fmt.Errorf("simc execution failed: %w, output: %s", err, string(output))
 	}
 
 	// Return the simulation output
-	return strings.TrimSpace(string(output)), nil
-
+	return simc.Output(output), nil
 }
 
 func parseSimcArgs(input string) []string {

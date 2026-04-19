@@ -3,8 +3,6 @@ Transform: AWS::Serverless-2016-10-31
 Description: Monolith-esque API.
 
 Resources:
-  # this defines your API Gateway resource
-  # we leave it empty for now
   MonolithAPI:
     Type: AWS::Serverless::Api
     Properties:
@@ -12,7 +10,8 @@ Resources:
   RunSimulationFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Timeout: 60
+      Timeout: 120
+      MemorySize: 256
       PackageType: Image
       Events:
         ApiEvent:

@@ -1,6 +1,7 @@
 ARG SIMC_VERSION=latest
+ARG GOLANG_VERSION=1.26-alpine
 
-FROM golang:1.26 AS build
+FROM golang:${GOLANG_VERSION} AS build
 WORKDIR /app
 
 COPY go.mod go.sum ./

@@ -8,15 +8,14 @@ import (
 	"strings"
 )
 
-// SimCUnmarshaler parses simc format into a struct.
-type SimCUnmarshaler interface {
+// Unmarshaler parses simc format into a struct.
+type Unmarshaler interface {
 	UnmarshalSimC(data []byte) error
 }
 
 // Unmarshal parses the full simc string
-func Unmarshal(data []byte) (Input, error) {
+func Unmarshal(data []byte, input *Input) error {
 	lines := strings.Split(strings.TrimSpace(string(data)), "\n")
-	var input Input
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
 		if line == "" || strings.HasPrefix(line, "#") {
@@ -24,7 +23,7 @@ func Unmarshal(data []byte) (Input, error) {
 		}
 		if IsCharacterValue(line) { // Character line
 			if err := input.Character.UnmarshalSimC([]byte(line)); err != nil {
-				return input, err
+				return err
 			}
 		} else if IsEquipmentValue(line) { // Equipment line
 			if input.Equipment == nil {
@@ -32,7 +31,7 @@ func Unmarshal(data []byte) (Input, error) {
 			}
 			var eq Equipment
 			if err := eq.UnmarshalSimC([]byte(line)); err != nil {
-				return input, err
+				return err
 			}
 			input.Equipment[eq.Slot] = eq
 		} else { // Assume misc options
@@ -40,11 +39,11 @@ func Unmarshal(data []byte) (Input, error) {
 				input.Options = make(Options)
 			}
 			if err := input.Options.UnmarshalSimC([]byte(line)); err != nil {
-				return input, err
+				return err
 			}
 		}
 	}
-	return input, nil
+	return nil
 }
 
 // unmarshalField handles unmarshaling a single key=value into a field.
@@ -78,7 +77,7 @@ func unmarshalField(field reflect.Value, tag, value string) error {
 		}
 		field.Set(slice)
 	case reflect.Struct:
-		if unmarshaler, ok := field.Addr().Interface().(SimCUnmarshaler); ok {
+		if unmarshaler, ok := field.Addr().Interface().(Unmarshaler); ok {
 			return unmarshaler.UnmarshalSimC([]byte(value))
 		}
 		return errors.New("nested struct without UnmarshalSimC")

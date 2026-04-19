@@ -74,8 +74,8 @@ type Character struct {
 	Talents     string   `json:"talents" simc:"talents"`
 }
 
-var _ SimCMarshaler = (*Character)(nil)   // Ensure SimcCharacter implements SimCUnmarshaler
-var _ SimCUnmarshaler = (*Character)(nil) // Ensure SimcCharacter implements SimCUnmarshaler
+var _ Marshaler = (*Character)(nil)   // Ensure SimcCharacter implements SimCUnmarshaler
+var _ Unmarshaler = (*Character)(nil) // Ensure SimcCharacter implements SimCUnmarshaler
 
 func (c Character) MarshalSimC() ([]byte, error) {
 	var sb strings.Builder
@@ -153,7 +153,7 @@ func (c *Character) UnmarshalSimC(data []byte) error {
 					}
 					field.SetInt(int64(intVal))
 				case reflect.Struct:
-					if unmarshaler, ok := field.Addr().Interface().(SimCUnmarshaler); ok {
+					if unmarshaler, ok := field.Addr().Interface().(Unmarshaler); ok {
 						if err := unmarshaler.UnmarshalSimC([]byte(line)); err != nil {
 							return err
 						}

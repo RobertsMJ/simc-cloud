@@ -8,8 +8,8 @@ import (
 // TODO: At some point, type this more strongly
 type Options map[string]string
 
-var _ SimCMarshaler = (*Options)(nil)   // Ensure SimcFightOptions implements SimCUnmarshaler
-var _ SimCUnmarshaler = (*Options)(nil) // Ensure SimcFightOptions implements SimCUnmarshaler
+var _ Marshaler = (*Options)(nil)   // Ensure SimcFightOptions implements SimCUnmarshaler
+var _ Unmarshaler = (*Options)(nil) // Ensure SimcFightOptions implements SimCUnmarshaler
 
 // Simply map key-value pairs
 func (f Options) MarshalSimC() ([]byte, error) {

@@ -1,0 +1,18 @@
+{
+  "body": "demonhunter=\"Kestdh\"\nlevel=90\nrace=blood_elf\nregion=us\nserver=illidan\nrole=attack\nprofessions=herbalism=88/mining=82\nspec=havoc\n\ntalents=CEkAG5bbocFKcv+yIq8fPd6ORZGMzMzmxMzMmZmMmZAAAAAAAzyDMmtZYmZ2mZGbz28AzwYYsMw2sYGDzmmGzMjhNAAAAAAEAMzgBgAAAD\n\nhead=,id=251109,enchant_id=8017,bonus_id=13440/6652/12667/13577/12699/12806\nneck=,id=249626,gem_id=240908,bonus_id=6652/13668/12798\nshoulder=,id=250031,enchant_id=8001,bonus_id=13340/13440/6652/13574/12806\nback=,id=258575,bonus_id=12795/13440/6652/13577/12699\nchest=,id=250036,enchant_id=7987,bonus_id=6652/13440/13336/13575/12798\nwrist=,id=244576,bonus_id=12214/12497/12066/8960/12384/8791/13622/13667/12667,crafted_stats=32/36,crafting_quality=5\nhands=,id=250034,bonus_id=6652/12798/13337/13574/3161\nwaist=,id=244573,bonus_id=12214/12497/12066/8960/12384/8791/13622/13667/12667,crafted_stats=49/32,crafting_quality=5\nlegs=,id=250032,enchant_id=8159,bonus_id=13339/6652/13575/12798\nfeet=,id=260372,enchant_id=7963,bonus_id=6652/13577/13334/10844/12798,crafted_stats=32/49\nfinger1=,id=193708,enchant_id=7967,gem_id=240983,bonus_id=13440/6652/13668/12699/12798\nfinger2=,id=240949,enchant_id=7967,gem_id=240908,bonus_id=12214/12497/12066/8791/13622/13667,crafted_stats=36/49,crafting_quality=5\ntrinket1=,id=193701,bonus_id=13440/6652/12699/12798\ntrinket2=,id=264507,bonus_id=12790\nmain_hand=,id=237840,enchant_id=8039,bonus_id=12214/12497/12066/12715/8791/13622/13667,crafted_stats=49/40,crafting_quality=5\noff_hand=,id=260408,enchant_id=8039,bonus_id=6652/13333/12790\n\n# fight configuration\ndesired_targets=5\nmax_time=300\nvary_combat_length=0.1",
+  "resource": "/simulate",
+  "path": "/simulate",
+  "httpMethod": "POST",
+  "headers": {
+    "Content-Type": "text/plain"
+  },
+  "requestContext": {
+    "resourceId": "123456",
+    "apiId": "1234567890",
+    "resourcePath": "/simulate",
+    "httpMethod": "POST",
+    "requestId": "c6af9ac6-7b61-11e6-9a41-93e8deadbeef",
+    "accountId": "123456789012",
+    "stage": "dev"
+  }
+}

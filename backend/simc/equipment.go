@@ -83,8 +83,8 @@ type Equipment struct {
 	CraftingQuality *int          `json:"crafting_quality" simc:"crafting_quality"`
 }
 
-var _ SimCMarshaler = (*Equipment)(nil)   // Ensure SimcEquipment implements SimCUnmarshaler
-var _ SimCUnmarshaler = (*Equipment)(nil) // Ensure SimcEquipment implements SimCUnmarshaler
+var _ Marshaler = (*Equipment)(nil)   // Ensure SimcEquipment implements SimCUnmarshaler
+var _ Unmarshaler = (*Equipment)(nil) // Ensure SimcEquipment implements SimCUnmarshaler
 
 func (e Equipment) MarshalSimC() ([]byte, error) {
 	parts := []string{}

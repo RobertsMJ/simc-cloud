@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: "3"
+
+tasks:
+  sim-profile-apigw:
+    cmds:
+      - jq --arg body "$(cat {{.CLI_ARGS}})" '.body = $body'
+        profiles/templates/apigw.json | sam local invoke RunSimulationFunction
+        -e -
+  sim-profile-sqs:
+    cmds:
+      - jq --arg body "$(cat {{.CLI_ARGS}})" '.Records[0].body = $body'
+        profiles/templates/sqs.json | sam local invoke RunSimulationFunction -e
+        -

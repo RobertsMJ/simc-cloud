@@ -7,12 +7,12 @@ import (
 	"strings"
 )
 
-// SimCMarshaler converts a struct to simc format.
-type SimCMarshaler interface {
+// Marshaler converts a struct to simc format.
+type Marshaler interface {
 	MarshalSimC() ([]byte, error)
 }
 
-func Marshal(input Input) ([]byte, error) {
+func Marshal(input *Input) ([]byte, error) {
 	eqp := ""
 	chr, err := input.Character.MarshalSimC()
 	if err != nil {
@@ -69,7 +69,7 @@ func marshalField(field reflect.Value, tag string) ([]byte, error) {
 		}
 		return []byte(fmt.Sprintf("%s=%s", tag, strings.Join(vals, "/"))), nil // Use / for multi-values
 	case reflect.Struct:
-		if marshaler, ok := field.Interface().(SimCMarshaler); ok {
+		if marshaler, ok := field.Interface().(Marshaler); ok {
 			return marshaler.MarshalSimC()
 		}
 		// Fallback to generic reflection (not implemented here for brevity)

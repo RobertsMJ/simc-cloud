@@ -6,18 +6,14 @@ type Input struct {
 	Options   Options                     `json:"options"`
 }
 
-var _ SimCMarshaler = (*Input)(nil)
-var _ SimCUnmarshaler = (*Input)(nil)
+var _ Marshaler = (*Input)(nil)
+var _ Unmarshaler = (*Input)(nil)
 
 func (i Input) MarshalSimC() ([]byte, error) {
-	return Marshal(i)
+	return Marshal(&i)
 }
 
+// UnmarshalSimC parses the simc input string into the Input struct.
 func (i *Input) UnmarshalSimC(data []byte) error {
-	input, err := Unmarshal(data)
-	if err != nil {
-		return err
-	}
-	*i = input
-	return nil
+	return Unmarshal(data, i)
 }
