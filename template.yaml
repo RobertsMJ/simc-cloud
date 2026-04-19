@@ -12,6 +12,7 @@ Resources:
   RunSimulationFunction:
     Type: AWS::Serverless::Function
     Properties:
+      Timeout: 60
       PackageType: Image
       Events:
         ApiEvent:
