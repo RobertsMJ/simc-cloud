@@ -3,7 +3,16 @@
 version: "3"
 
 tasks:
+  sam-build:
+    sources:
+      - backend/**/*.go
+      - backend/Dockerfile.run-sim
+      - template.yaml
+    cmds:
+      - sam build
+
   sim-profile-apigw:
+    deps: [sam-build]
     cmds:
       - |
         body=$(jq --arg input "$(cat {{.CLI_ARGS}})" '.input = $input' \
@@ -12,6 +21,7 @@ tasks:
           profiles/templates/apigw.json | sam local invoke RunSimulationFunction -e -
 
   sim-profile-sqs:
+    deps: [sam-build]
     cmds:
       - |
         body=$(jq --arg input "$(cat {{.CLI_ARGS}})" '.input = $input' \
@@ -26,4 +36,4 @@ tasks:
         -v "$(realpath {{.CLI_ARGS}}):/input.simc:ro" \
         -v "$(realpath profiles/results):/output" \
         simulationcraftorg/simc:latest \
-        /input.simc json2=/output/result html=/dev/null
+        /input.simc json2=/output/result.json html=/dev/null

@@ -9,13 +9,8 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 )
 
-type Request events.SQSEvent
-
-// SQS handlers just return an error
-type Response = error
-
-func NewRequestHandler[Req any, Resp any](callback func(ctx context.Context, req Req) (Resp, error)) func(context.Context, Request) Response {
-	return func(ctx context.Context, event Request) Response {
+func NewRequestHandler[Req any, Resp any](callback func(ctx context.Context, req Req) (Resp, error)) func(context.Context, events.SQSEvent) error {
+	return func(ctx context.Context, event events.SQSEvent) error {
 		if len(event.Records) == 0 {
 			return errors.New("no SQS record received")
 		}

@@ -1,9 +1,13 @@
 package sim
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
+	"os"
 	"os/exec"
+	"slices"
 	"strings"
 
 	"github.com/RobertsMJ/simc-cloud-backend/logger"
@@ -27,45 +31,46 @@ func (s *simulator) Run(ctx context.Context, request *SimInput) (SimOutput, erro
 	if request == nil {
 		return models.SimulationResponse{}, fmt.Errorf("input cannot be nil")
 	}
-	// Prepare simc command arguments
+
 	args, err := parseSimcArgs(&request.Input)
 	if err != nil {
 		return models.SimulationResponse{}, fmt.Errorf("failed to parse simc arguments: %w", err)
 	}
 
-	args = append(args, "json2=stdout")
-	args = append(args, "report_details=0")
-
-	// Write args to a temp file
-	// argsFile, err := os.CreateTemp("", "simc-args.txt")
-	// if err != nil {
-	// 	return models.SimulationResponse{}, fmt.Errorf("failed to create temp file: %w", err)
-	// }
-	// defer os.Remove(argsFile.Name())
-
-	// _, err = argsFile.WriteString(strings.Join(args, "\n"))
-	// if err != nil {
-	// 	return models.SimulationResponse{}, fmt.Errorf("failed to write simulation args to temp file: %w", err)
-	// }
-
-	// Execute simc command with context for timeout handling
-	// logger.Info("Running simulation", "args", argsFile.Name())
-	cmd := exec.CommandContext(ctx, "/app/simc", args...)
-	// cmd := exec.CommandContext(ctx, "/app/simc", argsFile.Name())
-
-	// Capture both stdout and stderr
-	output, err := cmd.CombinedOutput()
+	tmpDir, err := os.MkdirTemp("", "simc-*")
 	if err != nil {
-		return models.SimulationResponse{}, fmt.Errorf("simc execution failed: %w, output: %s", err, string(output))
+		return models.SimulationResponse{}, fmt.Errorf("failed to create temp dir: %w", err)
 	}
-	logger.Info("sim results: " + string(output))
+	defer os.RemoveAll(tmpDir)
 
-	// Return the simulation output
+	outputPath := tmpDir + "/output.json"
+	args = append(args, "json2="+outputPath, "html=/dev/null", "report_details=0")
+
+	cmd := exec.CommandContext(ctx, "/app/simc", args...)
+	var stderr bytes.Buffer
+	cmd.Stderr = &stderr
+
+	if err := cmd.Run(); err != nil {
+		return models.SimulationResponse{}, fmt.Errorf("simc execution failed: %w, stderr: %s", err, stderr.String())
+	}
+
+	outputBytes, err := os.ReadFile(outputPath)
+	if err != nil {
+		return models.SimulationResponse{}, fmt.Errorf("failed to read simc output: %w", err)
+	}
+
+	var result map[string]any
+	if err := json.Unmarshal(outputBytes, &result); err != nil {
+		return models.SimulationResponse{}, fmt.Errorf("failed to parse simc output: %w", err)
+	}
+
+	logger.Debug("simulation complete", "request_id", request.RequestID, "gearset_id", request.GearsetID, "result", result)
+
 	return models.SimulationResponse{
 		RequestID: request.RequestID,
 		GearsetID: request.GearsetID,
 		Metadata:  request.Metadata,
-		Result:    string(output),
+		Result:    result,
 	}, nil
 }
 
@@ -73,21 +78,8 @@ func parseSimcArgs(input *string) ([]string, error) {
 	if input == nil {
 		return nil, fmt.Errorf("simc input string cannot be nil")
 	}
-	// Handle windows-encoded newlines
-	simcFile := strings.ReplaceAll(*input, "\r\n", "\n")
-	args := strings.Split(simcFile, "\n")
-	// Filter out empty lines and comments
-	args = filter(args, func(s string) bool {
-		return s != "" && s != "\n" && !strings.HasPrefix(s, "#")
-	})
-	return args, nil
-}
-
-func filter[T any](slice []T, predicate func(T) bool) (filtered []T) {
-	for _, item := range slice {
-		if predicate(item) {
-			filtered = append(filtered, item)
-		}
-	}
-	return
+	args := strings.Split(strings.ReplaceAll(*input, "\r\n", "\n"), "\n")
+	return slices.DeleteFunc(args, func(s string) bool {
+		return s == "" || strings.HasPrefix(s, "#")
+	}), nil
 }

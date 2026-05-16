@@ -60,4 +60,7 @@ dist/
 # AWS
 .aws-sam/
 
+# Taskfile.dev
+.task/
+
 profiles/results

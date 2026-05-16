@@ -17,7 +17,6 @@ func init() {
 
 func handler(ctx context.Context, input models.SimulationRequest) (models.SimulationResponse, error) {
 
-	logger.Info(fmt.Sprintf("Starting simulation:\n%v", input), input)
 	simulator := sim.NewSimulator()
 	result, err := simulator.Run(ctx, &input)
 	if err != nil {

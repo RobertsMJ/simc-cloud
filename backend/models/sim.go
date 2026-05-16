@@ -11,5 +11,5 @@ type SimulationResponse struct {
 	RequestID string          `json:"request_id"`
 	GearsetID string          `json:"gearset_id"`
 	Metadata  *map[string]any `json:"metadata,omitempty"`
-	Result    string          `json:"result"`
+	Result    map[string]any  `json:"result"`
 }
