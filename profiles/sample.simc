@@ -30,3 +30,4 @@ off_hand=,id=260408,enchant_id=8039,bonus_id=6652/13333/12790
 desired_targets=5
 max_time=300
 vary_combat_length=0.1
+report_details=0

@@ -2,10 +2,9 @@ package apigw
 
 import (
 	"context"
-	"reflect"
+	"encoding/json"
 
 	"github.com/RobertsMJ/simc-cloud-backend/logger"
-	"github.com/RobertsMJ/simc-cloud-backend/simc"
 	"github.com/aws/aws-lambda-go/events"
 )
 
@@ -32,13 +31,12 @@ func NewErrorResponse(statusCode int, message string) (Response, error) {
 	}, nil
 }
 
-func NewRequestHandler[Req simc.Unmarshaler, Resp simc.Marshaler](callback func(ctx context.Context, req Req) (Resp, error)) func(context.Context, Request) (Response, error) {
+func NewRequestHandler[Req any, Resp any](callback func(ctx context.Context, req Req) (Resp, error)) func(context.Context, Request) (Response, error) {
 	return func(ctx context.Context, req Request) (Response, error) {
 		logger.Info("Handling request: " + req.Body)
 
 		var requestData Req
-		requestData = reflect.New(reflect.TypeOf(requestData).Elem()).Interface().(Req)
-		if err := requestData.UnmarshalSimC([]byte(req.Body)); err != nil {
+		if err := json.Unmarshal([]byte(req.Body), &requestData); err != nil {
 			return NewErrorResponse(400, "Invalid request format: "+err.Error())
 		}
 
@@ -47,7 +45,7 @@ func NewRequestHandler[Req simc.Unmarshaler, Resp simc.Marshaler](callback func(
 			return NewErrorResponse(500, "Internal server error: "+err.Error())
 		}
 
-		respBytes, err := respData.MarshalSimC()
+		respBytes, err := json.Marshal(respData)
 		if err != nil {
 			return NewErrorResponse(500, "Failed to marshal response: "+err.Error())
 		}

@@ -5,11 +5,25 @@ version: "3"
 tasks:
   sim-profile-apigw:
     cmds:
-      - jq --arg body "$(cat {{.CLI_ARGS}})" '.body = $body'
-        profiles/templates/apigw.json | sam local invoke RunSimulationFunction
-        -e -
+      - |
+        body=$(jq --arg input "$(cat {{.CLI_ARGS}})" '.input = $input' \
+          profiles/templates/request.json)
+        jq --arg body "$body" '.body = $body' \
+          profiles/templates/apigw.json | sam local invoke RunSimulationFunction -e -
+
   sim-profile-sqs:
     cmds:
-      - jq --arg body "$(cat {{.CLI_ARGS}})" '.Records[0].body = $body'
-        profiles/templates/sqs.json | sam local invoke RunSimulationFunction -e
-        -
+      - |
+        body=$(jq --arg input "$(cat {{.CLI_ARGS}})" '.input = $input' \
+          profiles/templates/request.json)
+        jq --arg body "$body" '.Records[0].body = $body' \
+          profiles/templates/sqs.json | sam local invoke RunSimulationFunction -e -
+  run-simc:
+    cmds:
+    - |
+      mkdir -p profiles/results
+      docker run --rm \
+        -v "$(realpath {{.CLI_ARGS}}):/input.simc:ro" \
+        -v "$(realpath profiles/results):/output" \
+        simulationcraftorg/simc:latest \
+        /input.simc json2=/output/result html=/dev/null

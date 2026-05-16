@@ -5,8 +5,8 @@ import (
 	"fmt"
 
 	"github.com/RobertsMJ/simc-cloud-backend/logger"
+	"github.com/RobertsMJ/simc-cloud-backend/models"
 	"github.com/RobertsMJ/simc-cloud-backend/sim"
-	"github.com/RobertsMJ/simc-cloud-backend/simc"
 	transport "github.com/RobertsMJ/simc-cloud-backend/transport/sqs"
 	"github.com/aws/aws-lambda-go/lambda"
 )
@@ -15,17 +15,17 @@ func init() {
 	logger.LoadLogger()
 }
 
-func handler(ctx context.Context, input *simc.Input) (*simc.Output, error) {
+func handler(ctx context.Context, input models.SimulationRequest) (models.SimulationResponse, error) {
 
 	logger.Info(fmt.Sprintf("Starting simulation:\n%v", input), input)
 	simulator := sim.NewSimulator()
-	result, err := simulator.Run(ctx, input)
+	result, err := simulator.Run(ctx, &input)
 	if err != nil {
 		logger.Error("Simulation failed", "error", err)
-		return nil, fmt.Errorf("simulation failed: %w", err)
+		return models.SimulationResponse{}, fmt.Errorf("simulation failed: %w", err)
 	}
 
-	return &result, nil
+	return result, nil
 }
 
 func main() {
