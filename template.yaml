@@ -2,15 +2,27 @@ AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 Description: Monolith-esque API.
 
+Globals:
+  Function:
+    Environment:
+      Variables:
+        LOG_LEVEL: "debug"
+
 Resources:
   MonolithAPI:
     Type: AWS::Serverless::Api
     Properties:
       StageName: dev
-  RunSimulationFunction:
+  SimulationQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: simulation-queue
+      MessageRetentionPeriod: 300
+      VisibilityTimeout: 30
+  CreateJobFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Timeout: 120
+      Timeout: 30
       MemorySize: 256
       PackageType: Image
       Events:
@@ -20,6 +32,18 @@ Resources:
             RestApiId: !Ref MonolithAPI
             Path: /simulate
             Method: post
+  RunSimulationFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Timeout: 30
+      #MemorySize: 256
+      PackageType: Image
+      Events:
+        SQS:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt SimulationQueue.Arn
+            BatchSize: 1
     Metadata:
       DockerTag: run-sim
       DockerContext: ./backend
