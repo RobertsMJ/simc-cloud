@@ -34,18 +34,15 @@ func itemFromResponse(r models.SimResult) simResultItem {
 	}
 }
 
-// Publishes the sim result to an SQS queue for processing by the database writer lambda.
-// This decouples the sim runner from the database and allows for better scalability and
-// fault tolerance. The sim runner can publish the result to the queue and then return
-// immediately, while the database writer lambda can process the results from the queue
-// at its own pace.
 type simRepository struct {
+	// TODO: DynamoDB client and table name
 }
 
 func NewSimRepository() *simRepository {
 	return &simRepository{}
 }
 
-func (r *simRepository) PublishResult(ctx context.Context, result models.SimResult) error {
+func (r *simRepository) SaveSimResult(ctx context.Context, result models.SimResult) error {
+	// TODO: Save sim result to DynamoDB using itemFromResponse to convert to simResultItem
 	return models.ErrNotImplemented
 }
