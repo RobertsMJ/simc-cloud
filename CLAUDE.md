@@ -1,23 +1,50 @@
 # simc-cloud
 
-Serverless AWS Lambda application that runs [SimulationCraft](https://github.com/simulationcraft/simc) simulations in the cloud.
+Serverless AWS Lambda application that runs [SimulationCraft](https://github.com/simulationcraft/simc) simulations in the cloud. The Go backend is designed to be platform-agnostic: AWS infrastructure (Lambda, SQS, DynamoDB) is isolated behind repository interfaces and transport adapters so the core business logic can be ported to other runtimes (e.g. Kubernetes + Kafka + Postgres) without modification.
 
 ## Architecture
 
 (TODO) A frontend interface for building gear combinations to simulate
-    - POSTs a request to the gearset generator with constraints
+
+- POSTs a request to the Job Creation service with a set of gear and gear constraints
+
+Job Creation Service
+
+- Creates a job and invokes the Gearset Generator with the provided set of items
+- Validates the request is valid
+- Returns the job ID to the frontend for status monitoring and results
+
 (TODO) Gearset generator
-    - Microservice that, given a list of gear options for each gear slot, generates gearset combinations that satisfy the given constraints
-        - Constraints could be similar to:
-            - Minimum 4-piece set bonus
-            - Minimum 2-piece set bonus
-            - (built-in) Limit 2 embellishments
-    - Puts the resulting valid gearsets as valid simulationcraft input strings to a queue to be simulated
+
+- Given a list of gear options for each gear slot, generates gear combinations that satisfy the given constraints
+    - Constraints could be similar to:
+        - Minimum 4-piece set bonus
+        - Minimum 2-piece set bonus
+        - Limit 2 crafted embellishments
+        - Upgrade currency (i.e. user has 60 crests, how many items can be upgraded with this currency)
+- Puts the resulting valid gearsets as valid simulationcraft input strings to a queue to be simulated
+
 Simulation Runner
-    - Handles a single simulation request
-    - Runs the simulation with the given configuration
-    - Reports the result
-(TODO) Results persistence and reporting back to the user
+
+- Consumes gearset simulation requests from SQS
+- Runs the simulation with the given configuration
+- Publishes the result to a results SQS queue for persistence
+
+(TODO) Persistence Service
+
+- Consumes simulation results from the results SQS queue
+- Writes results to DynamoDB (result record + atomic job completion counter)
+- Decoupled from the Simulation Runner so that DB write failures don't lose simulation results — unprocessable messages go to a dead-letter queue
+- DynamoDB table: single-table design with `PK=job_id`, `SK=RESULT#<gearset_id>`
+    - Each result item stores `statistics` (promoted from simc output for leaderboard queries without deserializing the full result blob) and the full `result` blob
+- Access patterns:
+    - Get all sim results for a Job by Job ID (leaderboard, sharing, bookmarking)
+    - Get a single result by Job ID + Gearset ID (drilldown)
+
+Long term:
+
+- Group simulations with a dungeon route
+- Dungeon route building, a la Mythic Dungeon Tools
 
 ## Project Structure
 
@@ -30,6 +57,10 @@ Taskfile.yml                # Local dev tasks
 ```
 
 ## Key Patterns
+
+### Portability constraint
+
+Repository interfaces and transport handlers must be defined in terms of domain types only (`models.*`, `context.Context`). AWS-specific types (`events.SQSEvent`, `dynamodbav` tags, etc.) must never appear in interfaces or domain packages — only in their concrete implementations.
 
 ### Transport handlers
 
@@ -45,11 +76,11 @@ When adding a new transport, follow this pattern — the core business logic sho
 
 ### Models
 
-`SimulationRequest` and `SimulationResponse` are the canonical types shared across all transports:
+`SimRequest` and `SimResult` are the canonical types shared across all transports:
 
 ```go
-type SimulationRequest struct {
-    RequestID string          `json:"request_id"`
+type SimRequest struct {
+    JobID     string          `json:"job_id"`
     GearsetID string          `json:"gearset_id"`
     Metadata  *map[string]any `json:"metadata,omitempty"`
     Input     string          `json:"input"`  // raw simc profile text
@@ -58,9 +89,11 @@ type SimulationRequest struct {
 
 The `Input` field is the full simc profile as a plain text string (newline-separated key=value pairs).
 
+`SimResult` is the domain result type, carrying `Status`, `Statistics` (typed, promoted from `sim.statistics` in the simc JSON), and `Result` (the full raw simc output as `SimcOutput`).
+
 ### Simulation service
 
-`sim/service.go` parses the `Input` string into simc CLI args (one per line, comments and empty lines filtered), then executes `/app/simc` with `json2=stdout` to capture structured JSON output directly on stdout.
+`sim/service.go` parses the `Input` string into simc CLI args (one per line, comments and empty lines filtered), executes `/app/simc` writing JSON output to a temp file, then unmarshals the output twice: once into a typed envelope to extract `sim.statistics`, and once into `SimcOutput` (a `map[string]any`) for the full result blob.
 
 ## Local Development
 

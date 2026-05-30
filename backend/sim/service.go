@@ -10,36 +10,39 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/RobertsMJ/simc-cloud-backend/logger"
 	"github.com/RobertsMJ/simc-cloud-backend/models"
 )
 
-type SimInput = models.SimulationRequest
-type SimOutput = models.SimulationResponse
-
-type Simulator interface {
-	Run(ctx context.Context, input *SimInput) (SimOutput, error)
+type simcOutputEnvelope struct {
+	Sim struct {
+		Statistics models.SimStatistics `json:"statistics"`
+	} `json:"sim"`
 }
 
-type simulator struct{}
+type Simulator interface {
+	Run(ctx context.Context, input *models.SimRequest) (models.SimResult, error)
+}
+
+type simulator struct {
+}
 
 func NewSimulator() Simulator {
 	return &simulator{}
 }
 
-func (s *simulator) Run(ctx context.Context, request *SimInput) (SimOutput, error) {
+func (s *simulator) Run(ctx context.Context, request *models.SimRequest) (models.SimResult, error) {
 	if request == nil {
-		return models.SimulationResponse{}, fmt.Errorf("input cannot be nil")
+		return models.SimResult{}, fmt.Errorf("input cannot be nil")
 	}
 
 	args, err := parseSimcArgs(&request.Input)
 	if err != nil {
-		return models.SimulationResponse{}, fmt.Errorf("failed to parse simc arguments: %w", err)
+		return models.SimResult{}, fmt.Errorf("failed to parse simc arguments: %w", err)
 	}
 
 	tmpDir, err := os.MkdirTemp("", "simc-*")
 	if err != nil {
-		return models.SimulationResponse{}, fmt.Errorf("failed to create temp dir: %w", err)
+		return models.SimResult{}, fmt.Errorf("failed to create temp dir: %w", err)
 	}
 	defer os.RemoveAll(tmpDir)
 
@@ -51,26 +54,31 @@ func (s *simulator) Run(ctx context.Context, request *SimInput) (SimOutput, erro
 	cmd.Stderr = &stderr
 
 	if err := cmd.Run(); err != nil {
-		return models.SimulationResponse{}, fmt.Errorf("simc execution failed: %w, stderr: %s", err, stderr.String())
+		return models.SimResult{}, fmt.Errorf("simc execution failed: %w, stderr: %s", err, stderr.String())
 	}
 
 	outputBytes, err := os.ReadFile(outputPath)
 	if err != nil {
-		return models.SimulationResponse{}, fmt.Errorf("failed to read simc output: %w", err)
+		return models.SimResult{}, fmt.Errorf("failed to read simc output: %w", err)
 	}
 
-	var result map[string]any
-	if err := json.Unmarshal(outputBytes, &result); err != nil {
-		return models.SimulationResponse{}, fmt.Errorf("failed to parse simc output: %w", err)
+	var envelope simcOutputEnvelope
+	if err := json.Unmarshal(outputBytes, &envelope); err != nil {
+		return models.SimResult{}, fmt.Errorf("failed to parse simc output: %w", err)
 	}
 
-	logger.Debug("simulation complete", "request_id", request.RequestID, "gearset_id", request.GearsetID, "result", result)
+	var output models.SimcOutput
+	if err := json.Unmarshal(outputBytes, &output); err != nil {
+		return models.SimResult{}, fmt.Errorf("failed to parse simc output: %w", err)
+	}
 
-	return models.SimulationResponse{
-		RequestID: request.RequestID,
-		GearsetID: request.GearsetID,
-		Metadata:  request.Metadata,
-		Result:    result,
+	return models.SimResult{
+		JobID:      request.JobID,
+		GearsetID:  request.GearsetID,
+		Status:     models.StatusCompleted,
+		Statistics: envelope.Sim.Statistics,
+		Metadata:   request.Metadata,
+		Result:     &output,
 	}, nil
 }
 

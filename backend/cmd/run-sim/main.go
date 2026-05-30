@@ -9,22 +9,31 @@ import (
 	"github.com/RobertsMJ/simc-cloud-backend/sim"
 	transport "github.com/RobertsMJ/simc-cloud-backend/transport/sqs"
 	"github.com/aws/aws-lambda-go/lambda"
+	sqssdk "github.com/aws/aws-sdk-go-v2/service/sqs"
 )
 
+var simulator sim.Simulator
+var publisher *transport.Publisher[models.SimResult]
+
 func init() {
+
+	cfg := LoadConfig(context.Background())
 	logger.LoadLogger()
+	client := sqssdk.NewFromConfig(cfg.AWS)
+	publisher = transport.NewPublisher[models.SimResult](context.Background(), client, cfg.resultsQueueName)
+	simulator = sim.NewSimulator()
 }
 
-func handler(ctx context.Context, input models.SimulationRequest) (models.SimulationResponse, error) {
-
-	simulator := sim.NewSimulator()
-	result, err := simulator.Run(ctx, &input)
+func handler(ctx context.Context, input models.SimRequest) (models.SimResult, error) {
+	res, err := simulator.Run(ctx, &input)
 	if err != nil {
 		logger.Error("Simulation failed", "error", err)
-		return models.SimulationResponse{}, fmt.Errorf("simulation failed: %w", err)
+		return models.SimResult{}, fmt.Errorf("simulation failed: %w", err)
 	}
 
-	return result, nil
+	publisher.Publish(ctx, res)
+
+	return res, nil
 }
 
 func main() {
