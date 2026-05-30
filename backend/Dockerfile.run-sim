@@ -12,7 +12,7 @@ RUN CGO_ENABLED=0 \
     GOOS=linux \
     go build \
     -tags lambda.norpc \
-    -o main ./cmd/run-sim/main.go
+    -o main ./cmd/run-sim/
 
 FROM alpine:latest AS prod-deps
 RUN \

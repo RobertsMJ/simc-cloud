@@ -4,6 +4,7 @@ version: "3"
 
 tasks:
   sam-build:
+    desc: Build SAM application (incremental, triggered by Go/Docker/template changes)
     sources:
       - backend/**/*.go
       - backend/Dockerfile.run-sim
@@ -12,6 +13,7 @@ tasks:
       - sam build
 
   sim-profile-apigw:
+    desc: "Invoke RunSimulationFunction locally via API Gateway event. Usage: task sim-profile-apigw -- profiles/sample.simc"
     deps: [sam-build]
     cmds:
       - |
@@ -21,6 +23,7 @@ tasks:
           profiles/templates/apigw.json | sam local invoke RunSimulationFunction -e -
 
   sim-profile-sqs:
+    desc: "Invoke RunSimulationFunction locally via SQS event. Usage: task sim-profile-sqs -- profiles/sample.simc"
     deps: [sam-build]
     cmds:
       - |
@@ -28,7 +31,9 @@ tasks:
           profiles/templates/request.json)
         jq --arg body "$body" '.Records[0].body = $body' \
           profiles/templates/sqs.json | sam local invoke RunSimulationFunction -e -
+
   run-simc:
+    desc: "Run simc directly via Docker, writes JSON to profiles/results/result.json. Usage: task run-simc -- profiles/sample.simc"
     cmds:
     - |
       mkdir -p profiles/results
