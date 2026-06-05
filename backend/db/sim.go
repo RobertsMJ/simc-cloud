@@ -1,33 +1,32 @@
 package db
 
 import (
-	"context"
-
 	"github.com/RobertsMJ/simc-cloud-backend/models"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 )
 
-type simResultItem struct {
+type resultItem struct {
 	PK           string               `dynamodbav:"PK"`
 	SK           string               `dynamodbav:"SK"`
 	JobID        string               `dynamodbav:"job_id"`
 	GearsetID    string               `dynamodbav:"gearset_id"`
-	Status       models.SimStatus     `dynamodbav:"status"`
+	Status       models.Status        `dynamodbav:"status"`
 	ErrorMessage *string              `dynamodbav:"error_message,omitempty"`
-	Baseline     bool                 `dynamodbav:"baseline,omitempty"`
+	IsBaseline   *bool                `dynamodbav:"is_baseline,omitempty"`
 	Statistics   models.SimStatistics `dynamodbav:"statistics"`
 	Metadata     *map[string]any      `dynamodbav:"metadata,omitempty"`
-	Result       *models.SimcOutput   `dynamodbav:"result,omitempty"`
+	Result       []byte               `dynamodbav:"result,omitempty"`
 }
 
-func itemFromResponse(r models.SimResult) simResultItem {
-	return simResultItem{
+func resultItemFromResult(r models.SimResult) resultItem {
+	return resultItem{
 		PK:           r.JobID,
 		SK:           "RESULT#" + r.GearsetID,
 		JobID:        r.JobID,
 		GearsetID:    r.GearsetID,
 		Status:       r.Status,
 		ErrorMessage: r.ErrorMessage,
-		Baseline:     r.Baseline,
+		IsBaseline:   &r.Baseline,
 		Statistics:   r.Statistics,
 		Metadata:     r.Metadata,
 		Result:       r.Result,
@@ -35,14 +34,20 @@ func itemFromResponse(r models.SimResult) simResultItem {
 }
 
 type simRepository struct {
-	// TODO: DynamoDB client and table name
+	client    *dynamodb.Client
+	tableName string
 }
 
-func NewSimRepository() *simRepository {
-	return &simRepository{}
+type SimRepositoryConfig struct {
+	Client    *dynamodb.Client
+	TableName string
 }
 
-func (r *simRepository) SaveSimResult(ctx context.Context, result models.SimResult) error {
-	// TODO: Save sim result to DynamoDB using itemFromResponse to convert to simResultItem
-	return models.ErrNotImplemented
+func NewSimRepository(config SimRepositoryConfig) *simRepository {
+	return &simRepository{
+		client:    config.Client,
+		tableName: config.TableName,
+	}
 }
+
+// TODO:MJR - Should only handle fetching results

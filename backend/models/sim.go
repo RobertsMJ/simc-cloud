@@ -1,5 +1,7 @@
 package models
 
+import "encoding/json"
+
 // Models for single simulations
 // Request: Single job and gearset with a simc input string
 // Before the sim is run, the job and gearset will be persisted in the database with a status of "in_progress". After the sim is run, the result will be persisted in the database with a status of "completed" or "error" depending on the outcome of the sim. The response will include the job ID, gearset ID, status, and result (if successful) or error message (if failed).
@@ -11,14 +13,6 @@ type SimRequest struct {
 	Metadata  *map[string]any `json:"metadata,omitempty"`
 	Input     string          `json:"input"`
 }
-
-type SimStatus string
-
-const (
-	StatusInProgress SimStatus = "in_progress"
-	StatusCompleted  SimStatus = "completed"
-	StatusError      SimStatus = "error"
-)
 
 type SimcOutput map[string]any
 
@@ -50,10 +44,10 @@ type SimStatistics struct {
 type SimResult struct {
 	JobID        string          `json:"job_id"`
 	GearsetID    string          `json:"gearset_id"`
-	Status       SimStatus       `json:"status"`
+	Status       Status          `json:"status"`
 	ErrorMessage *string         `json:"error_message,omitempty"`
 	Baseline     bool            `json:"baseline"`
 	Statistics   SimStatistics   `json:"statistics"`
 	Metadata     *map[string]any `json:"metadata,omitempty"`
-	Result       *SimcOutput     `json:"result"`
+	Result       json.RawMessage `json:"result"`
 }

@@ -67,18 +67,13 @@ func (s *simulator) Run(ctx context.Context, request *models.SimRequest) (models
 		return models.SimResult{}, fmt.Errorf("failed to parse simc output: %w", err)
 	}
 
-	var output models.SimcOutput
-	if err := json.Unmarshal(outputBytes, &output); err != nil {
-		return models.SimResult{}, fmt.Errorf("failed to parse simc output: %w", err)
-	}
-
 	return models.SimResult{
 		JobID:      request.JobID,
 		GearsetID:  request.GearsetID,
 		Status:     models.StatusCompleted,
 		Statistics: envelope.Sim.Statistics,
 		Metadata:   request.Metadata,
-		Result:     &output,
+		Result:     outputBytes,
 	}, nil
 }
 
