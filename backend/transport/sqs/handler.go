@@ -4,8 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"log/slog"
 
-	"github.com/RobertsMJ/simc-cloud-backend/logger"
 	"github.com/aws/aws-lambda-go/events"
 )
 
@@ -21,13 +21,13 @@ func NewRequestHandler[Req any, Resp any](callback func(ctx context.Context, req
 		record := event.Records[0]
 		var requestData Req
 		if err := json.Unmarshal([]byte(record.Body), &requestData); err != nil {
-			logger.Error("Failed to unmarshal SQS message", "error", err, "message_id", record.MessageId)
+			slog.Error("Failed to unmarshal SQS message", "error", err, "message_id", record.MessageId)
 			return err
 		}
 
 		_, err := callback(ctx, requestData)
 		if err != nil {
-			logger.Error("Failed to process SQS message", "error", err, "message_id", record.MessageId)
+			slog.Error("Failed to process SQS message", "error", err, "message_id", record.MessageId)
 			return err
 		}
 

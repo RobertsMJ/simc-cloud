@@ -3,8 +3,8 @@ package apigw
 import (
 	"context"
 	"encoding/json"
+	"log/slog"
 
-	"github.com/RobertsMJ/simc-cloud-backend/logger"
 	"github.com/aws/aws-lambda-go/events"
 )
 
@@ -33,7 +33,7 @@ func NewErrorResponse(statusCode int, message string) (Response, error) {
 
 func NewRequestHandler[Req any, Resp any](callback func(ctx context.Context, req Req) (Resp, error)) func(context.Context, Request) (Response, error) {
 	return func(ctx context.Context, req Request) (Response, error) {
-		logger.Info("Handling request: " + req.Body)
+		slog.Info("Handling request: " + req.Body)
 
 		var requestData Req
 		if err := json.Unmarshal([]byte(req.Body), &requestData); err != nil {
