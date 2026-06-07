@@ -13,7 +13,7 @@ import (
 )
 
 var client *dynamodb.Client
-var writer *job.Writer
+var writer *job.ResultWriter
 
 func init() {
 	applog.Init()

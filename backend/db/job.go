@@ -55,7 +55,7 @@ func NewJobRepository(config JobRepositoryConfig) *jobRepository {
 	}
 }
 
-var _ job.Writer = (*jobRepository)(nil)
+var _ job.ResultWriter = (*jobRepository)(nil)
 
 func (r *jobRepository) WriteResult(ctx context.Context, result models.SimResult) error {
 	item := resultItemFromResult(result)

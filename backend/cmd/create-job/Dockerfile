@@ -12,7 +12,7 @@ RUN CGO_ENABLED=0 \
     -tags lambda.norpc \
     -o main ./cmd/create-job/main.go
 
-FROM alpine-latest
+FROM alpine:latest
 WORKDIR /app
 COPY --from=build /app/main main
 ENTRYPOINT ["./main"]

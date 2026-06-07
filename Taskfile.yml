@@ -2,7 +2,19 @@
 
 version: "3"
 
+dotenv: [".env"]
+
 tasks:
+  local-up:
+    desc: Start LocalStack (SQS + DynamoDB)
+    cmds:
+      - docker compose up -d
+
+  local-down:
+    desc: Stop LocalStack
+    cmds:
+      - docker compose down
+
   sam-build:
     desc: Build SAM application (incremental, triggered by Go/Docker/template changes)
     sources:
@@ -20,7 +32,9 @@ tasks:
         body=$(jq --arg input "$(cat {{.CLI_ARGS}})" '.input = $input' \
           profiles/templates/request.json)
         jq --arg body "$body" '.body = $body' \
-          profiles/templates/apigw.json | sam local invoke RunSimulationFunction -e -
+          profiles/templates/apigw.json | sam local invoke RunSimulationFunction -e - \
+         --container-env-vars RESULTS_QUEUE_NAME=$RESULTS_QUEUE_NAME \
+         --container-env-vars AWS_ENDPOINT_URL=http://host.docker.internal:4566
 
   sim-profile-sqs:
     desc: "Invoke RunSimulationFunction locally via SQS event. Usage: task sim-profile-sqs -- profiles/sample.simc"
@@ -30,7 +44,9 @@ tasks:
         body=$(jq --arg input "$(cat {{.CLI_ARGS}})" '.input = $input' \
           profiles/templates/request.json)
         jq --arg body "$body" '.Records[0].body = $body' \
-          profiles/templates/sqs.json | sam local invoke RunSimulationFunction -e -
+          profiles/templates/sqs.json | sam local invoke RunSimulationFunction -e - \
+         --container-env-vars RESULTS_QUEUE_NAME=$RESULTS_QUEUE_NAME \
+         --container-env-vars AWS_ENDPOINT_URL=http://host.docker.internal:4566
 
   run-simc:
     desc: "Run simc directly via Docker, writes JSON to profiles/results/result.json. Usage: task run-simc -- profiles/sample.simc"
