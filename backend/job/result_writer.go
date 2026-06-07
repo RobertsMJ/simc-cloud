@@ -6,6 +6,6 @@ import (
 	"github.com/RobertsMJ/simc-cloud-backend/models"
 )
 
-type Writer interface {
+type ResultWriter interface {
 	WriteResult(ctx context.Context, result models.SimResult) error
 }

@@ -12,6 +12,7 @@
         "!Or sequence",
         "!Condition scalar",
         "!FindInMap sequence",
+        "!GetAtt",
         "!GetAtt sequence",
         "!GetAZs scalar",
         "!ImportValue scalar",

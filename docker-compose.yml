@@ -1,0 +1,21 @@
+services:
+  localstack:
+    image: localstack/localstack
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=sqs,dynamodb
+      - SIMULATION_QUEUE_NAME=${SIMULATION_QUEUE_NAME}
+      - RESULTS_QUEUE_NAME=${RESULTS_QUEUE_NAME}
+      - SIM_TABLE_NAME=${SIM_TABLE_NAME}
+    volumes:
+      - ./scripts/localstack-init.sh:/etc/localstack/init/ready.d/init.sh
+      - localstack-data:/var/lib/localstack
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4566/_localstack/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  localstack-data:
