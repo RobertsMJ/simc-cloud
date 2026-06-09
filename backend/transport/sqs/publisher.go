@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/RobertsMJ/simc-cloud-backend/config"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
 )
@@ -14,17 +15,18 @@ type Publisher[T any] struct {
 	queueURL string
 }
 
-func NewPublisher[T any](ctx context.Context, client *sqs.Client, queueName string) *Publisher[T] {
+func NewPublisher[Message any](ctx context.Context, queueName string) *Publisher[Message] {
+	client := sqs.NewFromConfig(config.LoadAWS(ctx))
 	queueURL, err := client.GetQueueUrl(ctx, &sqs.GetQueueUrlInput{
 		QueueName: aws.String(queueName),
 	})
 	if err != nil {
 		panic(fmt.Errorf("failed to get queue URL: %w", err))
 	}
-	return &Publisher[T]{client: client, queueURL: *queueURL.QueueUrl}
+	return &Publisher[Message]{client: client, queueURL: *queueURL.QueueUrl}
 }
 
-func (p *Publisher[T]) Publish(ctx context.Context, msg T) error {
+func (p *Publisher[Message]) Publish(ctx context.Context, msg Message) error {
 	body, err := json.Marshal(msg)
 	if err != nil {
 		return fmt.Errorf("failed to marshal message: %w", err)
