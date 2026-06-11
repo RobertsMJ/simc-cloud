@@ -1,6 +1,6 @@
 {
     "yaml.schemas": {
-        "https://raw.githubusercontent.com/aws/serverless-application-model/main/samtranslator/schema/schema.json": "file:///home/mjr/dev/simc-cloud/template.yaml"
+        "https://raw.githubusercontent.com/aws/serverless-application-model/main/samtranslator/schema/schema.json": "file:///${workspaceFolder}/template.yaml"
     },
     "yaml.customTags": [
         "!Base64 scalar",

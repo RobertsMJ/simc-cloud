@@ -5,16 +5,6 @@ version: "3"
 dotenv: [".env"]
 
 tasks:
-  local-up:
-    desc: Start LocalStack (SQS + DynamoDB)
-    cmds:
-      - docker compose up -d
-
-  local-down:
-    desc: Stop LocalStack
-    cmds:
-      - docker compose down
-
   sam-build:
     desc: Build SAM application (incremental, triggered by Go/Docker/template changes)
     sources:

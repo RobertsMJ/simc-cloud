@@ -38,6 +38,24 @@ func jobItemFromResponse(r models.Job) jobItem {
 	}
 }
 
+func (j jobItem) toModel() models.Job {
+	return models.Job{
+		ID:             j.ID,
+		Status:         j.Status,
+		TotalCount:     j.TotalCount,
+		CompletedCount: j.CompletedCount,
+		FailedCount:    j.FailedCount,
+		CreatedAt:      j.CreatedAt,
+	}
+}
+
+// TODO:MJR
+type JobRepository interface {
+	CreateJob(ctx context.Context, job models.Job) error
+	GetJob(ctx context.Context, jobID string) (*models.Job, error)
+	job.ResultWriter
+}
+
 type jobRepository struct {
 	client    *dynamodb.Client
 	tableName string
@@ -57,6 +75,49 @@ func NewJobRepository(config JobRepositoryConfig) *jobRepository {
 
 var _ job.ResultWriter = (*jobRepository)(nil)
 
+func (r *jobRepository) CreateJob(ctx context.Context, job models.Job) error {
+	item := jobItemFromResponse(job)
+
+	av, err := attributevalue.MarshalMap(item)
+	if err != nil {
+		return err
+	}
+
+	_, err = r.client.PutItem(ctx, &dynamodb.PutItemInput{
+		TableName: aws.String(r.tableName),
+		Item:      av,
+	})
+	return err
+}
+
+func (r *jobRepository) GetJob(ctx context.Context, jobID string) (*models.Job, error) {
+	resp, err := r.client.GetItem(ctx, &dynamodb.GetItemInput{
+		TableName: aws.String(r.tableName),
+		Key: map[string]types.AttributeValue{
+			"PK": &types.AttributeValueMemberS{Value: jobID},
+			"SK": &types.AttributeValueMemberS{Value: "JOB"},
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.Item == nil {
+		return nil, nil
+	}
+
+	var item jobItem
+	err = attributevalue.UnmarshalMap(resp.Item, &item)
+	if err != nil {
+		return nil, err
+	}
+
+	job := item.toModel()
+	return &job, nil
+}
+
+// WriteResult atomically updates the job's completed/failed count and writes the sim result.
+// If all sims are completed, it also updates the job status to completed.
 func (r *jobRepository) WriteResult(ctx context.Context, result models.SimResult) error {
 	item := resultItemFromResult(result)
 
@@ -151,36 +212,4 @@ func (r *jobRepository) WriteResult(ctx context.Context, result models.SimResult
 	}
 
 	return nil
-}
-
-func (r *jobRepository) GetJob(ctx context.Context, jobID string) (*models.Job, error) {
-	resp, err := r.client.GetItem(ctx, &dynamodb.GetItemInput{
-		TableName: aws.String(r.tableName),
-		Key: map[string]types.AttributeValue{
-			"PK": &types.AttributeValueMemberS{Value: jobID},
-			"SK": &types.AttributeValueMemberS{Value: "JOB"},
-		},
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	if resp.Item == nil {
-		return nil, nil
-	}
-
-	var item jobItem
-	err = attributevalue.UnmarshalMap(resp.Item, &item)
-	if err != nil {
-		return nil, err
-	}
-
-	return &models.Job{
-		ID:             item.ID,
-		Status:         item.Status,
-		TotalCount:     item.TotalCount,
-		CompletedCount: item.CompletedCount,
-		FailedCount:    item.FailedCount,
-		CreatedAt:      item.CreatedAt,
-	}, nil
 }
