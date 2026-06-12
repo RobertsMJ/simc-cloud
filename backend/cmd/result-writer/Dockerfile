@@ -10,7 +10,7 @@ RUN CGO_ENABLED=0 \
     GOOS=linux \
     go build \
     -tags lambda.norpc \
-    -o main ./cmd/create-job
+    -o main ./cmd/result-writer
 
 FROM alpine:latest
 WORKDIR /app

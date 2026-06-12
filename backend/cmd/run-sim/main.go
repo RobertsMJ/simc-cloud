@@ -22,19 +22,19 @@ var publisher resultPublisher
 func init() {
 	applog.Init()
 	cfg := LoadConfig(context.Background())
-	publisher = transport.NewPublisher[models.SimResult](context.Background(), cfg.resultsQueueName)
+	publisher = transport.NewPublisher[models.SimResult](context.Background(), cfg.resultsQueueURL)
 	simulator = sim.NewSimulator()
 }
 
 func handler(ctx context.Context, input models.SimRequest) error {
 	res, err := simulator.Run(ctx, &input)
 	if err != nil {
-		slog.Error("Simulation failed", "error", err)
+		slog.Error("simulation failed", "error", err)
 		return fmt.Errorf("simulation failed: %w", err)
 	}
 
 	if err := publisher.Publish(ctx, res); err != nil {
-		slog.Error("Failed to publish result", "error", err)
+		slog.Error("failed to publish result", "error", err)
 		return fmt.Errorf("failed to publish result: %w", err)
 	}
 

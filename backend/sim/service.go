@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log/slog"
 	"os"
 	"os/exec"
 	"slices"
@@ -35,6 +36,8 @@ func (s *simulator) Run(ctx context.Context, request *models.SimRequest) (models
 		return models.SimResult{}, fmt.Errorf("input cannot be nil")
 	}
 
+	slog.Info("Starting simulation for JobID: %s, GearsetID: %s", request.JobID, request.GearsetID)
+
 	args, err := parseSimcArgs(&request.Input)
 	if err != nil {
 		return models.SimResult{}, fmt.Errorf("failed to parse simc arguments: %w", err)
@@ -49,13 +52,18 @@ func (s *simulator) Run(ctx context.Context, request *models.SimRequest) (models
 	outputPath := tmpDir + "/output.json"
 	args = append(args, "json2="+outputPath, "html=/dev/null", "report_details=0")
 
+	slog.Debug("parsed simc arguments", "args", args)
+
 	cmd := exec.CommandContext(ctx, "/app/simc", args...)
 	var stderr bytes.Buffer
 	cmd.Stderr = &stderr
 
+	slog.Debug("Running simc command", "cmd", cmd.String())
 	if err := cmd.Run(); err != nil {
+		slog.Error("simc execution failed", "err", err, "stderr", stderr.String())
 		return models.SimResult{}, fmt.Errorf("simc execution failed: %w, stderr: %s", err, stderr.String())
 	}
+	slog.Debug("simc command completed successfully")
 
 	outputBytes, err := os.ReadFile(outputPath)
 	if err != nil {

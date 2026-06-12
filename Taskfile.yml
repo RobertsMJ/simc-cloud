@@ -22,29 +22,31 @@ tasks:
         body=$(jq --arg input "$(cat {{.CLI_ARGS}})" '.input = $input' \
           profiles/templates/request.json)
         jq --arg body "$body" '.body = $body' \
-          profiles/templates/apigw.json | sam local invoke RunSimulationFunction -e - \
-         --container-env-vars RESULTS_QUEUE_NAME=$RESULTS_QUEUE_NAME \
-         --container-env-vars AWS_ENDPOINT_URL=http://host.docker.internal:4566
+          profiles/templates/apigw.json | sam local invoke RunSimulationFunction -e -
 
   sim-profile-sqs:
     desc: "Invoke RunSimulationFunction locally via SQS event. Usage: task sim-profile-sqs -- profiles/sample.simc"
     deps: [sam-build]
     cmds:
       - |
-        body=$(jq --arg input "$(cat {{.CLI_ARGS}})" '.input = $input' \
-          profiles/templates/request.json)
+        body=$(jq --arg input "$(cat {{.CLI_ARGS}})" '.input = $input' profiles/templates/request.json)
         jq --arg body "$body" '.Records[0].body = $body' \
-          profiles/templates/sqs.json | sam local invoke RunSimulationFunction -e - \
-         --container-env-vars RESULTS_QUEUE_NAME=$RESULTS_QUEUE_NAME \
-         --container-env-vars AWS_ENDPOINT_URL=http://host.docker.internal:4566
-
+          profiles/templates/sqs.json | sam local invoke RunSimulationFunction -e -
+  get-sqs-event:
+    desc: "Invoke RunSimulationFunction locally via SQS event. Usage: task sim-profile-sqs -- profiles/sample.simc"
+    deps: [sam-build]
+    cmds:
+      - |
+        body=$(jq --arg input "$(cat {{.CLI_ARGS}})" '.input = $input' profiles/templates/request.json)
+        jq --arg body "$body" '.Records[0].body = $body' \
+          profiles/templates/sqs.json
   run-simc:
     desc: "Run simc directly via Docker, writes JSON to profiles/results/result.json. Usage: task run-simc -- profiles/sample.simc"
     cmds:
-    - |
-      mkdir -p profiles/results
-      docker run --rm \
-        -v "$(realpath {{.CLI_ARGS}}):/input.simc:ro" \
-        -v "$(realpath profiles/results):/output" \
-        simulationcraftorg/simc:latest \
-        /input.simc json2=/output/result.json html=/dev/null
+      - |
+        mkdir -p profiles/results
+        docker run --rm \
+          -v "$(realpath {{.CLI_ARGS}}):/input.simc:ro" \
+          -v "$(realpath profiles/results):/output" \
+          simulationcraftorg/simc:latest \
+          /input.simc json2=/output/result.json html=/dev/null

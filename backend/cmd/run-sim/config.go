@@ -7,11 +7,11 @@ import (
 )
 
 type Config struct {
-	resultsQueueName string
+	resultsQueueURL string
 }
 
 func LoadConfig(ctx context.Context) Config {
 	return Config{
-		resultsQueueName: appconfig.MustEnv("RESULTS_QUEUE_NAME"),
+		resultsQueueURL: appconfig.MustEnv("RESULTS_QUEUE_URL"),
 	}
 }

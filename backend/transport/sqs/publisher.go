@@ -15,15 +15,9 @@ type Publisher[T any] struct {
 	queueURL string
 }
 
-func NewPublisher[Message any](ctx context.Context, queueName string) *Publisher[Message] {
+func NewPublisher[Message any](ctx context.Context, queueURL string) *Publisher[Message] {
 	client := sqs.NewFromConfig(config.LoadAWS(ctx))
-	queueURL, err := client.GetQueueUrl(ctx, &sqs.GetQueueUrlInput{
-		QueueName: aws.String(queueName),
-	})
-	if err != nil {
-		panic(fmt.Errorf("failed to get queue URL: %w", err))
-	}
-	return &Publisher[Message]{client: client, queueURL: *queueURL.QueueUrl}
+	return &Publisher[Message]{client: client, queueURL: queueURL}
 }
 
 func (p *Publisher[Message]) Publish(ctx context.Context, msg Message) error {

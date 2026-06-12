@@ -31,7 +31,15 @@ Resources:
   SimulationQueue:
     Type: AWS::SQS::Queue
     Properties:
-      QueueName: !Ref SimQueueName
+      QueueName: !Sub ${StageName}-sims
+      MessageRetentionPeriod: 300
+      VisibilityTimeout: 30
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+  SimResultsQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub ${StageName}-sim-results
       MessageRetentionPeriod: 300
       VisibilityTimeout: 30
     DeletionPolicy: Delete
@@ -39,7 +47,7 @@ Resources:
   SimTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: !Ref SimTableName
+      TableName: !Sub ${StageName}-sims
       AttributeDefinitions:
         - AttributeName: PK
           AttributeType: S
@@ -75,12 +83,43 @@ Resources:
       DockerTag: create-job
       DockerContext: ./backend
       Dockerfile: cmd/create-job/Dockerfile
+  SimResultsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Timeout: 30
+      MemorySize: 256
+      PackageType: Image
+      Environment:
+        Variables:
+          SIM_TABLE_NAME: !Ref SimTable
+      Policies:
+        - SQSPollerPolicy:
+            QueueName: !Ref SimResultsQueue
+      Events:
+        SQS:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt SimResultsQueue.Arn
+            BatchSize: 1
+            FunctionResponseTypes:
+              - ReportBatchItemFailures
+    Metadata:
+      DockerContext: ./backend
+      Dockerfile: cmd/result-writer/Dockerfile
   RunSimulationFunction:
     Type: AWS::Serverless::Function
     Properties:
       Timeout: 30
-      #MemorySize: 256
+      MemorySize: 256
       PackageType: Image
+      Environment:
+        Variables:
+          RESULTS_QUEUE_URL: !GetAtt SimResultsQueue.QueueUrl
+      Policies:
+        - SQSPollerPolicy:
+            QueueName: !Ref SimulationQueue
+        - SQSSendMessagePolicy:
+            QueueName: !Ref SimResultsQueue
       Events:
         SQS:
           Type: SQS

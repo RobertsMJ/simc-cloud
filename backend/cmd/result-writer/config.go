@@ -8,15 +8,13 @@ import (
 )
 
 type Config struct {
-	AWS              aws.Config
-	resultsQueueName string
-	tableName        string
+	AWS       aws.Config
+	tableName string
 }
 
 func LoadConfig(ctx context.Context) Config {
 	return Config{
-		AWS:              config.LoadAWS(ctx),
-		resultsQueueName: config.MustEnv("RESULTS_QUEUE_NAME"),
-		tableName:        config.MustEnv("SIM_TABLE_NAME"),
+		AWS:       config.LoadAWS(ctx),
+		tableName: config.MustEnv("SIM_TABLE_NAME"),
 	}
 }
