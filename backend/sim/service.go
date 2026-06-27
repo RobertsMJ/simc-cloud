@@ -57,13 +57,15 @@ func (s *simulator) Run(ctx context.Context, request *models.SimRequest) (models
 	cmd := exec.CommandContext(ctx, "/app/simc", args...)
 	var stderr bytes.Buffer
 	cmd.Stderr = &stderr
+	var stdout bytes.Buffer
+	cmd.Stdout = &stdout
 
 	slog.Debug("Running simc command", "cmd", cmd.String())
 	if err := cmd.Run(); err != nil {
 		slog.Error("simc execution failed", "err", err, "stderr", stderr.String())
 		return models.SimResult{}, fmt.Errorf("simc execution failed: %w, stderr: %s", err, stderr.String())
 	}
-	slog.Debug("simc command completed successfully")
+	slog.Debug("simc command completed successfully", "stdout", stdout.String())
 
 	outputBytes, err := os.ReadFile(outputPath)
 	if err != nil {

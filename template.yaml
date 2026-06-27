@@ -109,8 +109,8 @@ Resources:
   RunSimulationFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Timeout: 30
-      MemorySize: 256
+      Timeout: 60
+      MemorySize: 4096
       PackageType: Image
       Environment:
         Variables:
