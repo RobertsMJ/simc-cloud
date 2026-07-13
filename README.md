@@ -1,4 +1,8 @@
-Serverless SIMC runner
+# Serverless SIMC runner
+
+A serverless simulationcraft runner for comparing World of Warcraft gear.
+
+## Development
 
 Prerequisites:
 
@@ -7,9 +11,6 @@ Prerequisites:
 - Install AWS CLI (`sudo snap install aws-cli --classic`)
 - `aws login`
 - Install AWS SAM (`brew install aws-sam-cli`)
-
-[Rough architecture](https://excalidraw.com/#json=TYNR-QuLm4pt3ouZwGs1D,nWcATGd-Jg-XzRfETBOrRQ)
-
 
 Test invocations:
 - task sim-profile-sqs -- profiles/sample.simc

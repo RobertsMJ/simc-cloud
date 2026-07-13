@@ -10,11 +10,10 @@ default:
       stack_name: dev
       resolve_s3: true
       s3_prefix: dev
-      region: us-east-2
       confirm_changeset: true
       capabilities: CAPABILITY_IAM
-      parameter_overrides: StageName="dev" SimQueueName="sim-queue" 
-        ResultsQueueName="sim-results" SimTableName="sim-table"
+      parameter_overrides: StageName="dev" ResultsQueueName="sim-results" 
+        UseLocal="false"
       image_repositories:
       - CreateJobFunction=135888417806.dkr.ecr.us-east-2.amazonaws.com/deve77989ed/createjobfunction5c119f46repo
       - SimResultsFunction=135888417806.dkr.ecr.us-east-2.amazonaws.com/deve77989ed/simresultsfunctionff00a71brepo

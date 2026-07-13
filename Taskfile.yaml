@@ -5,7 +5,7 @@ version: "3"
 dotenv: [".env"]
 
 tasks:
-  sam-build:
+  build:
     desc: Build SAM application (incremental, triggered by Go/Docker/template changes)
     sources:
       - backend/**/*.go
@@ -14,9 +14,20 @@ tasks:
     cmds:
       - sam build
 
+  deploy:
+    desc: Deploy SAM application to AWS
+    deps: [build]
+    cmds:
+      - sam deploy
+
+  delete:
+    desc: Destroy SAM application in AWS
+    cmds:
+      - sam delete --no-prompts
+
   sim-profile-apigw:
     desc: "Invoke RunSimulationFunction locally via API Gateway event. Usage: task sim-profile-apigw -- profiles/sample.simc"
-    deps: [sam-build]
+    deps: [build]
     cmds:
       - |
         body=$(jq --arg input "$(cat {{.CLI_ARGS}})" '.input = $input' \
@@ -26,15 +37,14 @@ tasks:
 
   sim-profile-sqs:
     desc: "Invoke RunSimulationFunction locally via SQS event. Usage: task sim-profile-sqs -- profiles/sample.simc"
-    deps: [sam-build]
+    deps: [build]
     cmds:
       - |
         body=$(jq --arg input "$(cat {{.CLI_ARGS}})" '.input = $input' profiles/templates/request.json)
         jq --arg body "$body" '.Records[0].body = $body' \
-          profiles/templates/sqs.json | sam local invoke RunSimulationFunction -e -
+          profiles/templates/sqs.json | sam local invoke RunSimulationFunction --docker-network simc-cloud -e -
   get-sqs-event:
-    desc: "Invoke RunSimulationFunction locally via SQS event. Usage: task sim-profile-sqs -- profiles/sample.simc"
-    deps: [sam-build]
+    desc: "Print a formatted simulation job as an SQS event. Usage: task get-sqs-event -- profiles/sample.simc"
     cmds:
       - |
         body=$(jq --arg input "$(cat {{.CLI_ARGS}})" '.input = $input' profiles/templates/request.json)

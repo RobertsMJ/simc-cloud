@@ -31,5 +31,4 @@ desired_targets=5
 max_time=300
 vary_combat_length=0.1
 report_details=0
-iterations=1000
-target_error=0.1
+iterations=100

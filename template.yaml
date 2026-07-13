@@ -2,26 +2,37 @@ AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 Description: Monolith-esque API.
 
-Globals:
-  Function:
-    Environment:
-      Variables:
-        LOG_LEVEL: "debug"
-
 Parameters:
   StageName:
     Type: String
     Default: dev
     Description: Environment stage (e.g., dev, test, prod)
-  SimQueueName:
-    Type: String
-    Default: sim-queue
   ResultsQueueName:
     Type: String
     Default: sim-results
-  SimTableName:
+  LogLevel:
     Type: String
-    Default: sim-table
+    Default: debug
+    AllowedValues:
+      - debug
+      - info
+      - warn
+      - error
+    Description: Log level for Lambda functions
+  UseLocal:
+    Type: String
+    Default: "false"
+    AllowedValues:
+      - "true"
+      - "false"
+    Description: Whether to use local resources (e.g., for testing with ElasticMQ)
+
+Globals:
+  Function:
+    Environment:
+      Variables:
+        LOG_LEVEL: !Ref LogLevel
+        USE_LOCAL: !Ref UseLocal
 
 Resources:
   MonolithAPI:
@@ -33,7 +44,7 @@ Resources:
     Properties:
       QueueName: !Sub ${StageName}-sims
       MessageRetentionPeriod: 300
-      VisibilityTimeout: 30
+      VisibilityTimeout: 60
     DeletionPolicy: Delete
     UpdateReplacePolicy: Delete
   SimResultsQueue:
@@ -41,7 +52,7 @@ Resources:
     Properties:
       QueueName: !Sub ${StageName}-sim-results
       MessageRetentionPeriod: 300
-      VisibilityTimeout: 30
+      VisibilityTimeout: 60
     DeletionPolicy: Delete
     UpdateReplacePolicy: Delete
   SimTable:
@@ -71,7 +82,7 @@ Resources:
       PackageType: Image
       Environment:
         Variables:
-          RESULTS_QUEUE_NAME: !Ref ResultsQueueName
+          RESULTS_QUEUE_URL: !GetAtt SimResultsQueue.QueueUrl
       Events:
         ApiEvent:
           Type: Api
@@ -95,6 +106,8 @@ Resources:
       Policies:
         - SQSPollerPolicy:
             QueueName: !Ref SimResultsQueue
+        - DynamoDBCrudPolicy:
+            TableName: !Ref SimTable
       Events:
         SQS:
           Type: SQS
@@ -110,7 +123,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Timeout: 60
-      MemorySize: 4096
+      MemorySize: 1024
       PackageType: Image
       Environment:
         Variables:

@@ -135,7 +135,6 @@ func (r *jobRepository) WriteResult(ctx context.Context, result models.SimResult
 	default:
 		return fmt.Errorf("invalid result status: %s", result.Status)
 	}
-	updateExpr := fmt.Sprintf("ADD %s :inc", counterField)
 
 	_, err = r.client.TransactWriteItems(ctx, &dynamodb.TransactWriteItemsInput{
 		TransactItems: []types.TransactWriteItem{
@@ -147,7 +146,10 @@ func (r *jobRepository) WriteResult(ctx context.Context, result models.SimResult
 						"PK": &types.AttributeValueMemberS{Value: item.PK},
 						"SK": &types.AttributeValueMemberS{Value: "JOB"},
 					},
-					UpdateExpression: aws.String(updateExpr),
+					UpdateExpression: aws.String(fmt.Sprintf("ADD %s :increment", counterField)),
+					ExpressionAttributeValues: map[string]types.AttributeValue{
+						":increment": &types.AttributeValueMemberN{Value: "1"},
+					},
 				},
 			},
 			// Put the sim result item

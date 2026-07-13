@@ -1,6 +1,7 @@
 package sim
 
 import (
+	"bufio"
 	"bytes"
 	"context"
 	"encoding/json"
@@ -36,7 +37,7 @@ func (s *simulator) Run(ctx context.Context, request *models.SimRequest) (models
 		return models.SimResult{}, fmt.Errorf("input cannot be nil")
 	}
 
-	slog.Info("Starting simulation for JobID: %s, GearsetID: %s", request.JobID, request.GearsetID)
+	slog.Info(fmt.Sprintf("Starting simulation for JobID: %s, GearsetID: %s", request.JobID, request.GearsetID))
 
 	args, err := parseSimcArgs(&request.Input)
 	if err != nil {
@@ -57,15 +58,26 @@ func (s *simulator) Run(ctx context.Context, request *models.SimRequest) (models
 	cmd := exec.CommandContext(ctx, "/app/simc", args...)
 	var stderr bytes.Buffer
 	cmd.Stderr = &stderr
-	var stdout bytes.Buffer
-	cmd.Stdout = &stdout
 
-	slog.Debug("Running simc command", "cmd", cmd.String())
-	if err := cmd.Run(); err != nil {
-		slog.Error("simc execution failed", "err", err, "stderr", stderr.String())
+	stdout, err := cmd.StdoutPipe()
+	if err != nil {
+		return models.SimResult{}, fmt.Errorf("failed to get stdout pipe: %w", err)
+	}
+
+	if err := cmd.Start(); err != nil {
+		slog.Error("failed to start simc command", "err", err, "stderr", stderr.String())
 		return models.SimResult{}, fmt.Errorf("simc execution failed: %w, stderr: %s", err, stderr.String())
 	}
-	slog.Debug("simc command completed successfully", "stdout", stdout.String())
+
+	scanner := bufio.NewScanner(stdout)
+	for scanner.Scan() {
+		slog.Debug(scanner.Text())
+	}
+
+	if err := cmd.Wait(); err != nil {
+		slog.Error("simc command failed", "err", err, "stderr", stderr.String())
+		return models.SimResult{}, fmt.Errorf("simc execution failed: %w, stderr: %s", err, stderr.String())
+	}
 
 	outputBytes, err := os.ReadFile(outputPath)
 	if err != nil {
