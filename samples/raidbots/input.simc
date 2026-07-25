@@ -1,0 +1,116 @@
+# Base Actor
+demonhunter=Kestdh
+race=night_elf
+level=90
+spec=havoc
+role=attack
+talents=CEkAG5bbocFKcv+yIq8fPd6ORZmZmZmZWmxMzMGzkxMDAAAAAAYWMmtZYmBmx2sNzMjxALDsNbmxwsopxMzYGbAAAADAABAzMYAIAAwA
+### Combo 1
+# Spellsnap Shadowmask 289
+head=,id=251109,enchant_id=8017,bonus_id=13440/6652/12667/13577/12699/12806
+# Nocturnal Thorncharm 276
+neck=,id=249626,gem_id=240908,bonus_id=13668/6652/12798,content_tuning=6015
+# Devouring Reaver's Exhaustplates 289
+shoulder=,id=250031,enchant_id=8001,bonus_id=13340/13574/42/13440/12806
+# Rigid Scale Greatcloak 289
+back=,id=258575,bonus_id=13440/6652/13577/12699/12806
+# Devouring Reaver's Engine 289
+chest=,id=250036,enchant_id=7987,bonus_id=13336/13575/13440/6652/12806
+# Silvermoon Agent's Deflectors 285
+wrist=,id=244576,bonus_id=12214/13667/12497/12066/8960/12384/8791/13622/12667,content_tuning=3615,crafted_stats=32/36
+# Devouring Reaver's Essence Grips 276
+hands=,id=250034,bonus_id=13337/13574/41/13440/12798
+# Silvermoon Agent's Utility Belt 285
+waist=,id=244573,bonus_id=12214/13667/12497/12066/8960/12384/8791/13622/12667,content_tuning=3615,crafted_stats=49/32
+# Devouring Reaver's Pistons 282
+legs=,id=250032,enchant_id=8159,bonus_id=13339/13575/6652/13440/12804
+# Boots of Burning Focus 289
+feet=,id=258577,enchant_id=7963,bonus_id=13440/6652/13577/12699/12806
+# Platinum Star Band 289
+finger1=,id=193708,enchant_id=7967,gem_id=240983,bonus_id=13440/40/13668/12699/12806
+# Masterwork Sin'dorei Band 285
+finger2=,id=240949,enchant_id=7967,gem_id=240908,bonus_id=12214/13667/12497/12066/8791/13622,content_tuning=3615,crafted_stats=36/49
+# Algeth'ar Puzzle Box 298
+trinket1=,id=193701,bonus_id=13440/6652/12699/13654
+# Gaze of the Alnseer 285
+trinket2=,id=249343,bonus_id=6652/13334/13653
+# Mystakria's Harvester 298
+main_hand=,id=193717,enchant_id=7981,bonus_id=13440/6652/12701/13654
+# Spellbreaker's Warglaive 295
+off_hand=,id=237840,enchant_id=7981,bonus_id=12214/13655/12497/12066/12715/8791/13622,content_tuning=3615,crafted_stats=49/40
+talents=CEkAAAAAAAAAAAAAAAAAAAAAAYmZmZmZWmxMzMGzkxMDAAAAAAYWMmtZYmBmx2sNzMjxALDsNbmxwsopxMzYGbAAAADAAAgZGMAAAAM
+omnium_talents=136822:1/136819:1
+
+name=Kestdh
+
+# Consumables
+potion=disabled
+food=disabled
+flask=disabled
+augmentation=disabled
+
+# Expansion Options
+temporary_enchant=disabled
+midnight.crucible_of_erratic_energies_violence=1
+midnight.crucible_of_erratic_energies_sustenance=1
+midnight.crucible_of_erratic_energies_predation=1
+
+# Actors
+### Combo 2
+# Spellsnap Shadowmask 289
+profileset."Combo 2"+=head=,id=251109,enchant_id=8017,bonus_id=13440/6652/12667/13577/12699/12806
+# Nocturnal Thorncharm 276
+profileset."Combo 2"+=neck=,id=249626,gem_id=240908,bonus_id=13668/6652/12798,content_tuning=6015
+# Devouring Reaver's Exhaustplates 289
+profileset."Combo 2"+=shoulder=,id=250031,enchant_id=8001,bonus_id=13340/13574/42/13440/12806
+# Rigid Scale Greatcloak 289
+profileset."Combo 2"+=back=,id=258575,bonus_id=13440/6652/13577/12699/12806
+# Devouring Reaver's Engine 289
+profileset."Combo 2"+=chest=,id=250036,enchant_id=7987,bonus_id=13336/13575/13440/6652/12806
+# Silvermoon Agent's Deflectors 285
+profileset."Combo 2"+=wrist=,id=244576,bonus_id=12214/13667/12497/12066/8960/12384/8791/13622/12667,content_tuning=3615,crafted_stats=32/36
+# Devouring Reaver's Essence Grips 276
+profileset."Combo 2"+=hands=,id=250034,bonus_id=13337/13574/41/13440/12798
+# Silvermoon Agent's Utility Belt 285
+profileset."Combo 2"+=waist=,id=244573,bonus_id=12214/13667/12497/12066/8960/12384/8791/13622/12667,content_tuning=3615,crafted_stats=49/32
+# Devouring Reaver's Pistons 282
+profileset."Combo 2"+=legs=,id=250032,enchant_id=8159,bonus_id=13339/13575/6652/13440/12804
+# Boots of Burning Focus 289
+profileset."Combo 2"+=feet=,id=258577,enchant_id=7963,bonus_id=13440/6652/13577/12699/12806
+# Platinum Star Band 289
+profileset."Combo 2"+=finger1=,id=193708,enchant_id=7967,gem_id=240983,bonus_id=13440/40/13668/12699/12806
+# Masterwork Sin'dorei Band 285
+profileset."Combo 2"+=finger2=,id=240949,enchant_id=7967,gem_id=240908,bonus_id=12214/13667/12497/12066/8791/13622,content_tuning=3615,crafted_stats=36/49
+# Algeth'ar Puzzle Box 298
+profileset."Combo 2"+=trinket1=,id=193701,bonus_id=13440/6652/12699/13654
+# Solarflare Prism 298
+profileset."Combo 2"+=trinket2=,id=252420,bonus_id=13440/40/12699/13654
+# Mystakria's Harvester 298
+profileset."Combo 2"+=main_hand=,id=193717,enchant_id=7981,bonus_id=13440/6652/12701/13654
+# Spellbreaker's Warglaive 295
+profileset."Combo 2"+=off_hand=,id=237840,enchant_id=7981,bonus_id=12214/13655/12497/12066/12715/8791/13622,content_tuning=3615,crafted_stats=49/40
+profileset."Combo 2"+=talents=CEkAAAAAAAAAAAAAAAAAAAAAAYmZmZmZWmxMzMGzkxMDAAAAAAYWMmtZYmBmx2sNzMjxALDsNbmxwsopxMzYGbAAAADAAAgZGMAAAAM
+profileset."Combo 2"+=omnium_talents=136822:1/136819:1
+
+# Simulation Options
+iterations=5000
+desired_targets=6
+max_time=300
+calculate_scale_factors=0
+scale_only=strength,intellect,agility,crit,mastery,vers,haste,weapon_dps,weapon_offhand_dps
+override.bloodlust=0
+override.arcane_intellect=0
+override.power_word_fortitude=0
+override.battle_shout=0
+override.mystic_touch=0
+override.chaos_brand=0
+override.skyfury=0
+override.mark_of_the_wild=0
+override.hunters_mark=0
+override.bleeding=0
+report_details=1
+single_actor_batch=1
+optimize_expressions=1
+buff_uptime_timeline=0
+buff_stack_uptime_timeline=0
+collect_action_sequence=0
