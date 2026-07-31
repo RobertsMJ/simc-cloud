@@ -1,0 +1,682 @@
+[
+  {
+    "Key": "demonhunter",
+    "Operator": "=",
+    "Value": "\"Kestdh\"",
+    "Comment": "",
+    "Disabled": false,
+    "Line": 6
+  },
+  {
+    "Key": "level",
+    "Operator": "=",
+    "Value": "90",
+    "Comment": "",
+    "Disabled": false,
+    "Line": 7
+  },
+  {
+    "Key": "race",
+    "Operator": "=",
+    "Value": "night_elf",
+    "Comment": "",
+    "Disabled": false,
+    "Line": 8
+  },
+  {
+    "Key": "region",
+    "Operator": "=",
+    "Value": "us",
+    "Comment": "",
+    "Disabled": false,
+    "Line": 9
+  },
+  {
+    "Key": "server",
+    "Operator": "=",
+    "Value": "illidan",
+    "Comment": "",
+    "Disabled": false,
+    "Line": 10
+  },
+  {
+    "Key": "role",
+    "Operator": "=",
+    "Value": "attack",
+    "Comment": "",
+    "Disabled": false,
+    "Line": 11
+  },
+  {
+    "Key": "professions",
+    "Operator": "=",
+    "Value": "herbalism=88/mining=84",
+    "Comment": "",
+    "Disabled": false,
+    "Line": 12
+  },
+  {
+    "Key": "spec",
+    "Operator": "=",
+    "Value": "havoc",
+    "Comment": "",
+    "Disabled": false,
+    "Line": 13
+  },
+  {
+    "Key": "loot_spec",
+    "Operator": "=",
+    "Value": "havoc",
+    "Comment": "",
+    "Disabled": true,
+    "Line": 14
+  },
+  {
+    "Key": "talents",
+    "Operator": "=",
+    "Value": "CEkAG5bbocFKcv+yIq8fPd6ORZmZmZmZWmxMzMGzkxMDAAAAAAYWMmtZYmBmx2sNzMjxALDsNbmxwsopxMzYGbAAAADAABAzMYAIAAwA",
+    "Comment": "",
+    "Disabled": false,
+    "Line": 16
+  },
+  {
+    "Key": "talents",
+    "Operator": "=",
+    "Value": "CEkAG5bbocFKcv+yIq8fPd6ORZmZmZmZWmxMzMGzwYmBAAAAAAMLGz2MMzAzYb2mZmxYglB2mNzYYWYMmZGzYDAAAYAAAAMzgBAAAgB",
+    "Comment": "Saved Loadout: M+",
+    "Disabled": true,
+    "Line": 19
+  },
+  {
+    "Key": "talents",
+    "Operator": "=",
+    "Value": "CEkAG5bbocFKcv+yIq8fPd6ORZmZGzMz2MmZmxYGGzMAAAAAAgZxMjxgBmx2sNzMzyYMsMw2sZGDzCjxMzMzYDAAAAAAAgZGMAAAAM",
+    "Comment": "Saved Loadout: Nully",
+    "Disabled": true,
+    "Line": 21
+  },
+  {
+    "Key": "talents",
+    "Operator": "=",
+    "Value": "CEkAG5bbocFKcv+yIq8fPd6ORZmZmZmZ2MmZmZGzwYmBAAAAAAMbzYMDzM4Bmx2sNzMjxALDsNbmxwsxYMzMG2AAAAAAAAYmBDAAAAD",
+    "Comment": "Saved Loadout: vael",
+    "Disabled": true,
+    "Line": 23
+  },
+  {
+    "Key": "talents",
+    "Operator": "=",
+    "Value": "CEkAG5bbocFKcv+yIq8fPd6ORZGMzMzmxMzMmZGGzMAAAAAAgZ5BGz2MMzMbzMjtZbegZYMMWGYbWMjhZjxYmZMsBAAAAAAAwMDGAAAAG",
+    "Comment": "Saved Loadout: Raid",
+    "Disabled": true,
+    "Line": 25
+  },
+  {
+    "Key": "talents",
+    "Operator": "=",
+    "Value": "CEkAG5bbocFKcv+yIq8fPd6ORZmZGzMz2MmZmxMzwYmBAAAAAAMbGz2MMzgZGbz28AzMGjhlB2mFzYY2YMmZGDbAAAAAAAAMzgBAAAgB",
+    "Comment": "Saved Loadout: degen",
+    "Disabled": true,
+    "Line": 27
+  },
+  {
+    "Key": "talents",
+    "Operator": "=",
+    "Value": "CEkAG5bbocFKcv+yIq8fPd6ORZmZmZmZ2MmZmxMzwYmBAAAAAAMLPwY2mhZmZbMjtZbMDjhxyAbzmZMMbMGzMjhNAAAAAAAAmZwAAAAwA",
+    "Comment": "Saved Loadout: Raid Cleave",
+    "Disabled": true,
+    "Line": 29
+  },
+  {
+    "Key": "talents",
+    "Operator": "=",
+    "Value": "CEkAG5bbocFKcv+yIq8fPd6ORZmZmZmZ2mxMzMGzwYmBAAAAAAMLGz2MMzMbjZw2MzwYYsMz2MYYstxAzMzYGLAAAAAAAgZGgBAAAgB",
+    "Comment": "Saved Loadout: M+ AR",
+    "Disabled": true,
+    "Line": 31
+  },
+  {
+    "Key": "omnium_talents",
+    "Operator": "=",
+    "Value": "136819:1/136822:1",
+    "Comment": "",
+    "Disabled": false,
+    "Line": 33
+  },
+  {
+    "Key": "head",
+    "Operator": "=",
+    "Value": ",id=251109,enchant_id=8017,bonus_id=13440/6652/12667/13577/12699/12806",
+    "Comment": "Spellsnap Shadowmask (289)",
+    "Disabled": false,
+    "Line": 36
+  },
+  {
+    "Key": "neck",
+    "Operator": "=",
+    "Value": ",id=249626,gem_id=240908,bonus_id=6652/13668/12798,content_tuning=6015",
+    "Comment": "Nocturnal Thorncharm (276)",
+    "Disabled": false,
+    "Line": 38
+  },
+  {
+    "Key": "shoulder",
+    "Operator": "=",
+    "Value": ",id=250031,enchant_id=8001,bonus_id=42/13440/13340/13574/12806",
+    "Comment": "Devouring Reaver's Exhaustplates (289)",
+    "Disabled": false,
+    "Line": 40
+  },
+  {
+    "Key": "back",
+    "Operator": "=",
+    "Value": ",id=258575,bonus_id=13440/6652/13577/12699/12806",
+    "Comment": "Rigid Scale Greatcloak (289)",
+    "Disabled": false,
+    "Line": 42
+  },
+  {
+    "Key": "chest",
+    "Operator": "=",
+    "Value": ",id=250036,enchant_id=7987,bonus_id=13336/13440/6652/13575/12806",
+    "Comment": "Devouring Reaver's Engine (289)",
+    "Disabled": false,
+    "Line": 44
+  },
+  {
+    "Key": "wrist",
+    "Operator": "=",
+    "Value": ",id=244576,bonus_id=12214/13667/12497/12066/8960/12384/8791/13622/12667,content_tuning=3615,crafted_stats=32/36,crafting_quality=5",
+    "Comment": "Silvermoon Agent's Deflectors (285)",
+    "Disabled": false,
+    "Line": 46
+  },
+  {
+    "Key": "hands",
+    "Operator": "=",
+    "Value": ",id=250034,bonus_id=41/13440/13337/13574/12798",
+    "Comment": "Devouring Reaver's Essence Grips (276)",
+    "Disabled": false,
+    "Line": 48
+  },
+  {
+    "Key": "waist",
+    "Operator": "=",
+    "Value": ",id=244573,bonus_id=12214/13667/12497/12066/8960/12384/8791/13622/12667,content_tuning=3615,crafted_stats=49/32,crafting_quality=5",
+    "Comment": "Silvermoon Agent's Utility Belt (285)",
+    "Disabled": false,
+    "Line": 50
+  },
+  {
+    "Key": "legs",
+    "Operator": "=",
+    "Value": ",id=250032,enchant_id=8159,bonus_id=6652/13440/13339/13575/12804",
+    "Comment": "Devouring Reaver's Pistons (282)",
+    "Disabled": false,
+    "Line": 52
+  },
+  {
+    "Key": "feet",
+    "Operator": "=",
+    "Value": ",id=258577,enchant_id=7963,bonus_id=13440/6652/13577/12699/12806",
+    "Comment": "Boots of Burning Focus (289)",
+    "Disabled": false,
+    "Line": 54
+  },
+  {
+    "Key": "finger1",
+    "Operator": "=",
+    "Value": ",id=193708,enchant_id=7967,gem_id=240983,bonus_id=13440/40/13668/12699/12806",
+    "Comment": "Platinum Star Band (289)",
+    "Disabled": false,
+    "Line": 56
+  },
+  {
+    "Key": "finger2",
+    "Operator": "=",
+    "Value": ",id=240949,enchant_id=7967,gem_id=240908,bonus_id=12214/13667/12497/12066/8791/13622,content_tuning=3615,crafted_stats=36/49,crafting_quality=5",
+    "Comment": "Masterwork Sin'dorei Band (285)",
+    "Disabled": false,
+    "Line": 58
+  },
+  {
+    "Key": "trinket1",
+    "Operator": "=",
+    "Value": ",id=193701,bonus_id=13440/6652/12699/13654",
+    "Comment": "Algeth'ar Puzzle Box (298)",
+    "Disabled": false,
+    "Line": 60
+  },
+  {
+    "Key": "trinket2",
+    "Operator": "=",
+    "Value": ",id=249343,bonus_id=6652/13334/13653",
+    "Comment": "Gaze of the Alnseer (285)",
+    "Disabled": false,
+    "Line": 62
+  },
+  {
+    "Key": "main_hand",
+    "Operator": "=",
+    "Value": ",id=193717,enchant_id=7981,bonus_id=13440/6652/12701/13654",
+    "Comment": "Mystakria's Harvester (298)",
+    "Disabled": false,
+    "Line": 64
+  },
+  {
+    "Key": "off_hand",
+    "Operator": "=",
+    "Value": ",id=237840,enchant_id=7981,bonus_id=12214/13655/12497/12066/12715/8791/13622,content_tuning=3615,crafted_stats=49/40,crafting_quality=5",
+    "Comment": "Spellbreaker's Warglaive (295)",
+    "Disabled": false,
+    "Line": 66
+  },
+  {
+    "Key": "head",
+    "Operator": "=",
+    "Value": ",id=251109,bonus_id=12795/13440/6652/12667/13577/12699,content_tuning=1279",
+    "Comment": "Spellsnap Shadowmask (266)",
+    "Disabled": true,
+    "Line": 71
+  },
+  {
+    "Key": "head",
+    "Operator": "=",
+    "Value": ",id=251177,bonus_id=12795/13440/6652/12667/13577/12699,content_tuning=1279",
+    "Comment": "Fetid Vilecrown (266)",
+    "Disabled": true,
+    "Line": 74
+  },
+  {
+    "Key": "head",
+    "Operator": "=",
+    "Value": ",id=250033,enchant_id=8017,bonus_id=6652/12667/13440/13338/13575/12798",
+    "Comment": "Devouring Reaver's Intake (276)",
+    "Disabled": true,
+    "Line": 77
+  },
+  {
+    "Key": "head",
+    "Operator": "=",
+    "Value": ",id=249640,bonus_id=12786/6652/12667/13577,content_tuning=6015",
+    "Comment": "Osseoclad Saberteeth (250)",
+    "Disabled": true,
+    "Line": 80
+  },
+  {
+    "Key": "shoulder",
+    "Operator": "=",
+    "Value": ",id=250031,enchant_id=8001,bonus_id=6652/12798/13440/13340/13574/3161",
+    "Comment": "Devouring Reaver's Exhaustplates (276)",
+    "Disabled": true,
+    "Line": 83
+  },
+  {
+    "Key": "shoulder",
+    "Operator": "=",
+    "Value": ",id=258581,bonus_id=12795/13440/6652/13577/12699,content_tuning=1279",
+    "Comment": "Bloodfeather Mantle (266)",
+    "Disabled": true,
+    "Line": 86
+  },
+  {
+    "Key": "shoulder",
+    "Operator": "=",
+    "Value": ",id=250031,enchant_id=8001,bonus_id=13340/13440/6652/13574/12806",
+    "Comment": "Devouring Reaver's Exhaustplates (289)",
+    "Disabled": true,
+    "Line": 89
+  },
+  {
+    "Key": "shoulder",
+    "Operator": "=",
+    "Value": ",id=258581,bonus_id=12795/13440/6652/13577/12699,content_tuning=1279",
+    "Comment": "Bloodfeather Mantle (266)",
+    "Disabled": true,
+    "Line": 92
+  },
+  {
+    "Key": "shoulder",
+    "Operator": "=",
+    "Value": ",id=258581,bonus_id=12795/13440/43/13577/12699,content_tuning=1279",
+    "Comment": "Bloodfeather Mantle (266)",
+    "Disabled": true,
+    "Line": 95
+  },
+  {
+    "Key": "shoulder",
+    "Operator": "=",
+    "Value": ",id=249333,bonus_id=6652/13577/13334/12795,content_tuning=4240",
+    "Comment": "Blooming Barklight Spaulders (266)",
+    "Disabled": true,
+    "Line": 98
+  },
+  {
+    "Key": "back",
+    "Operator": "=",
+    "Value": ",id=193712,bonus_id=12795/13440/6652/13577/12699,content_tuning=1279",
+    "Comment": "Potion-Stained Cloak (266)",
+    "Disabled": true,
+    "Line": 101
+  },
+  {
+    "Key": "back",
+    "Operator": "=",
+    "Value": ",id=258575,bonus_id=13440/6652/13577/12699/12798,content_tuning=1279",
+    "Comment": "Rigid Scale Greatcloak (276)",
+    "Disabled": true,
+    "Line": 104
+  },
+  {
+    "Key": "back",
+    "Operator": "=",
+    "Value": ",id=251161,bonus_id=12801/13440/6652/13577/12699",
+    "Comment": "Shroud of the Soulhunter (272)",
+    "Disabled": true,
+    "Line": 107
+  },
+  {
+    "Key": "back",
+    "Operator": "=",
+    "Value": ",id=250028,bonus_id=6652/13440/12802",
+    "Comment": "Devouring Reaver's Drape (276)",
+    "Disabled": true,
+    "Line": 110
+  },
+  {
+    "Key": "back",
+    "Operator": "=",
+    "Value": ",id=193712,bonus_id=12795/13440/6652/13577/12699,content_tuning=1279",
+    "Comment": "Potion-Stained Cloak (266)",
+    "Disabled": true,
+    "Line": 113
+  },
+  {
+    "Key": "chest",
+    "Operator": "=",
+    "Value": ",id=250036,enchant_id=7987,bonus_id=6652/13440/13336/13575/12798",
+    "Comment": "Devouring Reaver's Engine (276)",
+    "Disabled": true,
+    "Line": 116
+  },
+  {
+    "Key": "chest",
+    "Operator": "=",
+    "Value": ",id=249637,bonus_id=12786/6652/13577,content_tuning=6015",
+    "Comment": "Osseoclad Marrowvest (250)",
+    "Disabled": true,
+    "Line": 119
+  },
+  {
+    "Key": "chest",
+    "Operator": "=",
+    "Value": ",id=258586,bonus_id=12795/13440/6652/13577/12699,content_tuning=1279",
+    "Comment": "Bloodfeather Chestguard (266)",
+    "Disabled": true,
+    "Line": 122
+  },
+  {
+    "Key": "wrist",
+    "Operator": "=",
+    "Value": ",id=250029,bonus_id=6652/12667/12801/13440/3157",
+    "Comment": "Devouring Reaver's Support Straps (272)",
+    "Disabled": true,
+    "Line": 125
+  },
+  {
+    "Key": "wrist",
+    "Operator": "=",
+    "Value": ",id=251103,bonus_id=13440/6652/12667/13577/12699/12794,content_tuning=1279",
+    "Comment": "Custodial Cuffs (263)",
+    "Disabled": true,
+    "Line": 128
+  },
+  {
+    "Key": "wrist",
+    "Operator": "=",
+    "Value": ",id=50264,bonus_id=12801/13440/6652/12667/13577/12699",
+    "Comment": "Chewed Leather Wristguards (272)",
+    "Disabled": true,
+    "Line": 131
+  },
+  {
+    "Key": "hands",
+    "Operator": "=",
+    "Value": ",id=249321,bonus_id=6652/13577/13334/12795",
+    "Comment": "Vaelgor's Fearsome Grasp (266)",
+    "Disabled": true,
+    "Line": 134
+  },
+  {
+    "Key": "hands",
+    "Operator": "=",
+    "Value": ",id=256979,bonus_id=12779/6652/13577,content_tuning=4240",
+    "Comment": "Verdant Tracker's Claws (240)",
+    "Disabled": true,
+    "Line": 137
+  },
+  {
+    "Key": "hands",
+    "Operator": "=",
+    "Value": ",id=250034,bonus_id=6652/12798/13337/13574/3161",
+    "Comment": "Devouring Reaver's Essence Grips (276)",
+    "Disabled": true,
+    "Line": 140
+  },
+  {
+    "Key": "hands",
+    "Operator": "=",
+    "Value": ",id=259927,bonus_id=12785/6652/13577,content_tuning=5236",
+    "Comment": "Preyseeker's Sleek Gauntlets (246)",
+    "Disabled": true,
+    "Line": 143
+  },
+  {
+    "Key": "waist",
+    "Operator": "=",
+    "Value": ",id=250030,bonus_id=13334/6652/12667/12798",
+    "Comment": "Devouring Reaver's Emblem (276)",
+    "Disabled": true,
+    "Line": 146
+  },
+  {
+    "Key": "legs",
+    "Operator": "=",
+    "Value": ",id=250032,enchant_id=8159,bonus_id=13339/6652/13575/12798",
+    "Comment": "Devouring Reaver's Pistons (276)",
+    "Disabled": true,
+    "Line": 149
+  },
+  {
+    "Key": "feet",
+    "Operator": "=",
+    "Value": ",id=250035,bonus_id=6652/12798",
+    "Comment": "Devouring Reaver's Soul Flatteners (276)",
+    "Disabled": true,
+    "Line": 152
+  },
+  {
+    "Key": "feet",
+    "Operator": "=",
+    "Value": ",id=260372,enchant_id=7963,bonus_id=6652/13577/13334/10844/12798,content_tuning=3606,crafted_stats=32/49",
+    "Comment": "Nullstrider's Boots (276)",
+    "Disabled": true,
+    "Line": 155
+  },
+  {
+    "Key": "finger1",
+    "Operator": "=",
+    "Value": ",id=193708,enchant_id=7967,gem_id=240983,bonus_id=13440/6652/13668/12699/12798",
+    "Comment": "Platinum Star Band (276)",
+    "Disabled": true,
+    "Line": 158
+  },
+  {
+    "Key": "trinket1",
+    "Operator": "=",
+    "Value": ",id=252957,bonus_id=12793/6652,content_tuning=6015",
+    "Comment": "Tangle of Vibrant Vines (259)",
+    "Disabled": true,
+    "Line": 161
+  },
+  {
+    "Key": "trinket1",
+    "Operator": "=",
+    "Value": ",id=251787,bonus_id=12793/6652,content_tuning=6015",
+    "Comment": "Sealed Chaos Urn (259)",
+    "Disabled": true,
+    "Line": 164
+  },
+  {
+    "Key": "trinket1",
+    "Operator": "=",
+    "Value": ",id=248583,bonus_id=13183/12785/42/6652,content_tuning=5236",
+    "Comment": "Drum of Renewed Bonds (246)",
+    "Disabled": true,
+    "Line": 167
+  },
+  {
+    "Key": "trinket1",
+    "Operator": "=",
+    "Value": ",id=251792,bonus_id=12793/6652,content_tuning=6015",
+    "Comment": "Glorious Crusader's Keepsake (259)",
+    "Disabled": true,
+    "Line": 170
+  },
+  {
+    "Key": "trinket1",
+    "Operator": "=",
+    "Value": ",id=264507,bonus_id=12790,content_tuning=4240",
+    "Comment": "Crucible of Erratic Energies (263)",
+    "Disabled": true,
+    "Line": 173
+  },
+  {
+    "Key": "trinket1",
+    "Operator": "=",
+    "Value": ",id=252420,bonus_id=13440/40/12699/12806",
+    "Comment": "Solarflare Prism (289)",
+    "Disabled": true,
+    "Line": 176
+  },
+  {
+    "Key": "trinket1",
+    "Operator": "=",
+    "Value": ",id=252420,bonus_id=12795/13440/6652/12699,content_tuning=1279",
+    "Comment": "Solarflare Prism (266)",
+    "Disabled": true,
+    "Line": 179
+  },
+  {
+    "Key": "trinket1",
+    "Operator": "=",
+    "Value": ",id=251783,bonus_id=6652/12794,content_tuning=6011",
+    "Comment": "Lost Idol of the Hash'ey (263)",
+    "Disabled": true,
+    "Line": 182
+  },
+  {
+    "Key": "trinket1",
+    "Operator": "=",
+    "Value": ",id=171646,bonus_id=8902/7756/12699/40/12798,content_tuning=806",
+    "Comment": "Matrix Restabilizer (276)",
+    "Disabled": true,
+    "Line": 185
+  },
+  {
+    "Key": "trinket1",
+    "Operator": "=",
+    "Value": ",id=251784,bonus_id=12786/41/6652,content_tuning=6015",
+    "Comment": "Sylvan Wakrapuku (250)",
+    "Disabled": true,
+    "Line": 188
+  },
+  {
+    "Key": "trinket1",
+    "Operator": "=",
+    "Value": ",id=193701,bonus_id=13440/6652/12699/12798,content_tuning=1279",
+    "Comment": "Algeth'ar Puzzle Box (276)",
+    "Disabled": true,
+    "Line": 191
+  },
+  {
+    "Key": "off_hand",
+    "Operator": "=",
+    "Value": ",id=249276,bonus_id=6652/13334/12794",
+    "Comment": "Grimoire of the Eternal Light (263)",
+    "Disabled": true,
+    "Line": 194
+  },
+  {
+    "Key": "catalyst_currencies",
+    "Operator": "=",
+    "Value": "3269:8/3378:4/2813:8/3116:8",
+    "Comment": "",
+    "Disabled": true,
+    "Line": 198
+  },
+  {
+    "Key": "upgrade_currencies",
+    "Operator": "=",
+    "Value": "c:1792:904/c:2122:7/c:3343:15/c:3347:7/c:3383:15/c:3345:10/c:3341:15/i:232875:4",
+    "Comment": "",
+    "Disabled": true,
+    "Line": 200
+  },
+  {
+    "Key": "slot_high_watermarks",
+    "Operator": "=",
+    "Value": "0:289:289/1:276:285/2:289:289/3:289:289/4:285:285/5:282:282/6:289:289/7:285:285/8:276:276/9:285:285/10:289:289/11:289:289/12:0:298/13:42:233/14:298:298/15:295:295/16:263:263",
+    "Comment": "",
+    "Disabled": true,
+    "Line": 202
+  },
+  {
+    "Key": "upgrade_achievements",
+    "Operator": "=",
+    "Value": "19326/19397/19398/19577/19578/40107/40115/40118/40942/40943/40944/40945/41886/41887/41888/41892/42767/42768/42769/42770/61809",
+    "Comment": "",
+    "Disabled": true,
+    "Line": 204
+  },
+  {
+    "Key": "desired_targets",
+    "Operator": "=",
+    "Value": "5",
+    "Comment": "fight configuration",
+    "Disabled": false,
+    "Line": 208
+  },
+  {
+    "Key": "max_time",
+    "Operator": "=",
+    "Value": "300",
+    "Comment": "",
+    "Disabled": false,
+    "Line": 209
+  },
+  {
+    "Key": "vary_combat_length",
+    "Operator": "=",
+    "Value": "0.1",
+    "Comment": "",
+    "Disabled": false,
+    "Line": 210
+  },
+  {
+    "Key": "report_details",
+    "Operator": "=",
+    "Value": "0",
+    "Comment": "",
+    "Disabled": false,
+    "Line": 211
+  },
+  {
+    "Key": "iterations",
+    "Operator": "=",
+    "Value": "100",
+    "Comment": "",
+    "Disabled": false,
+    "Line": 212
+  }
+]

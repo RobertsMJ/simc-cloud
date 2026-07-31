@@ -44,6 +44,7 @@ const (
 type Item struct {
 	Slot                ItemSlot  `json:"slot" simc:",key"`
 	SlotGroup           SlotGroup `json:"slot_group,omitempty" simc:"-"`
+	Name                *string   `json:"name,omitempty" simc:",value"`
 	ID                  int       `json:"id" simc:"id"`
 	EnchantID           IDList    `json:"enchant_id,omitempty" simc:"enchant_id,omitempty"`
 	BonusID             IDList    `json:"bonus_id,omitempty" simc:"bonus_id,omitempty"`

@@ -1,0 +1,212 @@
+# Kestdh - Havoc - 2026-07-22 19:18 - US/Illidan
+# SimC Addon 12.1.0-01
+# WoW 12.0.7.68453, TOC 120007
+# Requires SimulationCraft 1000-01 or newer
+
+demonhunter="Kestdh"
+level=90
+race=night_elf
+region=us
+server=illidan
+role=attack
+professions=herbalism=88/mining=84
+spec=havoc
+# loot_spec=havoc
+
+talents=CEkAG5bbocFKcv+yIq8fPd6ORZmZmZmZWmxMzMGzkxMDAAAAAAYWMmtZYmBmx2sNzMjxALDsNbmxwsopxMzYGbAAAADAABAzMYAIAAwA
+
+# Saved Loadout: M+
+# talents=CEkAG5bbocFKcv+yIq8fPd6ORZmZmZmZWmxMzMGzwYmBAAAAAAMLGz2MMzAzYb2mZmxYglB2mNzYYWYMmZGzYDAAAYAAAAMzgBAAAgB
+# Saved Loadout: Nully
+# talents=CEkAG5bbocFKcv+yIq8fPd6ORZmZGzMz2MmZmxYGGzMAAAAAAgZxMjxgBmx2sNzMzyYMsMw2sZGDzCjxMzMzYDAAAAAAAgZGMAAAAM
+# Saved Loadout: vael
+# talents=CEkAG5bbocFKcv+yIq8fPd6ORZmZmZmZ2MmZmZGzwYmBAAAAAAMbzYMDzM4Bmx2sNzMjxALDsNbmxwsxYMzMG2AAAAAAAAYmBDAAAAD
+# Saved Loadout: Raid
+# talents=CEkAG5bbocFKcv+yIq8fPd6ORZGMzMzmxMzMmZGGzMAAAAAAgZ5BGz2MMzMbzMjtZbegZYMMWGYbWMjhZjxYmZMsBAAAAAAAwMDGAAAAG
+# Saved Loadout: degen
+# talents=CEkAG5bbocFKcv+yIq8fPd6ORZmZGzMz2MmZmxMzwYmBAAAAAAMbGz2MMzgZGbz28AzMGjhlB2mFzYY2YMmZGDbAAAAAAAAMzgBAAAgB
+# Saved Loadout: Raid Cleave
+# talents=CEkAG5bbocFKcv+yIq8fPd6ORZmZmZmZ2MmZmxMzwYmBAAAAAAMLPwY2mhZmZbMjtZbMDjhxyAbzmZMMbMGzMjhNAAAAAAAAmZwAAAAwA
+# Saved Loadout: M+ AR
+# talents=CEkAG5bbocFKcv+yIq8fPd6ORZmZmZmZ2mxMzMGzwYmBAAAAAAMLGz2MMzMbjZw2MzwYYsMz2MYYstxAzMzYGLAAAAAAAgZGgBAAAgB
+
+omnium_talents=136819:1/136822:1
+
+# Spellsnap Shadowmask (289)
+head=,id=251109,enchant_id=8017,bonus_id=13440/6652/12667/13577/12699/12806
+# Nocturnal Thorncharm (276)
+neck=,id=249626,gem_id=240908,bonus_id=6652/13668/12798,content_tuning=6015
+# Devouring Reaver's Exhaustplates (289)
+shoulder=,id=250031,enchant_id=8001,bonus_id=42/13440/13340/13574/12806
+# Rigid Scale Greatcloak (289)
+back=,id=258575,bonus_id=13440/6652/13577/12699/12806
+# Devouring Reaver's Engine (289)
+chest=,id=250036,enchant_id=7987,bonus_id=13336/13440/6652/13575/12806
+# Silvermoon Agent's Deflectors (285)
+wrist=,id=244576,bonus_id=12214/13667/12497/12066/8960/12384/8791/13622/12667,content_tuning=3615,crafted_stats=32/36,crafting_quality=5
+# Devouring Reaver's Essence Grips (276)
+hands=,id=250034,bonus_id=41/13440/13337/13574/12798
+# Silvermoon Agent's Utility Belt (285)
+waist=,id=244573,bonus_id=12214/13667/12497/12066/8960/12384/8791/13622/12667,content_tuning=3615,crafted_stats=49/32,crafting_quality=5
+# Devouring Reaver's Pistons (282)
+legs=,id=250032,enchant_id=8159,bonus_id=6652/13440/13339/13575/12804
+# Boots of Burning Focus (289)
+feet=,id=258577,enchant_id=7963,bonus_id=13440/6652/13577/12699/12806
+# Platinum Star Band (289)
+finger1=,id=193708,enchant_id=7967,gem_id=240983,bonus_id=13440/40/13668/12699/12806
+# Masterwork Sin'dorei Band (285)
+finger2=,id=240949,enchant_id=7967,gem_id=240908,bonus_id=12214/13667/12497/12066/8791/13622,content_tuning=3615,crafted_stats=36/49,crafting_quality=5
+# Algeth'ar Puzzle Box (298)
+trinket1=,id=193701,bonus_id=13440/6652/12699/13654
+# Gaze of the Alnseer (285)
+trinket2=,id=249343,bonus_id=6652/13334/13653
+# Mystakria's Harvester (298)
+main_hand=,id=193717,enchant_id=7981,bonus_id=13440/6652/12701/13654
+# Spellbreaker's Warglaive (295)
+off_hand=,id=237840,enchant_id=7981,bonus_id=12214/13655/12497/12066/12715/8791/13622,content_tuning=3615,crafted_stats=49/40,crafting_quality=5
+
+### Gear from Bags
+#
+# Spellsnap Shadowmask (266)
+# head=,id=251109,bonus_id=12795/13440/6652/12667/13577/12699,content_tuning=1279
+#
+# Fetid Vilecrown (266)
+# head=,id=251177,bonus_id=12795/13440/6652/12667/13577/12699,content_tuning=1279
+#
+# Devouring Reaver's Intake (276)
+# head=,id=250033,enchant_id=8017,bonus_id=6652/12667/13440/13338/13575/12798
+#
+# Osseoclad Saberteeth (250)
+# head=,id=249640,bonus_id=12786/6652/12667/13577,content_tuning=6015
+#
+# Devouring Reaver's Exhaustplates (276)
+# shoulder=,id=250031,enchant_id=8001,bonus_id=6652/12798/13440/13340/13574/3161
+#
+# Bloodfeather Mantle (266)
+# shoulder=,id=258581,bonus_id=12795/13440/6652/13577/12699,content_tuning=1279
+#
+# Devouring Reaver's Exhaustplates (289)
+# shoulder=,id=250031,enchant_id=8001,bonus_id=13340/13440/6652/13574/12806
+#
+# Bloodfeather Mantle (266)
+# shoulder=,id=258581,bonus_id=12795/13440/6652/13577/12699,content_tuning=1279
+#
+# Bloodfeather Mantle (266)
+# shoulder=,id=258581,bonus_id=12795/13440/43/13577/12699,content_tuning=1279
+#
+# Blooming Barklight Spaulders (266)
+# shoulder=,id=249333,bonus_id=6652/13577/13334/12795,content_tuning=4240
+#
+# Potion-Stained Cloak (266)
+# back=,id=193712,bonus_id=12795/13440/6652/13577/12699,content_tuning=1279
+#
+# Rigid Scale Greatcloak (276)
+# back=,id=258575,bonus_id=13440/6652/13577/12699/12798,content_tuning=1279
+#
+# Shroud of the Soulhunter (272)
+# back=,id=251161,bonus_id=12801/13440/6652/13577/12699
+#
+# Devouring Reaver's Drape (276)
+# back=,id=250028,bonus_id=6652/13440/12802
+#
+# Potion-Stained Cloak (266)
+# back=,id=193712,bonus_id=12795/13440/6652/13577/12699,content_tuning=1279
+#
+# Devouring Reaver's Engine (276)
+# chest=,id=250036,enchant_id=7987,bonus_id=6652/13440/13336/13575/12798
+#
+# Osseoclad Marrowvest (250)
+# chest=,id=249637,bonus_id=12786/6652/13577,content_tuning=6015
+#
+# Bloodfeather Chestguard (266)
+# chest=,id=258586,bonus_id=12795/13440/6652/13577/12699,content_tuning=1279
+#
+# Devouring Reaver's Support Straps (272)
+# wrist=,id=250029,bonus_id=6652/12667/12801/13440/3157
+#
+# Custodial Cuffs (263)
+# wrist=,id=251103,bonus_id=13440/6652/12667/13577/12699/12794,content_tuning=1279
+#
+# Chewed Leather Wristguards (272)
+# wrist=,id=50264,bonus_id=12801/13440/6652/12667/13577/12699
+#
+# Vaelgor's Fearsome Grasp (266)
+# hands=,id=249321,bonus_id=6652/13577/13334/12795
+#
+# Verdant Tracker's Claws (240)
+# hands=,id=256979,bonus_id=12779/6652/13577,content_tuning=4240
+#
+# Devouring Reaver's Essence Grips (276)
+# hands=,id=250034,bonus_id=6652/12798/13337/13574/3161
+#
+# Preyseeker's Sleek Gauntlets (246)
+# hands=,id=259927,bonus_id=12785/6652/13577,content_tuning=5236
+#
+# Devouring Reaver's Emblem (276)
+# waist=,id=250030,bonus_id=13334/6652/12667/12798
+#
+# Devouring Reaver's Pistons (276)
+# legs=,id=250032,enchant_id=8159,bonus_id=13339/6652/13575/12798
+#
+# Devouring Reaver's Soul Flatteners (276)
+# feet=,id=250035,bonus_id=6652/12798
+#
+# Nullstrider's Boots (276)
+# feet=,id=260372,enchant_id=7963,bonus_id=6652/13577/13334/10844/12798,content_tuning=3606,crafted_stats=32/49
+#
+# Platinum Star Band (276)
+# finger1=,id=193708,enchant_id=7967,gem_id=240983,bonus_id=13440/6652/13668/12699/12798
+#
+# Tangle of Vibrant Vines (259)
+# trinket1=,id=252957,bonus_id=12793/6652,content_tuning=6015
+#
+# Sealed Chaos Urn (259)
+# trinket1=,id=251787,bonus_id=12793/6652,content_tuning=6015
+#
+# Drum of Renewed Bonds (246)
+# trinket1=,id=248583,bonus_id=13183/12785/42/6652,content_tuning=5236
+#
+# Glorious Crusader's Keepsake (259)
+# trinket1=,id=251792,bonus_id=12793/6652,content_tuning=6015
+#
+# Crucible of Erratic Energies (263)
+# trinket1=,id=264507,bonus_id=12790,content_tuning=4240
+#
+# Solarflare Prism (289)
+# trinket1=,id=252420,bonus_id=13440/40/12699/12806
+#
+# Solarflare Prism (266)
+# trinket1=,id=252420,bonus_id=12795/13440/6652/12699,content_tuning=1279
+#
+# Lost Idol of the Hash'ey (263)
+# trinket1=,id=251783,bonus_id=6652/12794,content_tuning=6011
+#
+# Matrix Restabilizer (276)
+# trinket1=,id=171646,bonus_id=8902/7756/12699/40/12798,content_tuning=806
+#
+# Sylvan Wakrapuku (250)
+# trinket1=,id=251784,bonus_id=12786/41/6652,content_tuning=6015
+#
+# Algeth'ar Puzzle Box (276)
+# trinket1=,id=193701,bonus_id=13440/6652/12699/12798,content_tuning=1279
+#
+# Grimoire of the Eternal Light (263)
+# off_hand=,id=249276,bonus_id=6652/13334/12794
+
+### Additional Character Info
+#
+# catalyst_currencies=3269:8/3378:4/2813:8/3116:8
+#
+# upgrade_currencies=c:1792:904/c:2122:7/c:3343:15/c:3347:7/c:3383:15/c:3345:10/c:3341:15/i:232875:4
+#
+# slot_high_watermarks=0:289:289/1:276:285/2:289:289/3:289:289/4:285:285/5:282:282/6:289:289/7:285:285/8:276:276/9:285:285/10:289:289/11:289:289/12:0:298/13:42:233/14:298:298/15:295:295/16:263:263
+#
+# upgrade_achievements=19326/19397/19398/19577/19578/40107/40115/40118/40942/40943/40944/40945/41886/41887/41888/41892/42767/42768/42769/42770/61809
+
+# Checksum: 7af45746
+# fight configuration
+desired_targets=5
+max_time=300
+vary_combat_length=0.1
+report_details=0
+iterations=100

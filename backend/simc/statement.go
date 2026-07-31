@@ -1,12 +1,16 @@
 package simc
 
+import (
+	"bufio"
+	"io"
+	"strings"
+)
+
 // TODO:MJR A simc document is simply a slice of statements
 // Where each statement is represented as a key-value pair with optional attributes and comments
 // The key is the value before the first =
 // The value is the value after the first =
 // The value may be empty, i.e. "foo="
-// Attrs are the comma-separated key-value pairs after the initial key-value pair
-// A comment may trail the statement, indicated by a # character
 
 // Parsing Rules:
 // A leading comment line followed by a statement line attaches that comment to the statement
@@ -23,14 +27,88 @@ package simc
 // 	# Devouring Reaver's Intake (276)
 //	# head=,id=250033,enchant_id=8017,bonus_id=6652/12667/13440/13338/13575/12798
 
-type Document []Statement
-type Statement struct {
-	Key     string
-	Value   string
-	Attrs   []Attr
-	Comment string
+type operator string
+
+const (
+	operatorAssign operator = "="
+	operatorAppend operator = "+="
+)
+
+type statement struct {
+	Key      string
+	Operator operator
+	Value    string
+	Comment  string
+	Disabled bool
+	Line     int
 }
-type Attr struct {
-	Key   string
-	Value string
+
+func newStatement(line string, lineNum int) (res statement) {
+	res.Line = lineNum
+
+	if strings.HasPrefix(line, "#") {
+		res.Disabled = true
+		line = strings.TrimLeft(line, "#")
+	}
+	line = strings.TrimSpace(line)
+
+	if strings.Contains(line, string(operatorAppend)) {
+		res.Operator = operatorAppend
+	} else if strings.Contains(line, string(operatorAssign)) {
+		res.Operator = operatorAssign
+	}
+
+	if res.Operator != "" {
+		key, value, found := strings.Cut(line, string(res.Operator))
+		if !found {
+			res.Value = line
+		} else {
+			res.Key = strings.TrimSpace(key)
+			res.Value = strings.TrimSpace(value)
+		}
+	} else {
+		res.Value = line
+	}
+	return res
+}
+
+func parse(r io.Reader) ([]statement, error) {
+	res := []statement{}
+
+	scanner := bufio.NewScanner(r)
+	lineNumber := 0
+	var detachedComment string
+	for scanner.Scan() {
+		if scanner.Err() != nil {
+			return []statement{}, scanner.Err()
+		}
+
+		line := strings.TrimSpace(scanner.Text())
+		lineNumber++
+		if line == "" {
+			detachedComment = ""
+			continue
+		}
+		if strings.HasPrefix(line, "#") {
+			// Skip empty comments
+			strippedComment := strings.TrimSpace(strings.TrimLeft(line, "#"))
+			if strippedComment == "" {
+				detachedComment = ""
+				continue
+			}
+
+			// Commented line with value, but not a statement
+			if !strings.Contains(line, "=") {
+				detachedComment = strippedComment
+				continue
+			}
+		}
+		stmt := newStatement(line, lineNumber)
+		if detachedComment != "" {
+			stmt.Comment = detachedComment
+		}
+		detachedComment = ""
+		res = append(res, stmt)
+	}
+	return res, nil
 }

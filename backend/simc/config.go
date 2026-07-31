@@ -1,5 +1,7 @@
 package simc
 
+import "fmt"
+
 type SimConfig struct {
 	DesiredTargets int
 	MaxTime        int
@@ -13,7 +15,13 @@ var (
 )
 
 func (sc SimConfig) MarshalSimcValue() (string, error) {
-	panic("not implemented")
+	return fmt.Sprintf(`
+desired_targets=%d
+max_time=%d
+report_details=%d
+iterations=%d
+`,
+		sc.DesiredTargets, sc.MaxTime, sc.ReportDetails, sc.Iterations), nil
 }
 
 func (sc SimConfig) UnmarshalSimcValue(value string) error {
