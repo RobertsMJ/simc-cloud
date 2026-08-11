@@ -79,6 +79,9 @@ func (sd *SimulationDocument) handleItem(statement statement) error {
 	if statement.Disabled {
 		sd.LoadoutOptions.Items = append(sd.LoadoutOptions.Items, item)
 	} else {
+		if sd.ActiveLoadout.Items == nil {
+			sd.ActiveLoadout.Items = make(map[ItemSlot]Item)
+		}
 		sd.ActiveLoadout.Items[item.Slot] = item
 	}
 	return nil
