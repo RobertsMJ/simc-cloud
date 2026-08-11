@@ -38,13 +38,19 @@ type statement struct {
 	Key      string
 	Operator operator
 	Value    string
+	RawSimc  string
 	Comment  string
 	Disabled bool
 	Line     int
 }
 
+type StatementUnmarshaler interface {
+	UnmarshalStatement(statement) error
+}
+
 func newStatement(line string, lineNum int) (res statement) {
 	res.Line = lineNum
+	res.RawSimc = line
 
 	if strings.HasPrefix(line, "#") {
 		res.Disabled = true

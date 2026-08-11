@@ -26,6 +26,43 @@ var (
 	_ ValueUnmarshaler = (*IDValue)(nil)
 )
 
+func (i *IDValue) UnmarshalStatement(s statement) error {
+	if s.Key != "omnium_talents" {
+		return ErrInvalidIDValueFormat
+	}
+	return i.UnmarshalSimcValue(s.Value)
+}
+
+func (i IDValue) MarshalSimcValue() (string, error) {
+	return fmt.Sprintf("%d:%d", i.ID, i.Value), nil
+}
+
+func (i *IDValue) UnmarshalSimcValue(value string) error {
+	k, v, found := strings.Cut(value, ":")
+	if !found {
+		return ErrInvalidIDValueFormat
+	}
+	id, err := strconv.Atoi(k)
+	if err != nil {
+		return fmt.Errorf("invalid ID in IDValue: %s", value)
+	}
+	val, err := strconv.Atoi(v)
+	if err != nil {
+		return fmt.Errorf("invalid Value in IDValue: %s", value)
+	}
+
+	i.ID = id
+	i.Value = val
+	return nil
+}
+
+func (i *IDValueList) UnmarshalStatement(s statement) error {
+	if s.Key != "omnium_talents" {
+		return ErrInvalidIDValueFormat
+	}
+	return i.UnmarshalSimcValue(s.Value)
+}
+
 func (i IDValueList) MarshalSimcValue() (string, error) {
 	res, err := lo.MapErr(i, func(idv IDValue, _ int) (string, error) {
 		return idv.MarshalSimcValue()
@@ -50,28 +87,5 @@ func (i *IDValueList) UnmarshalSimcValue(value string) error {
 		return err
 	}
 	*i = IDValueList(res)
-	return nil
-}
-
-func (i IDValue) MarshalSimcValue() (string, error) {
-	return fmt.Sprintf("%d:%d", i.ID, i.Value), nil
-}
-
-func (i *IDValue) UnmarshalSimcValue(value string) error {
-	k, v, found := strings.Cut(value, ":")
-	if !found {
-		return ErrInvalidIDValueFormat
-	}
-	id, err := strconv.Atoi(k)
-	if err != nil {
-		return fmt.Errorf("invalid ID in IDValue: %s", value)
-	}
-	val, err := strconv.Atoi(v)
-	if err != nil {
-		return fmt.Errorf("invalid Value in IDValue: %s", value)
-	}
-
-	i.ID = id
-	i.Value = val
 	return nil
 }

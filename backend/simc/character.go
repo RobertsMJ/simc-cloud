@@ -3,18 +3,32 @@ package simc
 type WowClass string
 
 const (
-	WowClassDH WowClass = "demonhunter"
+	WowClassDK      WowClass = "deathknight"
+	WowClassDH      WowClass = "demonhunter"
+	WowClassDruid   WowClass = "druid"
+	WowClassEvoker  WowClass = "evoker"
+	WowClassHunter  WowClass = "hunter"
+	WowClassMage    WowClass = "mage"
+	WowClassMonk    WowClass = "monk"
+	WowClassPaladin WowClass = "paladin"
+	WowClassPriest  WowClass = "priest"
+	WowClassRogue   WowClass = "rogue"
+	WowClassShaman  WowClass = "shaman"
+	WowClassWarlock WowClass = "warlock"
+	WowClassWarrior WowClass = "warrior"
 )
 
+type nameClass struct {
+	key  WowClass
+	name string
+}
+
 type Character struct {
-	Name        string      `json:"name"`
-	Class       WowClass    `json:"class"`
-	Level       int         `json:"level"`
-	Race        string      `json:"race"`
-	Server      string      `json:"server"`
-	Role        string      `json:"role"`
-	Professions Professions `json:"professions"`
-	Spec        string      `json:"spec"`
+	Name  string   `json:"name"`
+	Class WowClass `json:"class"`
+	Level int      `json:"level"`
+	Role  string   `json:"role"`
+	Spec  string   `json:"spec"`
 }
 
 var (

@@ -3,16 +3,14 @@ package models
 import "github.com/RobertsMJ/simc-cloud-backend/simc"
 
 type CreateJobRequest struct {
-	Character simc.Character
-	Baseline  simc.Loadout
-	Options   simc.LoadoutOptions
-	Config    simc.SimConfig // TODO:MJR How should I handle this?
+	Character simc.Character      `json:"character"`
+	Baseline  simc.Loadout        `json:"baseline"`
+	Options   simc.LoadoutOptions `json:"options"`
 }
 
 type CreateJobResponse struct {
-	ID     string         `json:"id"`
-	Status Status         `json:"status"`
-	Config simc.SimConfig `json:"config"`
+	ID     string `json:"id"`
+	Status Status `json:"status"`
 }
 
 type Status string
@@ -24,11 +22,10 @@ const (
 )
 
 type Job struct {
-	ID             string         `json:"id"`
-	Status         Status         `json:"status"`
-	Config         simc.SimConfig `json:"config"`
-	TotalCount     int            `json:"total_count"`
-	CompletedCount int            `json:"completed_count"`
-	FailedCount    int            `json:"failed_count"`
-	CreatedAt      string         `json:"created_at"`
+	ID             string `json:"id"`
+	Status         Status `json:"status"`
+	TotalCount     int    `json:"total_count"`
+	CompletedCount int    `json:"completed_count"`
+	FailedCount    int    `json:"failed_count"`
+	CreatedAt      string `json:"created_at"`
 }

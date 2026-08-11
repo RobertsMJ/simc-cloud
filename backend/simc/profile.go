@@ -1,16 +1,14 @@
 package simc
 
-import "fmt"
+import "strings"
 
 type Profile struct {
 	Character Character `json:"character"`
 	Loadout   Loadout   `json:"loadout"`
-	Config    SimConfig `json:"config"`
 }
 
 var (
-	_ ValueMarshaler   = Profile{}
-	_ ValueUnmarshaler = (*Profile)(nil)
+	_ ValueMarshaler = Profile{}
 )
 
 func (p Profile) MarshalSimcValue() (string, error) {
@@ -22,17 +20,5 @@ func (p Profile) MarshalSimcValue() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	cfg, err := p.Config.MarshalSimcValue()
-	if err != nil {
-		return "", err
-	}
-	return fmt.Sprintf(`
-%s
-%s
-%s
-	`, character, loadout, cfg), nil
-}
-
-func (p Profile) UnmarshalSimcValue(value string) error {
-	panic("not implemented")
+	return strings.Join([]string{character, loadout}, "\n"), nil
 }
