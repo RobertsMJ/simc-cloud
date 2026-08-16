@@ -3,8 +3,10 @@ package simc
 import (
 	"bytes"
 	"os"
+	"path/filepath"
 	"testing"
 
+	"github.com/RobertsMJ/simc-cloud-backend/internal/test"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -24,5 +26,10 @@ func (s *SimcTestSuite) TestNewSimulationDocument() {
 	res, err := NewSimulationDocument(bytes.NewReader(input))
 	s.NoError(err)
 	s.NotNil(res)
+
+	path, err := filepath.Abs("fixtures/test_dh_sim_doc.json")
+	s.NoError(err)
+	expected := test.GoldenValue(s.T(), path, res)
+	s.Equal(res, expected)
 
 }

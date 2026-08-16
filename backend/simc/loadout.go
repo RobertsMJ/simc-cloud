@@ -23,8 +23,8 @@ var (
 	_ ValueUnmarshaler = (*LoadoutOptions)(nil)
 )
 
-func (l Loadout) UnmarshalStatement(s statement) error {
-	if s.Key == "talent" {
+func (l *Loadout) UnmarshalStatement(s statement) error {
+	if s.Key == "talents" {
 		return l.Talent.UnmarshalStatement(s)
 	}
 	if s.Key == "omnium_talents" {
@@ -53,7 +53,7 @@ func (l Loadout) UnmarshalSimcValue(value string) error {
 }
 
 func (lo *LoadoutOptions) UnmarshalStatement(s statement) error {
-	if s.Key == "talent" {
+	if s.Key == "talents" {
 		var talent Talent
 		if err := talent.UnmarshalStatement(s); err != nil {
 			return err

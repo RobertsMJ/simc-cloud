@@ -1,17 +1,14 @@
 package simc
 
 import (
-	"encoding/json"
-	"flag"
-	"io"
 	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 
+	"github.com/RobertsMJ/simc-cloud-backend/internal/test"
 	"github.com/stretchr/testify/suite"
 )
-
-var update = flag.Bool("update", false, "update expected test results")
 
 type StatementTestSuite struct {
 	suite.Suite
@@ -29,40 +26,8 @@ func (s *StatementTestSuite) TestParse() {
 	res, err := parse(strings.NewReader(string(input)))
 	s.NoError(err)
 
-	expected := s.goldenValue("test_dh_statements", res)
+	path, err := filepath.Abs("./fixtures/test_dh_statements.json")
+	s.NoError(err)
+	expected := test.GoldenValue(s.T(), path, res)
 	s.ElementsMatch(res, expected)
-}
-
-func (s *StatementTestSuite) goldenValue(filename string, actual []statement) []statement {
-	s.T().Helper()
-
-	path := "fixtures/" + filename + ".json"
-	f, err := os.OpenFile(path, os.O_RDWR, 0644)
-	if err != nil {
-		s.T().Fatal("could not open golden file")
-	}
-	defer f.Close()
-
-	if *update {
-		js, err := json.MarshalIndent(actual, "", "  ")
-		if err != nil {
-			s.T().Fatal("could not marshal golden dataset")
-		}
-		_, err = f.Write(js)
-		if err != nil {
-			s.T().Fatal("could not write golden file")
-		}
-		return actual
-	}
-
-	content, err := io.ReadAll(f)
-	if err != nil {
-		s.T().Fatal("could not read golden file")
-	}
-	var expected []statement
-	err = json.Unmarshal(content, &expected)
-	if err != nil {
-		s.T().Fatal("could not unmarshal golden dataset")
-	}
-	return expected
 }

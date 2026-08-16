@@ -23,12 +23,12 @@ var (
 )
 
 func (t *Talent) UnmarshalStatement(s statement) error {
-	if s.Key != "talent" {
+	if s.Key != "talents" {
 		return ErrInvalidTalentStatement
 	}
 
 	t.Name = strings.TrimPrefix(s.Comment, "Saved Loadout: ")
-	t.Value = s.RawSimc
+	t.Value = s.Value
 	return nil
 }
 

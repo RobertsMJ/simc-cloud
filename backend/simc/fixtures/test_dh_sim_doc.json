@@ -1,0 +1,824 @@
+{
+  "Character": {
+    "level": 0,
+    "role": "",
+    "spec": ""
+  },
+  "ActiveLoadout": {
+    "Talent": {
+      "Name": "",
+      "Value": "CEkAG5bbocFKcv+yIq8fPd6ORZmZmZmZWmxMzMGzkxMDAAAAAAYWMmtZYmBmx2sNzMjxALDsNbmxwsopxMzYGbAAAADAABAzMYAIAAwA"
+    },
+    "Items": {
+      "back": {
+        "slot": "back",
+        "id": 0,
+        "bonus_id": [
+          13440,
+          6652,
+          13577,
+          12699,
+          12806
+        ]
+      },
+      "chest": {
+        "slot": "chest",
+        "id": 0,
+        "enchant_id": [
+          7987
+        ],
+        "bonus_id": [
+          13336,
+          13440,
+          6652,
+          13575,
+          12806
+        ]
+      },
+      "feet": {
+        "slot": "feet",
+        "id": 0,
+        "enchant_id": [
+          7963
+        ],
+        "bonus_id": [
+          13440,
+          6652,
+          13577,
+          12699,
+          12806
+        ]
+      },
+      "finger1": {
+        "slot": "finger1",
+        "id": 0,
+        "enchant_id": [
+          7967
+        ],
+        "bonus_id": [
+          13440,
+          40,
+          13668,
+          12699,
+          12806
+        ],
+        "gem_id": [
+          240983
+        ]
+      },
+      "finger2": {
+        "slot": "finger2",
+        "id": 0,
+        "enchant_id": [
+          7967
+        ],
+        "bonus_id": [
+          12214,
+          13667,
+          12497,
+          12066,
+          8791,
+          13622
+        ],
+        "gem_id": [
+          240908
+        ],
+        "crafted_stats": [
+          36,
+          49
+        ]
+      },
+      "hands": {
+        "slot": "hands",
+        "id": 0,
+        "bonus_id": [
+          41,
+          13440,
+          13337,
+          13574,
+          12798
+        ]
+      },
+      "head": {
+        "slot": "head",
+        "id": 0,
+        "enchant_id": [
+          8017
+        ],
+        "bonus_id": [
+          13440,
+          6652,
+          12667,
+          13577,
+          12699,
+          12806
+        ]
+      },
+      "legs": {
+        "slot": "legs",
+        "id": 0,
+        "enchant_id": [
+          8159
+        ],
+        "bonus_id": [
+          6652,
+          13440,
+          13339,
+          13575,
+          12804
+        ]
+      },
+      "main_hand": {
+        "slot": "main_hand",
+        "id": 0,
+        "enchant_id": [
+          7981
+        ],
+        "bonus_id": [
+          13440,
+          6652,
+          12701,
+          13654
+        ]
+      },
+      "neck": {
+        "slot": "neck",
+        "id": 0,
+        "bonus_id": [
+          6652,
+          13668,
+          12798
+        ],
+        "gem_id": [
+          240908
+        ]
+      },
+      "off_hand": {
+        "slot": "off_hand",
+        "id": 0,
+        "enchant_id": [
+          7981
+        ],
+        "bonus_id": [
+          12214,
+          13655,
+          12497,
+          12066,
+          12715,
+          8791,
+          13622
+        ],
+        "crafted_stats": [
+          49,
+          40
+        ]
+      },
+      "shoulder": {
+        "slot": "shoulder",
+        "id": 0,
+        "enchant_id": [
+          8001
+        ],
+        "bonus_id": [
+          42,
+          13440,
+          13340,
+          13574,
+          12806
+        ]
+      },
+      "trinket1": {
+        "slot": "trinket1",
+        "id": 0,
+        "bonus_id": [
+          13440,
+          6652,
+          12699,
+          13654
+        ]
+      },
+      "trinket2": {
+        "slot": "trinket2",
+        "id": 0,
+        "bonus_id": [
+          6652,
+          13334,
+          13653
+        ]
+      },
+      "waist": {
+        "slot": "waist",
+        "id": 0,
+        "bonus_id": [
+          12214,
+          13667,
+          12497,
+          12066,
+          8960,
+          12384,
+          8791,
+          13622,
+          12667
+        ],
+        "crafted_stats": [
+          49,
+          32
+        ]
+      },
+      "wrist": {
+        "slot": "wrist",
+        "id": 0,
+        "bonus_id": [
+          12214,
+          13667,
+          12497,
+          12066,
+          8960,
+          12384,
+          8791,
+          13622,
+          12667
+        ],
+        "crafted_stats": [
+          32,
+          36
+        ]
+      }
+    },
+    "OmniumTalents": [
+      {
+        "ID": 136819,
+        "Value": 1
+      },
+      {
+        "ID": 136822,
+        "Value": 1
+      }
+    ]
+  },
+  "LoadoutOptions": {
+    "Talents": [
+      {
+        "Name": "M+",
+        "Value": "CEkAG5bbocFKcv+yIq8fPd6ORZmZmZmZWmxMzMGzwYmBAAAAAAMLGz2MMzAzYb2mZmxYglB2mNzYYWYMmZGzYDAAAYAAAAMzgBAAAgB"
+      },
+      {
+        "Name": "Nully",
+        "Value": "CEkAG5bbocFKcv+yIq8fPd6ORZmZGzMz2MmZmxYGGzMAAAAAAgZxMjxgBmx2sNzMzyYMsMw2sZGDzCjxMzMzYDAAAAAAAgZGMAAAAM"
+      },
+      {
+        "Name": "vael",
+        "Value": "CEkAG5bbocFKcv+yIq8fPd6ORZmZmZmZ2MmZmZGzwYmBAAAAAAMbzYMDzM4Bmx2sNzMjxALDsNbmxwsxYMzMG2AAAAAAAAYmBDAAAAD"
+      },
+      {
+        "Name": "Raid",
+        "Value": "CEkAG5bbocFKcv+yIq8fPd6ORZGMzMzmxMzMmZGGzMAAAAAAgZ5BGz2MMzMbzMjtZbegZYMMWGYbWMjhZjxYmZMsBAAAAAAAwMDGAAAAG"
+      },
+      {
+        "Name": "degen",
+        "Value": "CEkAG5bbocFKcv+yIq8fPd6ORZmZGzMz2MmZmxMzwYmBAAAAAAMbGz2MMzgZGbz28AzMGjhlB2mFzYY2YMmZGDbAAAAAAAAMzgBAAAgB"
+      },
+      {
+        "Name": "Raid Cleave",
+        "Value": "CEkAG5bbocFKcv+yIq8fPd6ORZmZmZmZ2MmZmxMzwYmBAAAAAAMLPwY2mhZmZbMjtZbMDjhxyAbzmZMMbMGzMjhNAAAAAAAAmZwAAAAwA"
+      },
+      {
+        "Name": "M+ AR",
+        "Value": "CEkAG5bbocFKcv+yIq8fPd6ORZmZmZmZ2mxMzMGzwYmBAAAAAAMLGz2MMzMbjZw2MzwYYsMz2MYYstxAzMzYGLAAAAAAAgZGgBAAAgB"
+      }
+    ],
+    "Items": [
+      {
+        "slot": "head",
+        "id": 0,
+        "bonus_id": [
+          12795,
+          13440,
+          6652,
+          12667,
+          13577,
+          12699
+        ]
+      },
+      {
+        "slot": "head",
+        "id": 0,
+        "bonus_id": [
+          12795,
+          13440,
+          6652,
+          12667,
+          13577,
+          12699
+        ]
+      },
+      {
+        "slot": "head",
+        "id": 0,
+        "enchant_id": [
+          8017
+        ],
+        "bonus_id": [
+          6652,
+          12667,
+          13440,
+          13338,
+          13575,
+          12798
+        ]
+      },
+      {
+        "slot": "head",
+        "id": 0,
+        "bonus_id": [
+          12786,
+          6652,
+          12667,
+          13577
+        ]
+      },
+      {
+        "slot": "shoulder",
+        "id": 0,
+        "enchant_id": [
+          8001
+        ],
+        "bonus_id": [
+          6652,
+          12798,
+          13440,
+          13340,
+          13574,
+          3161
+        ]
+      },
+      {
+        "slot": "shoulder",
+        "id": 0,
+        "bonus_id": [
+          12795,
+          13440,
+          6652,
+          13577,
+          12699
+        ]
+      },
+      {
+        "slot": "shoulder",
+        "id": 0,
+        "enchant_id": [
+          8001
+        ],
+        "bonus_id": [
+          13340,
+          13440,
+          6652,
+          13574,
+          12806
+        ]
+      },
+      {
+        "slot": "shoulder",
+        "id": 0,
+        "bonus_id": [
+          12795,
+          13440,
+          6652,
+          13577,
+          12699
+        ]
+      },
+      {
+        "slot": "shoulder",
+        "id": 0,
+        "bonus_id": [
+          12795,
+          13440,
+          43,
+          13577,
+          12699
+        ]
+      },
+      {
+        "slot": "shoulder",
+        "id": 0,
+        "bonus_id": [
+          6652,
+          13577,
+          13334,
+          12795
+        ]
+      },
+      {
+        "slot": "back",
+        "id": 0,
+        "bonus_id": [
+          12795,
+          13440,
+          6652,
+          13577,
+          12699
+        ]
+      },
+      {
+        "slot": "back",
+        "id": 0,
+        "bonus_id": [
+          13440,
+          6652,
+          13577,
+          12699,
+          12798
+        ]
+      },
+      {
+        "slot": "back",
+        "id": 0,
+        "bonus_id": [
+          12801,
+          13440,
+          6652,
+          13577,
+          12699
+        ]
+      },
+      {
+        "slot": "back",
+        "id": 0,
+        "bonus_id": [
+          6652,
+          13440,
+          12802
+        ]
+      },
+      {
+        "slot": "back",
+        "id": 0,
+        "bonus_id": [
+          12795,
+          13440,
+          6652,
+          13577,
+          12699
+        ]
+      },
+      {
+        "slot": "chest",
+        "id": 0,
+        "enchant_id": [
+          7987
+        ],
+        "bonus_id": [
+          6652,
+          13440,
+          13336,
+          13575,
+          12798
+        ]
+      },
+      {
+        "slot": "chest",
+        "id": 0,
+        "bonus_id": [
+          12786,
+          6652,
+          13577
+        ]
+      },
+      {
+        "slot": "chest",
+        "id": 0,
+        "bonus_id": [
+          12795,
+          13440,
+          6652,
+          13577,
+          12699
+        ]
+      },
+      {
+        "slot": "wrist",
+        "id": 0,
+        "bonus_id": [
+          6652,
+          12667,
+          12801,
+          13440,
+          3157
+        ]
+      },
+      {
+        "slot": "wrist",
+        "id": 0,
+        "bonus_id": [
+          13440,
+          6652,
+          12667,
+          13577,
+          12699,
+          12794
+        ]
+      },
+      {
+        "slot": "wrist",
+        "id": 0,
+        "bonus_id": [
+          12801,
+          13440,
+          6652,
+          12667,
+          13577,
+          12699
+        ]
+      },
+      {
+        "slot": "hands",
+        "id": 0,
+        "bonus_id": [
+          6652,
+          13577,
+          13334,
+          12795
+        ]
+      },
+      {
+        "slot": "hands",
+        "id": 0,
+        "bonus_id": [
+          12779,
+          6652,
+          13577
+        ]
+      },
+      {
+        "slot": "hands",
+        "id": 0,
+        "bonus_id": [
+          6652,
+          12798,
+          13337,
+          13574,
+          3161
+        ]
+      },
+      {
+        "slot": "hands",
+        "id": 0,
+        "bonus_id": [
+          12785,
+          6652,
+          13577
+        ]
+      },
+      {
+        "slot": "waist",
+        "id": 0,
+        "bonus_id": [
+          13334,
+          6652,
+          12667,
+          12798
+        ]
+      },
+      {
+        "slot": "legs",
+        "id": 0,
+        "enchant_id": [
+          8159
+        ],
+        "bonus_id": [
+          13339,
+          6652,
+          13575,
+          12798
+        ]
+      },
+      {
+        "slot": "feet",
+        "id": 0,
+        "bonus_id": [
+          6652,
+          12798
+        ]
+      },
+      {
+        "slot": "feet",
+        "id": 0,
+        "enchant_id": [
+          7963
+        ],
+        "bonus_id": [
+          6652,
+          13577,
+          13334,
+          10844,
+          12798
+        ],
+        "crafted_stats": [
+          32,
+          49
+        ]
+      },
+      {
+        "slot": "finger1",
+        "id": 0,
+        "enchant_id": [
+          7967
+        ],
+        "bonus_id": [
+          13440,
+          6652,
+          13668,
+          12699,
+          12798
+        ],
+        "gem_id": [
+          240983
+        ]
+      },
+      {
+        "slot": "trinket1",
+        "id": 0,
+        "bonus_id": [
+          12793,
+          6652
+        ]
+      },
+      {
+        "slot": "trinket1",
+        "id": 0,
+        "bonus_id": [
+          12793,
+          6652
+        ]
+      },
+      {
+        "slot": "trinket1",
+        "id": 0,
+        "bonus_id": [
+          13183,
+          12785,
+          42,
+          6652
+        ]
+      },
+      {
+        "slot": "trinket1",
+        "id": 0,
+        "bonus_id": [
+          12793,
+          6652
+        ]
+      },
+      {
+        "slot": "trinket1",
+        "id": 0,
+        "bonus_id": [
+          12790
+        ]
+      },
+      {
+        "slot": "trinket1",
+        "id": 0,
+        "bonus_id": [
+          13440,
+          40,
+          12699,
+          12806
+        ]
+      },
+      {
+        "slot": "trinket1",
+        "id": 0,
+        "bonus_id": [
+          12795,
+          13440,
+          6652,
+          12699
+        ]
+      },
+      {
+        "slot": "trinket1",
+        "id": 0,
+        "bonus_id": [
+          6652,
+          12794
+        ]
+      },
+      {
+        "slot": "trinket1",
+        "id": 0,
+        "bonus_id": [
+          8902,
+          7756,
+          12699,
+          40,
+          12798
+        ]
+      },
+      {
+        "slot": "trinket1",
+        "id": 0,
+        "bonus_id": [
+          12786,
+          41,
+          6652
+        ]
+      },
+      {
+        "slot": "trinket1",
+        "id": 0,
+        "bonus_id": [
+          13440,
+          6652,
+          12699,
+          12798
+        ]
+      },
+      {
+        "slot": "off_hand",
+        "id": 0,
+        "bonus_id": [
+          6652,
+          13334,
+          12794
+        ]
+      }
+    ],
+    "OmniumTalents": null
+  },
+  "Extra": [
+    {
+      "Key": "demonhunter",
+      "Value": "\"Kestdh\""
+    },
+    {
+      "Key": "level",
+      "Value": "90"
+    },
+    {
+      "Key": "race",
+      "Value": "night_elf"
+    },
+    {
+      "Key": "region",
+      "Value": "us"
+    },
+    {
+      "Key": "server",
+      "Value": "illidan"
+    },
+    {
+      "Key": "role",
+      "Value": "attack"
+    },
+    {
+      "Key": "professions",
+      "Value": "herbalism=88/mining=84"
+    },
+    {
+      "Key": "spec",
+      "Value": "havoc"
+    },
+    {
+      "Key": "loot_spec",
+      "Value": "havoc"
+    },
+    {
+      "Key": "catalyst_currencies",
+      "Value": "3269:8/3378:4/2813:8/3116:8"
+    },
+    {
+      "Key": "upgrade_currencies",
+      "Value": "c:1792:904/c:2122:7/c:3343:15/c:3347:7/c:3383:15/c:3345:10/c:3341:15/i:232875:4"
+    },
+    {
+      "Key": "slot_high_watermarks",
+      "Value": "0:289:289/1:276:285/2:289:289/3:289:289/4:285:285/5:282:282/6:289:289/7:285:285/8:276:276/9:285:285/10:289:289/11:289:289/12:0:298/13:42:233/14:298:298/15:295:295/16:263:263"
+    },
+    {
+      "Key": "upgrade_achievements",
+      "Value": "19326/19397/19398/19577/19578/40107/40115/40118/40942/40943/40944/40945/41886/41887/41888/41892/42767/42768/42769/42770/61809"
+    },
+    {
+      "Key": "desired_targets",
+      "Value": "5"
+    },
+    {
+      "Key": "max_time",
+      "Value": "300"
+    },
+    {
+      "Key": "vary_combat_length",
+      "Value": "0.1"
+    },
+    {
+      "Key": "report_details",
+      "Value": "0"
+    },
+    {
+      "Key": "iterations",
+      "Value": "100"
+    }
+  ]
+}

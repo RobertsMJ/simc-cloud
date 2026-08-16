@@ -3,6 +3,7 @@ package simc
 import (
 	"errors"
 	"io"
+	"log/slog"
 	"reflect"
 	"strings"
 	"sync"
@@ -19,6 +20,7 @@ type ValueMarshaler interface{ MarshalSimcValue() (string, error) }
 type ValueUnmarshaler interface{ UnmarshalSimcValue(string) error }
 
 type SimulationDocument struct {
+	Character      Character
 	ActiveLoadout  Loadout
 	LoadoutOptions LoadoutOptions
 	Extra          []Parameter
@@ -44,18 +46,29 @@ func NewSimulationDocument(doc io.Reader) (sd SimulationDocument, err error) {
 	}
 
 	for _, statement := range statements {
-		if statement.Key == "talent" {
+		if statement.Key == "talents" {
 			if err = sd.handleTalent(statement); err != nil {
+				slog.Error("could not handle talent statement", "err", err, "statement", statement)
 				return sd, err
 			}
 		} else if _, ok := ItemSlotFromString(statement.Key); ok {
 			if err = sd.handleItem(statement); err != nil {
+				slog.Error("could not handle item statement", "err", err, "statement", statement)
 				return sd, err
 			}
 		} else if statement.Key == "omnium_talents" {
 			if err = sd.handleOmniumTalents(statement); err != nil {
+				slog.Error("could not handle omnium talents", "err", err, "statement", statement)
 				return sd, err
 			}
+		} else {
+			if sd.Extra == nil {
+				sd.Extra = []Parameter{}
+			}
+			sd.Extra = append(sd.Extra, Parameter{
+				Key:   statement.Key,
+				Value: statement.Value,
+			})
 		}
 	}
 
@@ -105,7 +118,14 @@ func Marshal(doc *SimulationDocument) (io.Reader, error) {
 	panic("not implemented")
 }
 
-// var index = sync.OnceValue[map[reflect.Type]reflect.]]
+// TODO:MJR think about this. pre-initialize the reflection index for the known types?
+// var index = sync.OnceValue(func() map[reflect.Type]map[string]int {
+// 	types := []reflect.Type{
+// 		reflect.TypeFor[Character](),
+// 		reflect.TypeFor[Item](),
+// 	}
+// 	return make(map[reflect.Type]map[string]int)
+// })
 
 type simcTag struct {
 	Key   string
@@ -181,8 +201,7 @@ func UnmarshalStatement(s statement, val any) error {
 	// Handle the key/value special case
 	if keyIdx, ok := indices[keyField]; ok {
 		field := reflect.ValueOf(val).Elem().Field(keyIdx)
-		err := assignToField(field, s.Key)
-		if err != nil {
+		if err := assignToField(field, s.Key); err != nil {
 			return err
 		}
 	}
@@ -199,8 +218,7 @@ func UnmarshalStatement(s statement, val any) error {
 			attrs = attrs[1:]
 
 			field := reflect.ValueOf(val).Elem().Field(valueIdx)
-			err := assignToField(field, attrVal)
-			if err != nil {
+			if err := assignToField(field, attrVal); err != nil {
 				return err
 			}
 		}

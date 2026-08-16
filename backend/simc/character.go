@@ -19,16 +19,15 @@ const (
 )
 
 type nameClass struct {
-	key  WowClass
-	name string
+	class WowClass `simc:",key"`
+	name  string   `simc:",value"`
 }
 
 type Character struct {
-	Name  string   `json:"name"`
-	Class WowClass `json:"class"`
-	Level int      `json:"level"`
-	Role  string   `json:"role"`
-	Spec  string   `json:"spec"`
+	nameClass
+	Level int    `json:"level" simc:"level"`
+	Role  string `json:"role" simc:"role"`
+	Spec  string `json:"spec" simc:"spec"`
 }
 
 var (
