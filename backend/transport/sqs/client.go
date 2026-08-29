@@ -4,7 +4,7 @@ import (
 	"context"
 	"log/slog"
 
-	"github.com/RobertsMJ/simc-cloud-backend/config"
+	"github.com/RobertsMJ/simc-cloud/backend/config"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
 )

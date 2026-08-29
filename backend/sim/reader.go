@@ -3,7 +3,7 @@ package sim
 import (
 	"context"
 
-	"github.com/RobertsMJ/simc-cloud-backend/models"
+	"github.com/RobertsMJ/simc-cloud/backend/models"
 )
 
 type Reader interface {

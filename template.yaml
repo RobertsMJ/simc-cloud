@@ -92,8 +92,8 @@ Resources:
             Method: post
     Metadata:
       DockerTag: create-job
-      DockerContext: ./backend
-      Dockerfile: cmd/create-job/Dockerfile
+      DockerContext: .
+      Dockerfile: backend/cmd/create-job/Dockerfile
   SimResultsFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -117,8 +117,9 @@ Resources:
             FunctionResponseTypes:
               - ReportBatchItemFailures
     Metadata:
-      DockerContext: ./backend
-      Dockerfile: cmd/result-writer/Dockerfile
+      DockerTag: write-results
+      DockerContext: .
+      Dockerfile: backend/cmd/result-writer/Dockerfile
   RunSimulationFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -143,5 +144,5 @@ Resources:
               - ReportBatchItemFailures
     Metadata:
       DockerTag: run-sim
-      DockerContext: ./backend
-      Dockerfile: cmd/run-sim/Dockerfile
+      DockerContext: .
+      Dockerfile: backend/cmd/run-sim/Dockerfile

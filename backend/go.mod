@@ -1,15 +1,20 @@
-module github.com/RobertsMJ/simc-cloud-backend
+module github.com/RobertsMJ/simc-cloud/backend
 
-go 1.26.1
+go 1.26.7
+
+replace github.com/RobertsMJ/simc-cloud/simc => ./../simc
+
+replace github.com/RobertsMJ/simc-cloud/test-utils => ./../test-utils
 
 require (
+	github.com/RobertsMJ/simc-cloud/simc v0.0.0-00010101000000-000000000000
 	github.com/aws/aws-lambda-go v1.53.0
 	github.com/aws/aws-sdk-go-v2 v1.41.12
 	github.com/aws/aws-sdk-go-v2/config v1.32.17
 	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.20.45
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.57.9
 	github.com/aws/aws-sdk-go-v2/service/sqs v1.42.29
-	github.com/stretchr/testify v1.11.1
+	github.com/stretchr/testify v1.12.1
 )
 
 require (
@@ -27,9 +32,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.35.21 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sts v1.42.1 // indirect
 	github.com/aws/smithy-go v1.27.1 // indirect
-	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/samber/lo v1.53.0 // indirect
+	go.yaml.in/yaml/v3 v3.0.5 // indirect
 	golang.org/x/text v0.22.0 // indirect
-	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"log/slog"
 
-	"github.com/RobertsMJ/simc-cloud-backend/internal/applog"
-	"github.com/RobertsMJ/simc-cloud-backend/models"
-	"github.com/RobertsMJ/simc-cloud-backend/sim"
-	transport "github.com/RobertsMJ/simc-cloud-backend/transport/sqs"
+	"github.com/RobertsMJ/simc-cloud/backend/internal/applog"
+	"github.com/RobertsMJ/simc-cloud/backend/models"
+	"github.com/RobertsMJ/simc-cloud/backend/sim"
+	transport "github.com/RobertsMJ/simc-cloud/backend/transport/sqs"
 	"github.com/aws/aws-lambda-go/lambda"
 )
 

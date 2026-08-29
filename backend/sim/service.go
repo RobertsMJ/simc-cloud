@@ -12,7 +12,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/RobertsMJ/simc-cloud-backend/models"
+	"github.com/RobertsMJ/simc-cloud/backend/models"
 )
 
 type simcOutputEnvelope struct {

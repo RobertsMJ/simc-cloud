@@ -1,9 +1,9 @@
-package simc_test
+package internal_test
 
 import (
 	"testing"
 
-	"github.com/RobertsMJ/simc-cloud-backend/simc"
+	"github.com/RobertsMJ/simc-cloud/simc/internal"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -17,7 +17,7 @@ func TestIDListTestSuite(t *testing.T) {
 
 func (s *IDListTestSuite) TestMarshalSimcValue() {
 	// Test implementation
-	idList := simc.IDList{1, 2, 3}
+	idList := internal.IDList{1, 2, 3}
 	result, err := idList.MarshalSimcValue()
 	s.NoError(err)
 	s.Equal("1/2/3", result)
@@ -25,15 +25,15 @@ func (s *IDListTestSuite) TestMarshalSimcValue() {
 
 func (s *IDListTestSuite) TestUnmarshalSimcValue() {
 	// Test implementation
-	idList := simc.IDList{}
+	idList := internal.IDList{}
 	err := idList.UnmarshalSimcValue("1/2/3")
 	s.NoError(err)
-	s.Equal(simc.IDList{1, 2, 3}, idList)
+	s.Equal(internal.IDList{1, 2, 3}, idList)
 }
 
 func (s *IDListTestSuite) TestMarshalSimcValue_Empty() {
 	// Test implementation
-	idList := simc.IDList{}
+	idList := internal.IDList{}
 	result, err := idList.MarshalSimcValue()
 	s.NoError(err)
 	s.Equal("", result)
@@ -41,8 +41,8 @@ func (s *IDListTestSuite) TestMarshalSimcValue_Empty() {
 
 func (s *IDListTestSuite) TestUnmarshalSimcValue_Empty() {
 	// Test implementation
-	idList := simc.IDList{}
+	idList := internal.IDList{}
 	err := idList.UnmarshalSimcValue("")
 	s.NoError(err)
-	s.Equal(simc.IDList{}, idList)
+	s.Equal(internal.IDList{}, idList)
 }

@@ -3,6 +3,8 @@ package simc
 import (
 	"fmt"
 	"strings"
+
+	"github.com/RobertsMJ/simc-cloud/simc/internal"
 )
 
 var ErrInvalidTalentStatement = fmt.Errorf("invalid talent statement")
@@ -18,11 +20,11 @@ type Talent struct {
 }
 
 var (
-	_ StatementUnmarshaler = (*Talent)(nil)
-	_ ValueMarshaler       = Talent{}
+	_ internal.StatementUnmarshaler = (*Talent)(nil)
+	_ internal.ValueMarshaler       = Talent{}
 )
 
-func (t *Talent) UnmarshalStatement(s statement) error {
+func (t *Talent) UnmarshalStatement(s internal.Statement) error {
 	if s.Key != "talents" {
 		return ErrInvalidTalentStatement
 	}

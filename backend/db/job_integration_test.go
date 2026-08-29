@@ -6,9 +6,9 @@ import (
 	"context"
 	"testing"
 
-	"github.com/RobertsMJ/simc-cloud-backend/config"
-	"github.com/RobertsMJ/simc-cloud-backend/db"
-	"github.com/RobertsMJ/simc-cloud-backend/models"
+	"github.com/RobertsMJ/simc-cloud/backend/config"
+	"github.com/RobertsMJ/simc-cloud/backend/db"
+	"github.com/RobertsMJ/simc-cloud/backend/models"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/stretchr/testify/suite"

@@ -1,6 +1,10 @@
 package simc
 
-import "strings"
+import (
+	"strings"
+
+	"github.com/RobertsMJ/simc-cloud/simc/internal"
+)
 
 type Profile struct {
 	Character Character `json:"character"`
@@ -8,7 +12,7 @@ type Profile struct {
 }
 
 var (
-	_ ValueMarshaler = Profile{}
+	_ internal.ValueMarshaler = Profile{}
 )
 
 func (p Profile) MarshalSimcValue() (string, error) {

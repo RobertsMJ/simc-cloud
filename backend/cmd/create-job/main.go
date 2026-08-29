@@ -4,9 +4,9 @@ import (
 	"context"
 	"log/slog"
 
-	"github.com/RobertsMJ/simc-cloud-backend/internal/applog"
-	"github.com/RobertsMJ/simc-cloud-backend/models"
-	transport "github.com/RobertsMJ/simc-cloud-backend/transport/apigw"
+	"github.com/RobertsMJ/simc-cloud/backend/internal/applog"
+	"github.com/RobertsMJ/simc-cloud/backend/models"
+	transport "github.com/RobertsMJ/simc-cloud/backend/transport/apigw"
 	"github.com/aws/aws-lambda-go/lambda"
 )
 

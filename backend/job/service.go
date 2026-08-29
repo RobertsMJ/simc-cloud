@@ -1,6 +1,6 @@
 package job
 
-import "github.com/RobertsMJ/simc-cloud-backend/models"
+import "github.com/RobertsMJ/simc-cloud/backend/models"
 
 type CreateJobInput struct{}
 type CreateJobOutput struct{}

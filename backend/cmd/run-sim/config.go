@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 
-	appconfig "github.com/RobertsMJ/simc-cloud-backend/config"
+	appconfig "github.com/RobertsMJ/simc-cloud/backend/config"
 )
 
 type Config struct {

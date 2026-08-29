@@ -1,4 +1,4 @@
-package simc
+package internal
 
 import (
 	"bufio"
@@ -29,12 +29,7 @@ import (
 
 type operator string
 
-const (
-	operatorAssign operator = "="
-	operatorAppend operator = "+="
-)
-
-type statement struct {
+type Statement struct {
 	Key      string
 	Operator operator
 	Value    string
@@ -45,48 +40,24 @@ type statement struct {
 }
 
 type StatementUnmarshaler interface {
-	UnmarshalStatement(statement) error
+	UnmarshalStatement(Statement) error
 }
 
-func newStatement(line string, lineNum int) (res statement) {
-	res.Line = lineNum
-	res.RawSimc = line
+const (
+	operatorAssign operator = "="
+	operatorAppend operator = "+="
+)
 
-	if strings.HasPrefix(line, "#") {
-		res.Disabled = true
-		line = strings.TrimLeft(line, "#")
-	}
-	line = strings.TrimSpace(line)
-
-	if strings.Contains(line, string(operatorAppend)) {
-		res.Operator = operatorAppend
-	} else if strings.Contains(line, string(operatorAssign)) {
-		res.Operator = operatorAssign
-	}
-
-	if res.Operator != "" {
-		key, value, found := strings.Cut(line, string(res.Operator))
-		if !found {
-			res.Value = line
-		} else {
-			res.Key = strings.TrimSpace(key)
-			res.Value = strings.TrimSpace(value)
-		}
-	} else {
-		res.Value = line
-	}
-	return res
-}
-
-func parse(r io.Reader) ([]statement, error) {
-	res := []statement{}
+// ParseStatements extracts statements from a simc document
+func ParseStatements(r io.Reader) ([]Statement, error) {
+	res := []Statement{}
 
 	scanner := bufio.NewScanner(r)
 	lineNumber := 0
 	var detachedComment string
 	for scanner.Scan() {
 		if scanner.Err() != nil {
-			return []statement{}, scanner.Err()
+			return []Statement{}, scanner.Err()
 		}
 
 		line := strings.TrimSpace(scanner.Text())
@@ -117,4 +88,34 @@ func parse(r io.Reader) ([]statement, error) {
 		res = append(res, stmt)
 	}
 	return res, nil
+}
+
+func newStatement(line string, lineNum int) (res Statement) {
+	res.Line = lineNum
+	res.RawSimc = line
+
+	if strings.HasPrefix(line, "#") {
+		res.Disabled = true
+		line = strings.TrimLeft(line, "#")
+	}
+	line = strings.TrimSpace(line)
+
+	if strings.Contains(line, string(operatorAppend)) {
+		res.Operator = operatorAppend
+	} else if strings.Contains(line, string(operatorAssign)) {
+		res.Operator = operatorAssign
+	}
+
+	if res.Operator != "" {
+		key, value, found := strings.Cut(line, string(res.Operator))
+		if !found {
+			res.Value = line
+		} else {
+			res.Key = strings.TrimSpace(key)
+			res.Value = strings.TrimSpace(value)
+		}
+	} else {
+		res.Value = line
+	}
+	return res
 }

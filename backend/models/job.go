@@ -1,6 +1,6 @@
 package models
 
-import "github.com/RobertsMJ/simc-cloud-backend/simc"
+import "github.com/RobertsMJ/simc-cloud/simc"
 
 type CreateJobRequest struct {
 	Character simc.Character      `json:"character"`

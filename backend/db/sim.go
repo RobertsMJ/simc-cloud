@@ -1,7 +1,7 @@
 package db
 
 import (
-	"github.com/RobertsMJ/simc-cloud-backend/models"
+	"github.com/RobertsMJ/simc-cloud/backend/models"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 )
 

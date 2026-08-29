@@ -1,4 +1,4 @@
-package simc
+package internal
 
 import (
 	"errors"
@@ -26,7 +26,7 @@ var (
 	_ ValueUnmarshaler = (*IDValue)(nil)
 )
 
-func (i *IDValue) UnmarshalStatement(s statement) error {
+func (i *IDValue) UnmarshalStatement(s Statement) error {
 	if s.Key != "omnium_talents" {
 		return ErrInvalidIDValueFormat
 	}
@@ -56,7 +56,7 @@ func (i *IDValue) UnmarshalSimcValue(value string) error {
 	return nil
 }
 
-func (i *IDValueList) UnmarshalStatement(s statement) error {
+func (i *IDValueList) UnmarshalStatement(s Statement) error {
 	if s.Key != "omnium_talents" {
 		return ErrInvalidIDValueFormat
 	}

@@ -22,5 +22,9 @@
         "!Sub scalar",
         "!Transform mapping",
         "!Ref scalar",
-    ]
+    ],
+    "gopls": {
+        "ui.semanticTokens": true,
+    },
+    "github.copilot.completions.chat.enabled": false
 }

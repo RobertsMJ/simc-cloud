@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"log/slog"
 
-	"github.com/RobertsMJ/simc-cloud-backend/job"
-	"github.com/RobertsMJ/simc-cloud-backend/models"
+	"github.com/RobertsMJ/simc-cloud/backend/job"
+	"github.com/RobertsMJ/simc-cloud/backend/models"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"

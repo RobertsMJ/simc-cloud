@@ -1,6 +1,7 @@
-package simc
+package internal
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 
@@ -8,12 +9,13 @@ import (
 )
 
 type IDList []int // List of IDs joined by '/'
+
 var (
 	_ ValueMarshaler   = IDList(nil)
 	_ ValueUnmarshaler = (*IDList)(nil)
 )
 
-func (i *IDList) UnmarshalStatement(s statement) error {
+func (i *IDList) UnmarshalStatement(s Statement) error {
 	panic("not implemented")
 }
 
@@ -24,9 +26,14 @@ func (i IDList) MarshalSimcValue() (string, error) {
 }
 
 func (i *IDList) UnmarshalSimcValue(value string) error {
+	if i == nil {
+		return fmt.Errorf("idlist unmarshal: %w", ErrUnmarshalIntoNilPtr)
+	}
+
 	if value == "" {
 		return nil
 	}
+
 	res, err := lo.MapErr(
 		strings.Split(value, "/"),
 		func(s string, _ int) (int, error) {
@@ -36,6 +43,6 @@ func (i *IDList) UnmarshalSimcValue(value string) error {
 	if err != nil {
 		return err
 	}
-	*i = res
+	*i = append(*i, res...)
 	return nil
 }
