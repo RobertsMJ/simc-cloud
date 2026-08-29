@@ -39,19 +39,17 @@ func NewSimulationDocument(doc io.Reader) (sd SimulationDocument, err error) {
 				slog.Error("could not handle talent statement", "err", err, "statement", statement)
 				return sd, err
 			}
-		}
-
-		if _, ok := ItemSlotFromString(statement.Key); ok {
+		case isItemKey(statement.Key):
 			if err = sd.handleItem(statement); err != nil {
 				slog.Error("could not handle item statement", "err", err, "statement", statement)
 				return sd, err
 			}
-		} else if statement.Key == "omnium_talents" {
+		case statement.Key == "omnium_talents":
 			if err = sd.handleOmniumTalents(statement); err != nil {
 				slog.Error("could not handle omnium talents", "err", err, "statement", statement)
 				return sd, err
 			}
-		} else {
+		default:
 			if sd.Extra == nil {
 				sd.Extra = []Parameter{}
 			}

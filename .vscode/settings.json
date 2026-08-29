@@ -25,6 +25,5 @@
     ],
     "gopls": {
         "ui.semanticTokens": true,
-    },
-    "github.copilot.completions.chat.enabled": false
+    }
 }

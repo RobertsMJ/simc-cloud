@@ -30,6 +30,6 @@ func (s *SimcTestSuite) TestNewSimulationDocument() {
 	path, err := filepath.Abs("internal/fixtures/test_dh_sim_doc.json")
 	s.NoError(err)
 	expected := test.GoldenValue(s.T(), path, res)
-	s.Equal(res, expected)
+	s.Equal(expected, res)
 
 }
