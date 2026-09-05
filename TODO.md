@@ -1,5 +1,5 @@
 [ ] k8s infrastructure initialization
-    [ ] Move kiali to a proper helm install
+    [x] Move kiali to a proper helm install
     [ ] move prometheus to a proper helm install
     [ ] add grafana
     [ ] add argocd
