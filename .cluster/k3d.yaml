@@ -1,0 +1,34 @@
+apiVersion: k3d.io/v1alpha5
+kind: Simple
+metadata:
+  name: dev-cluster
+servers: 1
+agents: 2
+kubeAPI:
+  # host: "k3d.localhost"
+  hostIP: "127.0.0.1"
+  hostPort: "6550"
+ports:
+  - port: 80:80
+    nodeFilters:
+      - loadbalancer:*
+  - port: 443:443
+    nodeFilters:
+      - loadbalancer:*
+registries:
+  create:
+    name: registry.localhost
+    hostPort: "5000"
+volumes:
+  - volume: ${PWD}/.cluster/addons:/var/lib/rancher/k3s/server/manifests/addons
+    nodeFilters:
+      - server:*
+options:
+  k3s:
+    extraArgs:
+      - arg: "--disable=traefik"
+        nodeFilters:
+          - server:*
+  kubeconfig:
+    updateDefaultKubeconfig: true
+    switchCurrentContext: true

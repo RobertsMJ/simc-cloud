@@ -1,7 +1,5 @@
 package job
 
-import "github.com/RobertsMJ/simc-cloud/backend/models"
-
 type CreateJobInput struct{}
 type CreateJobOutput struct{}
 
@@ -16,5 +14,5 @@ func NewService() Service {
 }
 
 func (s *service) CreateJob(input CreateJobInput) (CreateJobOutput, error) {
-	return CreateJobOutput{}, models.ErrNotImplemented
+	panic("not implemented")
 }

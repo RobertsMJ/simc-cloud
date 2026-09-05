@@ -1,0 +1,15 @@
+version: "3"
+
+tasks:
+  create:
+    desc: Create a local k3d cluster for development
+    cmds:
+      - k3d cluster create --config k3d.yaml
+  delete:
+    desc: Destroy the local k3d cluster
+    cmds:
+      - k3d cluster delete dev-cluster
+  ls:
+    cmds:
+      - ls
+      - echo $PWD

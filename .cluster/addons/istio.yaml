@@ -1,0 +1,61 @@
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: istio-system
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: istio
+  namespace: kube-system
+spec:
+  chart: base
+  repo: https://blob.istio.io/istio-release/charts
+  targetNamespace: istio-system
+  valuesContent: |-
+    global:
+      platform: k3s
+    profile: ambient
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: istiod
+  namespace: kube-system
+spec:
+  chart: istiod
+  repo: https://blob.istio.io/istio-release/charts
+  targetNamespace: istio-system
+  valuesContent: |-
+    global:
+      platform: k3s
+    profile: ambient
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: istio-cni
+  namespace: kube-system
+spec:
+  chart: cni
+  repo: https://blob.istio.io/istio-release/charts
+  targetNamespace: istio-system
+  valuesContent: |-
+    global:
+      platform: k3s
+    profile: ambient
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: ztunnel
+  namespace: kube-system
+spec:
+  chart: ztunnel
+  repo: https://blob.istio.io/istio-release/charts
+  targetNamespace: istio-system
+  valuesContent: |-
+    global:
+      platform: k3s
+    profile: ambient

@@ -4,7 +4,16 @@ version: "3"
 
 dotenv: [".env"]
 
+includes:
+  cluster:
+    taskfile: .cluster/Taskfile.yaml
+    dir: .cluster
+
 tasks:
+  install-deps:
+    desc: Install development dependencies
+    cmds:
+      - brew install kubectl k3d helm istioctl
   build:
     desc: Build SAM application (incremental, triggered by Go/Docker/template changes)
     sources:
