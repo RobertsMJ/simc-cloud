@@ -5,11 +5,12 @@ import (
 	"fmt"
 	"log/slog"
 
-	"github.com/RobertsMJ/simc-cloud/backend/internal/applog"
+	"go.uber.org/fx"
+	"go.uber.org/fx/fxevent"
+
 	"github.com/RobertsMJ/simc-cloud/backend/models"
+	"github.com/RobertsMJ/simc-cloud/backend/platform"
 	"github.com/RobertsMJ/simc-cloud/backend/sim"
-	transport "github.com/RobertsMJ/simc-cloud/backend/transport/sqs"
-	"github.com/aws/aws-lambda-go/lambda"
 )
 
 type resultPublisher interface {
@@ -20,10 +21,10 @@ var simulator sim.Simulator
 var publisher resultPublisher
 
 func init() {
-	applog.Init()
-	cfg := LoadConfig(context.Background())
-	publisher = transport.NewPublisher[models.SimResult](context.Background(), cfg.resultsQueueURL)
-	simulator = sim.NewSimulator()
+	// applog.Init()
+	// cfg := LoadConfig(context.Background())
+	// publisher = transport.NewPublisher[models.SimResult](context.Background(), cfg.resultsQueueURL)
+	// simulator = sim.NewSimulator()
 }
 
 func handler(ctx context.Context, input models.SimRequest) error {
@@ -42,5 +43,18 @@ func handler(ctx context.Context, input models.SimRequest) error {
 }
 
 func main() {
-	lambda.Start(transport.NewConsumer(handler))
+	fx.New(
+		fx.WithLogger(func(log *slog.Logger) fxevent.Logger {
+			return &fxevent.SlogLogger{Logger: log}
+		}),
+		platform.Module,
+		fx.Provide(
+			context.Background,
+			NewSimConfig,
+			sim.NewSimulator,
+		),
+		fx.Invoke(func(ctx context.Context, cfg SimConfig, sim sim.Simulator) {
+			slog.Info("running run-sim app")
+		}),
+	).Run()
 }

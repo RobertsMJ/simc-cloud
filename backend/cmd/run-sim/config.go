@@ -1,17 +1,17 @@
 package main
 
 import (
-	"context"
-
-	appconfig "github.com/RobertsMJ/simc-cloud/backend/config"
+	"github.com/RobertsMJ/simc-cloud/backend/config"
 )
 
-type Config struct {
+type SimConfig struct {
+	*config.Config
 	resultsQueueURL string
 }
 
-func LoadConfig(ctx context.Context) Config {
-	return Config{
-		resultsQueueURL: appconfig.MustEnv("RESULTS_QUEUE_URL"),
+func NewSimConfig(cfg *config.Config) SimConfig {
+	return SimConfig{
+		Config: cfg,
+		// resultsQueueURL: config.MustEnv("RESULTS_QUEUE_URL"),
 	}
 }
