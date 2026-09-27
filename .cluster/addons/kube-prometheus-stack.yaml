@@ -1,0 +1,51 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: kube-prometheus-stack
+  namespace: kube-system
+spec:
+  chart: oci://ghcr.io/prometheus-community/charts/kube-prometheus-stack
+  targetNamespace: monitoring
+  createNamespace: true
+  valuesContent: |-
+    crds:
+      enabled: true
+      upgradeJob:
+        enabled: true
+        forceConflicts: true
+    cleanPrometheusOperatorObjectNames: true
+    prometheus:
+      route:
+        main:
+          enabled: true
+          hostnames:
+            - prometheus.k3d.localhost
+          parentRefs:
+            - group: gateway.networking.k8s.io
+              name: shared-gateway
+              kind: Gateway
+              namespace: istio-system
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: grafana
+  namespace: monitoring
+spec:
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      name: shared-gateway
+      kind: Gateway
+      namespace: istio-system
+  hostnames:
+    - "grafana.k3d.localhost"
+  rules:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: kube-prometheus-stack-grafana
+          port: 80
+      matches:
+        - path:
+            type: PathPrefix
+            value: /

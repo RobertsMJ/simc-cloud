@@ -15,11 +15,13 @@ spec:
       spec:
         auth:
           strategy: anonymous
-        # deployment:
-        #   accessible_namespaces: ["**"]
-        # external_services:
-        #   istio:
-        #     url_service_version: http://istiod.istio-system.svc:15014/version
+        external_services:
+          grafana:
+            internal_url: http://kube-prometheus-stack-grafana.monitoring.svc.cluster.local
+            external_url: http://grafana.k3d.localhost
+          prometheus:
+            url: http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090
+            external_url: http://prometheus.k3d.localhost
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
