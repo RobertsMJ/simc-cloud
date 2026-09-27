@@ -31,6 +31,5 @@ Prerequisites:
 
 - Install Homebrew (`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`)
 - Install Docker (https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository)
-- Install Go (`sudo apt install golang-go`)
 - Install dependencies (`task install-deps`)
 - Create cluster (`task cluster:create`)

@@ -8,57 +8,15 @@ includes:
   cluster:
     taskfile: .cluster/Taskfile.yaml
     dir: .cluster
-
+  backend:
+    taskfile: backend/Taskfile.yaml
+    dir: backend
 tasks:
   install-deps:
     desc: Install development dependencies
     cmds:
-      - brew install kubectl k3d helm istioctl
-  build:
-    desc: Build SAM application (incremental, triggered by Go/Docker/template changes)
-    sources:
-      - backend/**/*.go
-      - backend/Dockerfile.run-sim
-      - template.yaml
-    cmds:
-      - sam build
+      - brew install kubectl k3d helm istioctl golangci-lint
 
-  deploy:
-    desc: Deploy SAM application to AWS
-    deps: [build]
-    cmds:
-      - sam deploy
-
-  delete:
-    desc: Destroy SAM application in AWS
-    cmds:
-      - sam delete --no-prompts
-
-  sim-profile-apigw:
-    desc: "Invoke RunSimulationFunction locally via API Gateway event. Usage: task sim-profile-apigw -- profiles/sample.simc"
-    deps: [build]
-    cmds:
-      - |
-        body=$(jq --arg input "$(cat {{.CLI_ARGS}})" '.input = $input' \
-          profiles/templates/request.json)
-        jq --arg body "$body" '.body = $body' \
-          profiles/templates/apigw.json | sam local invoke RunSimulationFunction -e -
-
-  sim-profile-sqs:
-    desc: "Invoke RunSimulationFunction locally via SQS event. Usage: task sim-profile-sqs -- profiles/sample.simc"
-    deps: [build]
-    cmds:
-      - |
-        body=$(jq --arg input "$(cat {{.CLI_ARGS}})" '.input = $input' profiles/templates/request.json)
-        jq --arg body "$body" '.Records[0].body = $body' \
-          profiles/templates/sqs.json | sam local invoke RunSimulationFunction --docker-network simc-cloud -e -
-  get-sqs-event:
-    desc: "Print a formatted simulation job as an SQS event. Usage: task get-sqs-event -- profiles/sample.simc"
-    cmds:
-      - |
-        body=$(jq --arg input "$(cat {{.CLI_ARGS}})" '.input = $input' profiles/templates/request.json)
-        jq --arg body "$body" '.Records[0].body = $body' \
-          profiles/templates/sqs.json
   run-simc:
     desc: "Run simc directly via Docker, writes JSON to profiles/results/result.json. Usage: task run-simc -- profiles/sample.simc"
     cmds:

@@ -1,10 +1,14 @@
+---
+paths:
+  - "backend/**"
+---
+
 # Backend Design Rules
 
-- The Go backend is designed to be platform-agnostic: AWS infrastructure (Lambda, SQS, DynamoDB) is isolated behind repository interfaces and transport adapters so the core business logic can be ported to other runtimes (e.g. Kubernetes + Kafka + Postgres) without modification.
-- The backend should be designed with a focus on modularity and separation of concerns as a learning exercise for the developer. Any component should be able to be swapped out without affecting the overall system.
-- The backend should be designed with a focus on performance and scalability to handle high traffic loads efficiently.
-- The backend should be designed to be maintainable and testable, with clear interfaces and effective tests.
+- Keep the backend platform-agnostic. Infrastructure (message queue, database, compute runtime) sits behind repository interfaces and transport adapters, so business logic moves to a new runtime without changes.
+- Modularity and separation of concerns are learning goals here in their own right. Any component should be swappable without affecting the rest of the system.
+- Shared cross-cutting concerns (admin HTTP server, health/readiness, metrics, logging) belong in `backend/platform`, composed into each service through its `fx.Module`. A new service wires that module in and doesn't reimplement these.
 
 ## Design Constraints
 
-- Repository interfaces and transport handlers must be defined in terms of domain types only (`models.*`, `context.Context`). AWS-specific types (`events.SQSEvent`, `dynamodbav` tags, etc.) must never appear in interfaces or domain packages — only in their concrete implementations.
+- Repository interfaces and transport handlers use domain types only (`models.*`, `context.Context`). Infrastructure types must never appear in interfaces or domain packages, only in their concrete implementations.
