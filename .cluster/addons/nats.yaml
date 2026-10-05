@@ -1,0 +1,97 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: nats
+  namespace: kube-system
+spec:
+  chart: nats
+  repo: https://nats-io.github.io/k8s/helm/charts/
+  targetNamespace: nats
+  createNamespace: true
+  valuesContent: |-
+    config:
+      port: 4222
+      jetstream:
+        enabled: true
+        fileStore:
+          pvc:
+            size: 100Mi
+      cluster:
+        enabled: true
+    container:
+      resources:
+        limits:
+          cpu: 250m
+          memory: 256Mi
+        requests:
+          cpu: 250m
+          memory: 256Mi
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: nack
+  namespace: kube-system
+spec:
+  chart: nack
+  repo: https://nats-io.github.io/k8s/helm/charts/
+  targetNamespace: nats
+  valuesContent: |-
+    jetstream:
+      nats:
+        url: nats://nats.nats.svc.cluster.local:4222
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: nui-cli-contexts
+  namespace: nats
+type: Opaque
+stringData:
+  context1.json: |
+    {
+      "name": "nats",
+      "url": "nats://nats.nats.svc.cluster.local:4222"
+    }
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: nui
+  namespace: kube-system
+spec:
+  chart: nui
+  repo: https://nats-nui.github.io/k8s/helm/charts
+  targetNamespace: nats
+  valuesContent: |-
+    autoloadContexts: true
+    contextsVolume:
+      name: nui-cli-contexts
+      items:
+        - key: context1.json
+          path: context1.json
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: nui
+  namespace: nats
+spec:
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      name: shared-gateway
+      kind: Gateway
+      namespace: istio-system
+  hostnames:
+    - "nui.k3d.localhost"
+  rules:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: nui
+          port: 31311
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
+---
