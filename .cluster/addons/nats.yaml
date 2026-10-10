@@ -1,3 +1,10 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nats
+  labels:
+    istio.io/dataplane-mode: ambient
+---
 apiVersion: helm.cattle.io/v1
 kind: HelmChart
 metadata:
@@ -7,7 +14,6 @@ spec:
   chart: nats
   repo: https://nats-io.github.io/k8s/helm/charts/
   targetNamespace: nats
-  createNamespace: true
   valuesContent: |-
     config:
       port: 4222
