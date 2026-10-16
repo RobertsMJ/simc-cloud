@@ -15,6 +15,9 @@ spec:
         forceConflicts: true
     cleanPrometheusOperatorObjectNames: true
     prometheus:
+      prometheusSpec:
+        podMonitorSelectorNilUsesHelmValues: false
+        serviceMonitorSelectorNilUsesHelmValues: false
       route:
         main:
           enabled: true

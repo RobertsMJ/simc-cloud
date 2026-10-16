@@ -85,3 +85,16 @@ spec:
   #       from: Same
   #   tls:
   #     mode: Terminate
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: istio-pod-monitor
+  namespace: istio-system
+spec:
+  selector:
+    matchLabels:
+      app: ztunnel
+  podMetricsEndpoints:
+    - port: ztunnel-stats
+      path: /stats/prometheus

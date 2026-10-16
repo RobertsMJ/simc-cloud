@@ -1,0 +1,52 @@
+---
+apiVersion: jetstream.nats.io/v1beta2
+kind: Stream
+metadata:
+  name: simc-job-stream
+spec:
+  name: simc-job-stream
+  subjects: ["simc.*"]
+  storage: memory
+  maxAge: 1h
+---
+apiVersion: jetstream.nats.io/v1beta2
+kind: Consumer
+metadata:
+  name: simc-job-pull
+spec:
+  streamName: simc-job-stream
+  durableName: simc-job-pull
+  deliverPolicy: all
+  filterSubject: simc.jobs
+  maxDeliver: 1
+  ackPolicy: explicit
+  ackWait: 120s
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: run-sim
+  labels:
+    app: run-sim
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: run-sim
+  template:
+    metadata:
+      labels:
+        app: run-sim
+    spec:
+      containers:
+        - name: run-sim
+          image: registry.localhost:5000/run-sim:latest
+          ports:
+            - containerPort: 8081
+          env:
+            - name: QUEUE_URL
+              value: "nats://nats.nats.svc.cluster.local:4222"
+            - name: STREAM_ID
+              value: "simc-job-stream"
+            - name: CONSUMER_ID
+              value: "simc-job-pull"

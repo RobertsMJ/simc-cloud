@@ -27,3 +27,8 @@ tasks:
           -v "$(realpath profiles/results):/output" \
           simulationcraftorg/simc:latest \
           /input.simc json2=/output/result.json html=/dev/null
+  build-run-sim-image:
+    desc: "Build the run-sim Docker image"
+    cmds:
+      - docker build -t registry.localhost:5000/run-sim:latest -f backend/cmd/run-sim/Dockerfile .
+      - docker push registry.localhost:5000/run-sim:latest

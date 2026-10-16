@@ -6,35 +6,50 @@ import (
 	"log/slog"
 
 	"go.uber.org/fx"
-	"go.uber.org/fx/fxevent"
 
+	"github.com/RobertsMJ/simc-cloud/backend/config"
 	"github.com/RobertsMJ/simc-cloud/backend/models"
-	"github.com/RobertsMJ/simc-cloud/backend/platform"
+	"github.com/RobertsMJ/simc-cloud/backend/platform/admin"
+	natsx "github.com/RobertsMJ/simc-cloud/backend/platform/nats"
 	"github.com/RobertsMJ/simc-cloud/backend/sim"
+	"github.com/RobertsMJ/simc-cloud/backend/transport/queue"
 )
 
-type resultPublisher interface {
-	Publish(ctx context.Context, result models.SimResult) error
+type StubPublisher struct{}
+
+func NewStubPublisher() *StubPublisher {
+	return &StubPublisher{}
 }
 
-var simulator sim.Simulator
-var publisher resultPublisher
-
-func init() {
-	// applog.Init()
-	// cfg := LoadConfig(context.Background())
-	// publisher = transport.NewPublisher[models.SimResult](context.Background(), cfg.resultsQueueURL)
-	// simulator = sim.NewSimulator()
+func (p *StubPublisher) Publish(ctx context.Context, msg models.SimResult) error {
+	slog.Info("stub publishing result", "result", msg)
+	return nil
 }
 
-func handler(ctx context.Context, input models.SimRequest) error {
-	res, err := simulator.Run(ctx, &input)
+type SimService struct {
+	simulator sim.Simulator
+	publisher sim.ResultPublisher
+}
+
+var _ queue.Consumer[models.SimRequest] = (*SimService)(nil)
+
+func NewSimService(sim sim.Simulator, publisher sim.ResultPublisher) *SimService {
+	return &SimService{
+		simulator: sim,
+		publisher: publisher,
+	}
+}
+
+func (s *SimService) Handle(ctx context.Context, input models.SimRequest) error {
+	slog.Info("handling sim request", "input", input)
+	res, err := s.simulator.Run(ctx, &input)
 	if err != nil {
 		slog.Error("simulation failed", "error", err)
 		return fmt.Errorf("simulation failed: %w", err)
 	}
 
-	if err := publisher.Publish(ctx, res); err != nil {
+	slog.Info("simulation completed", "result", res)
+	if err := s.publisher.Publish(ctx, res); err != nil {
 		slog.Error("failed to publish result", "error", err)
 		return fmt.Errorf("failed to publish result: %w", err)
 	}
@@ -42,19 +57,28 @@ func handler(ctx context.Context, input models.SimRequest) error {
 	return nil
 }
 
+func NewConsumerConfig() *natsx.ConsumerConfig {
+	return &natsx.ConsumerConfig{
+		StreamID:   config.MustEnv("STREAM_ID"),
+		ConsumerID: config.MustEnv("CONSUMER_ID"),
+	}
+}
+
 func main() {
-	fx.New(
-		fx.WithLogger(func(log *slog.Logger) fxevent.Logger {
-			return &fxevent.SlogLogger{Logger: log}
-		}),
-		platform.Module,
+	app := fx.New(
+		// fx.WithLogger(func(log *slog.Logger) fxevent.Logger {
+		// 	return &fxevent.SlogLogger{Logger: log}
+		// }),
+		admin.Module,
+		natsx.Module,
 		fx.Provide(
-			context.Background,
-			NewSimConfig,
+			NewConsumerConfig,
 			sim.NewSimulator,
+			fx.Annotate(NewStubPublisher, fx.As(new(sim.ResultPublisher))),
+			fx.Annotate(NewSimService, fx.As(new(queue.Consumer[models.SimRequest]))),
 		),
-		fx.Invoke(func(ctx context.Context, cfg SimConfig, sim sim.Simulator) {
-			slog.Info("running run-sim app")
-		}),
-	).Run()
+		fx.Invoke(natsx.NewConsumer[models.SimRequest]),
+	)
+
+	app.Run()
 }

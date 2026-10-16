@@ -20,10 +20,15 @@ spec:
       jetstream:
         enabled: true
         fileStore:
+          enabled: true
           pvc:
             size: 100Mi
+        memoryStore:
+          enabled: true
+          maxMemory: 256Mi
       cluster:
         enabled: true
+        replicas: 3
     container:
       resources:
         limits:

@@ -5,6 +5,13 @@ metadata:
   labels:
     istio.io/dataplane-mode: ambient
 ---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: scylla
+  labels:
+    istio.io/dataplane-mode: ambient
+---
 apiVersion: helm.cattle.io/v1
 kind: HelmChart
 metadata:
@@ -16,3 +23,45 @@ spec:
   targetNamespace: scylla-operator
   valuesContent: |-
     replicas: 1
+---
+apiVersion: scylla.scylladb.com/v1alpha1
+kind: ScyllaOperatorConfig
+metadata:
+  name: cluster
+spec:
+  configuredClusterDomain: cluster.local
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: scylladb-config
+  namespace: scylla
+data:
+  scylla.yaml: |
+    authenticator: PasswordAuthenticator
+    authorizer: CassandraAuthorizer
+---
+apiVersion: scylla.scylladb.com/v1
+kind: ScyllaCluster
+metadata:
+  name: dev-cluster
+  namespace: scylla
+spec:
+  version: 2026.2.5
+  developerMode: true
+  datacenter:
+    name: dev
+    racks:
+      - name: rack1
+        members: 1
+        scyllaConfig: scylladb-config
+        storage:
+          capacity: 1Gi
+          storageClassName: local-path
+        resources:
+          requests:
+            cpu: 10m
+            memory: 100Mi
+          limits:
+            cpu: 1
+            memory: 1Gi

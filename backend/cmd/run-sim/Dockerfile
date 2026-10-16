@@ -49,6 +49,7 @@ RUN CGO_ENABLED=0 \
 
 
 FROM alpine:latest AS simc-runtime
+WORKDIR /app
 RUN \
     apk --no-cache add --virtual build_dependencies \
     libcurl \
