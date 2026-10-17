@@ -6,34 +6,24 @@ import (
 	"log/slog"
 
 	"go.uber.org/fx"
+	"go.uber.org/fx/fxevent"
 
 	"github.com/RobertsMJ/simc-cloud/backend/config"
 	"github.com/RobertsMJ/simc-cloud/backend/models"
 	"github.com/RobertsMJ/simc-cloud/backend/platform/admin"
-	natsx "github.com/RobertsMJ/simc-cloud/backend/platform/nats"
+	"github.com/RobertsMJ/simc-cloud/backend/platform/natsx"
 	"github.com/RobertsMJ/simc-cloud/backend/sim"
 	"github.com/RobertsMJ/simc-cloud/backend/transport/queue"
 )
 
-type StubPublisher struct{}
-
-func NewStubPublisher() *StubPublisher {
-	return &StubPublisher{}
-}
-
-func (p *StubPublisher) Publish(ctx context.Context, msg models.SimResult) error {
-	slog.Info("stub publishing result", "result", msg)
-	return nil
-}
-
 type SimService struct {
 	simulator sim.Simulator
-	publisher sim.ResultPublisher
+	publisher queue.Publisher[models.SimResult]
 }
 
 var _ queue.Consumer[models.SimRequest] = (*SimService)(nil)
 
-func NewSimService(sim sim.Simulator, publisher sim.ResultPublisher) *SimService {
+func NewSimService(sim sim.Simulator, publisher queue.Publisher[models.SimResult]) *SimService {
 	return &SimService{
 		simulator: sim,
 		publisher: publisher,
@@ -64,20 +54,27 @@ func NewConsumerConfig() *natsx.ConsumerConfig {
 	}
 }
 
+func NewPublisherConfig() *natsx.PublisherConfig {
+	return &natsx.PublisherConfig{
+		Subject: config.MustEnv("PUBLISH_SUBJECT"),
+	}
+}
+
 func main() {
 	app := fx.New(
-		// fx.WithLogger(func(log *slog.Logger) fxevent.Logger {
-		// 	return &fxevent.SlogLogger{Logger: log}
-		// }),
+		fx.WithLogger(func(log *slog.Logger) fxevent.Logger {
+			return &fxevent.SlogLogger{Logger: log}
+		}),
 		admin.Module,
 		natsx.Module,
 		fx.Provide(
 			NewConsumerConfig,
+			NewPublisherConfig,
 			sim.NewSimulator,
-			fx.Annotate(NewStubPublisher, fx.As(new(sim.ResultPublisher))),
+			fx.Annotate(natsx.NewPublisher[models.SimResult], fx.As(new(queue.Publisher[models.SimResult]))),
 			fx.Annotate(NewSimService, fx.As(new(queue.Consumer[models.SimRequest]))),
 		),
-		fx.Invoke(natsx.NewConsumer[models.SimRequest]),
+		fx.Invoke(natsx.RunConsumer[models.SimRequest]),
 	)
 
 	app.Run()

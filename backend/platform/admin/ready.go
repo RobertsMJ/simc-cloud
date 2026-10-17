@@ -10,7 +10,7 @@ func NewReadyCheckHandler() *ReadyCheckHandler {
 
 func (h *ReadyCheckHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("READY"))
+	w.Write([]byte("ok"))
 }
 
 func (h *ReadyCheckHandler) Path() string {

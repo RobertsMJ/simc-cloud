@@ -50,3 +50,13 @@ spec:
               value: "simc-job-stream"
             - name: CONSUMER_ID
               value: "simc-job-pull"
+            - name: PUBLISH_SUBJECT
+              value: "simc.results"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8081
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8081

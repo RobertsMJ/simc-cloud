@@ -28,6 +28,6 @@ type Config struct {
 func NewConfig() *Config {
 	return &Config{
 		AdminPort: OptionalEnv("ADMIN_PORT", "8081"),
-		AdminHost: OptionalEnv("ADMIN_HOST", "127.0.0.1"),
+		AdminHost: OptionalEnv("ADMIN_HOST", "0.0.0.0"),
 	}
 }
