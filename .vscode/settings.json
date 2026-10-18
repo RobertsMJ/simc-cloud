@@ -26,5 +26,12 @@
     ],
     "gopls": {
         "ui.semanticTokens": true,
+    },
+    "[gotmpl]": {
+        "editor.indentSize": 2
+    },
+    "files.associations": {
+        "chart/**/*.yaml": "helm-template",
+        "chart/**/*.tpl": "helm-template"
     }
 }

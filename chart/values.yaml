@@ -1,0 +1,63 @@
+# fullnameOverride allows the chart name to be set
+fullnameOverride:
+# nameOverride allows the release name to be set
+nameOverride:
+
+# default values for applications deployed in the simc-chart
+default:
+  # adminPort is the port that the app will listen on for admin endpoints (health, readiness, etc)
+  adminPort: 8081
+  # probes is a list of paths that will be used for liveness and readiness probes
+  probes:
+    # liveness is the configuration for the platform liveness probe
+    liveness:
+      # liveness.periodSeconds is the interval of the liveness probe
+      periodSeconds: 10
+      # liveness.timeoutSeconds is the interval of the liveness probe
+      timeoutSeconds: 2
+      failureThreshold: 3
+    readiness:
+      periodSeconds: 5
+      timeoutSeconds: 2
+      failureThreshold: 2
+    startup:
+      periodSeconds: 1
+      timeoutSeconds: 2
+      failureThreshold: 30
+  env:
+    QUEUE_URL: "nats://nats.nats.svc.cluster.local:4222"
+
+streams:
+  simc-job-stream:
+    subjects: ["simc.*"]
+    storage: file
+    maxAge: 1h
+
+apps:
+  run-sim:
+    component: worker
+    image:
+      registry: registry.localhost:5000
+      repository: run-sim
+      tag: latest
+    replicas: 1
+    terminationGracePeriodSeconds: 300
+    resources:
+      requests:
+        memory: 128Mi
+        cpu: 100m
+      limits:
+        memory: 512Mi
+        cpu: 500m
+    consumer:
+      streamName: simc-job-stream
+      durableName: simc-jobs-consumer
+      filterSubject: simc.jobs
+      ackWait: 240s
+    publisher:
+      streamName: simc-job-stream
+      subject: simc.results
+    probes:
+      liveness:
+        timeoutSeconds: 5
+        failureThreshold: 6

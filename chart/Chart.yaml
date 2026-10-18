@@ -1,0 +1,7 @@
+apiVersion: v2
+name: simc
+description: A cloud-native chart for SimulationCraft simulations
+
+type: application
+version: 0.1.0
+appVersion: "1.0.0-alpha.1"

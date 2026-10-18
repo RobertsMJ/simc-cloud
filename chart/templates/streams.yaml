@@ -1,0 +1,6 @@
+{{- range $name, $stream := .Values.streams }}
+{{- $ctx := dict "root" $ "name" $name "stream" $stream }}
+
+{{- include "simc-chart.stream" $ctx }}
+
+{{- end }}

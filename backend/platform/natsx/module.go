@@ -35,7 +35,8 @@ type ConsumerConfig struct {
 }
 
 type PublisherConfig struct {
-	Subject string
+	StreamID string
+	Subject  string
 }
 
 func NewStream(lc fx.Lifecycle, cfg *NatsConfig) (jetstream.JetStream, error) {

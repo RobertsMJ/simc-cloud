@@ -49,14 +49,14 @@ func (s *SimService) Handle(ctx context.Context, input models.SimRequest) error 
 
 func NewConsumerConfig() *natsx.ConsumerConfig {
 	return &natsx.ConsumerConfig{
-		StreamID:   config.MustEnv("STREAM_ID"),
-		ConsumerID: config.MustEnv("CONSUMER_ID"),
+		StreamID:   config.MustEnv("CONSUMER_STREAM_NAME"),
+		ConsumerID: config.MustEnv("CONSUMER_NAME"),
 	}
 }
 
 func NewPublisherConfig() *natsx.PublisherConfig {
 	return &natsx.PublisherConfig{
-		Subject: config.MustEnv("PUBLISH_SUBJECT"),
+		Subject: config.MustEnv("PUBLISHER_SUBJECT"),
 	}
 }
 

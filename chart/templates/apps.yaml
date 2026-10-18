@@ -1,0 +1,16 @@
+{{- range $name, $rawApp := .Values.apps }}
+{{- $app := mergeOverwrite (deepCopy $.Values.default) $rawApp }}
+{{- $_ := $app.image | required "The app must have an image defined" -}}
+{{- $_ := $app.image.registry | required "App image must have a registry defined " -}}
+{{- $_ := $app.image.repository | required "App image must have a repository defined " -}}
+{{- $_ := $app.image.tag | required "App image must have a tag defined " -}}
+{{- $ctx := dict "root" $ "name" $name "app" $app }}
+
+{{- include "simc-chart.app.deployment" $ctx }}
+{{- include "simc-chart.app.serviceaccount" $ctx }}
+{{- if $ctx.app.consumer -}}
+{{- include "simc-chart.app.consumer" $ctx }}
+{{- end }}
+{{- include "simc-chart.app.env" $ctx }}
+
+{{- end }}
