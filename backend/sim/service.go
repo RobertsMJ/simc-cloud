@@ -5,10 +5,12 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log/slog"
 	"os"
 	"os/exec"
+	"runtime"
 	"slices"
 	"strings"
 
@@ -37,7 +39,7 @@ func (s *simulator) Run(ctx context.Context, request *models.SimRequest) (models
 		return models.SimResult{}, fmt.Errorf("input cannot be nil")
 	}
 
-	slog.Info(fmt.Sprintf("Starting simulation for JobID: %s, GearsetID: %s", request.JobID, request.GearsetID))
+	slog.Debug(fmt.Sprintf("Starting simulation for JobID: %s, GearsetID: %s", request.JobID, request.GearsetID))
 
 	args, err := parseSimcArgs(&request.Input)
 	if err != nil {
@@ -51,7 +53,9 @@ func (s *simulator) Run(ctx context.Context, request *models.SimRequest) (models
 	defer os.RemoveAll(tmpDir)
 
 	outputPath := tmpDir + "/output.json"
-	args = append(args, "json2="+outputPath, "html=/dev/null", "report_details=0")
+	threads := fmt.Sprintf("threads=%d", runtime.GOMAXPROCS(0))
+	slog.Debug("running simulation with threads", "threads", runtime.GOMAXPROCS(0))
+	args = append(args, "json2="+outputPath, "html=/dev/null", "report_details=0", "target_error=0.05", threads)
 
 	slog.Debug("parsed simc arguments", "args", args)
 
@@ -71,12 +75,22 @@ func (s *simulator) Run(ctx context.Context, request *models.SimRequest) (models
 
 	scanner := bufio.NewScanner(stdout)
 	for scanner.Scan() {
-		slog.Debug(scanner.Text())
+		txt := strings.TrimSpace(scanner.Text())
+		if txt != "" {
+			slog.Debug(scanner.Text())
+		}
+	}
+	if err := scanner.Err(); err != nil {
+		slog.Error("scanner errored", "err", err)
 	}
 
 	if err := cmd.Wait(); err != nil {
+		if ctxErr := context.Cause(ctx); ctxErr != nil {
+			slog.Error("simc command terminated by context", "ctxErr", ctxErr, "err", err)
+			return models.SimResult{}, errors.Join(ctxErr, err)
+		}
 		slog.Error("simc command failed", "err", err, "stderr", stderr.String())
-		return models.SimResult{}, fmt.Errorf("simc execution failed: %w, stderr: %s", err, stderr.String())
+		return models.SimResult{}, err
 	}
 
 	outputBytes, err := os.ReadFile(outputPath)
@@ -88,6 +102,8 @@ func (s *simulator) Run(ctx context.Context, request *models.SimRequest) (models
 	if err := json.Unmarshal(outputBytes, &envelope); err != nil {
 		return models.SimResult{}, fmt.Errorf("failed to parse simc output: %w", err)
 	}
+
+	slog.Info("sim completed successfully", "job_id", request.JobID, "gearset_id", request.GearsetID, "threads", threads, "cpu_time", envelope.Sim.Statistics.ElapsedCpuSeconds)
 
 	return models.SimResult{
 		JobID:      request.JobID,

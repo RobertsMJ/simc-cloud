@@ -71,9 +71,6 @@ App pod annotations: config checksums merged with podAnnotations.
 {{- define "simc-chart.app.podAnnotations" -}}
 {{- $_ := required "simc-chart.app.podAnnotations: expected app context" .app -}}
 {{- $annotations := dict -}}
-{{- with include "simc-chart.app.envData" . -}}
-{{- $_ := set $annotations "checksum/env" (. | sha256sum) -}}
-{{- end }}
 {{- with .app.podAnnotations }}
 {{- $annotations = merge $annotations . -}}
 {{- end }}
@@ -81,3 +78,24 @@ App pod annotations: config checksums merged with podAnnotations.
 {{- toYaml . -}}
 {{- end -}}
 {{- end }}
+
+{{/*
+App termination grace period
+{{ include "simc-chart.app.terminationGraceSeconds" $ctx }}
+*/}}
+{{- define "simc-chart.app.terminationGraceSeconds" -}}
+{{- $tail := int (default 15 (default .root.Values.default.shutdownTailSeconds .app.shutdownTailSeconds)) -}}
+{{- $grace := int (default 30 .app.terminationGracePeriodSeconds) -}}
+{{- if .app.consumer -}}
+  {{-  $_ := required "consumer must define maxRuntimeSeconds" .app.maxRuntimeSeconds -}}
+  {{- $min := add (int .app.maxRuntimeSeconds) $tail -}}
+  {{- if .app.terminationGracePeriodSeconds -}}
+    {{- if lt $grace $min -}}
+      {{- fail (printf "%s: terminationGracePeriodSeconds (%d) < maxRuntimeSeconds + shutdownTailSeconds (%d)" .name $grace $min) -}}
+    {{- end -}}
+  {{- else -}}
+    {{- $grace = $min -}}
+  {{- end -}}
+{{- end -}}
+{{- $grace -}}
+{{- end -}}

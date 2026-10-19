@@ -26,6 +26,7 @@ default:
       failureThreshold: 30
   env:
     QUEUE_URL: "nats://nats.nats.svc.cluster.local:4222"
+    LOG_LEVEL: "INFO"
 
 streams:
   simc-job-stream:
@@ -41,19 +42,22 @@ apps:
       repository: run-sim
       tag: latest
     replicas: 1
-    terminationGracePeriodSeconds: 300
     resources:
       requests:
         memory: 128Mi
-        cpu: 100m
+        cpu: 1000m
       limits:
         memory: 512Mi
-        cpu: 500m
+        cpu: 1000m
     consumer:
       streamName: simc-job-stream
       durableName: simc-jobs-consumer
       filterSubject: simc.jobs
-      ackWait: 240s
+      maxDeliver: 3
+      ackWait: 10s
+    # shutdownTailSeconds must cover any in-code shutdown grace period
+    shutdownTailSeconds: 10
+    maxRuntimeSeconds: 290
     publisher:
       streamName: simc-job-stream
       subject: simc.results

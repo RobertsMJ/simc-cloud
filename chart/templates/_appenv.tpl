@@ -16,7 +16,9 @@ data:
 
 {{- define "simc-chart.app.envName" -}}
 {{- $_ := required "simc-chart.app.envName: expected app context" .app -}}
-{{- include "simc-chart.app.fullname" $ }}-env
+{{- $appName := include "simc-chart.app.fullname" $ -}}
+{{- $hash := include "simc-chart.app.envData" $ | sha256sum | trunc 8 -}}
+{{- printf "%s-env-%s" $appName $hash }}
 {{- end }}
 
 {{- define "simc-chart.app.envData" }}
@@ -25,6 +27,10 @@ data:
 {{- if .app.env }}
 {{- $env = merge $env .app.env -}}
 {{- end -}}
+{{- with .app.maxRuntimeSeconds -}}
+{{- $_ := set $env "MAX_RUNTIME" (printf "%ds" (int .)) -}}
+{{- end -}}
+{{- $_ := set $env "TERMINATION_PERIOD" (printf "%ss" (include "simc-chart.app.terminationGraceSeconds" .)) -}}
 {{- if .app.consumer -}}
 {{- $env = merge $env (include "simc-chart.app.consumerData" . | fromYaml) -}}
 {{- end -}}

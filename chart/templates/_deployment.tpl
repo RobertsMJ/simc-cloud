@@ -27,9 +27,7 @@ spec:
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if .app.terminationGracePeriodSeconds}}
-      terminationGracePeriodSeconds: {{ .app.terminationGracePeriodSeconds }}
-      {{- end}}
+      terminationGracePeriodSeconds: {{ include "simc-chart.app.terminationGraceSeconds" $ }}
       automountServiceAccountToken: false
       containers:
         - name: {{ .name }}

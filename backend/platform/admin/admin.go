@@ -10,7 +10,7 @@ import (
 var Module = fx.Module(
 	"admin",
 	fx.Provide(
-		config.NewConfig,
+		config.NewAppConfig,
 		NewAdminServer,
 		NewLogger,
 		fx.Annotate(NewServeMux, fx.ParamTags(`group:"admin"`)),

@@ -2,7 +2,7 @@
 
 These rules apply to CLAUDE.md, files under `.claude/rules/`, READMEs, and code comments — the durable documentation surfaces, as opposed to `TODO.md` or a PR description.
 
-- Don't restate what's directly discoverable by reading the code or directory structure (file layout, which packages exist, which addons are installed, etc.). It adds token and maintenance cost without adding information, and it's the first thing to drift out of sync with the code it's describing.
+- Don't restate what's directly discoverable by reading the code or directory structure (file layout, which packages exist, which addons are installed, etc.).
 - Only write down what isn't obvious from the code itself:
     - Rationale — why a decision was made, what it trades off against
     - Constraints and gotchas that aren't visible from a single file (cross-service invariants, platform limitations)

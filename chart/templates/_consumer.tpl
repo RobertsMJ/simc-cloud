@@ -11,7 +11,7 @@ metadata:
 spec:
   streamName: {{ .app.consumer.streamName }}
   durableName: {{ .app.consumer.durableName }}
-  deliverPolicy: {{ default "all" .app.consumer.deliverPolicy  }}
+  deliverPolicy: {{ default "all" .app.consumer.deliverPolicy }}
   {{- with .app.consumer.filterSubject }}
   filterSubject: {{ . }}
   {{- end }}
@@ -19,7 +19,9 @@ spec:
   filterSubjects:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  maxDeliver: {{ default 1 .app.consumer.maxDeliver }}
+  {{- with .app.consumer.maxDeliver }}
+  maxDeliver: {{ . }}
+  {{- end }}
   ackPolicy: {{ default "explicit" .app.consumer.ackPolicy }}
   ackWait: {{ default "30s" .app.consumer.ackWait }}
 {{- end -}}

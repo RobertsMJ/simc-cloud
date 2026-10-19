@@ -2,8 +2,10 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log/slog"
+	"time"
 
 	"go.uber.org/fx"
 	"go.uber.org/fx/fxevent"
@@ -16,63 +18,80 @@ import (
 	"github.com/RobertsMJ/simc-cloud/backend/transport/queue"
 )
 
+type SimConfig struct {
+	MaxRuntime time.Duration
+}
+
+func NewSimConfig() *SimConfig {
+	maxRuntime, err := time.ParseDuration(config.MustEnv("MAX_RUNTIME"))
+	if err != nil {
+		panic("failed to parse maxRuntime")
+	}
+	return &SimConfig{
+		MaxRuntime: maxRuntime,
+	}
+}
+
 type SimService struct {
 	simulator sim.Simulator
 	publisher queue.Publisher[models.SimResult]
+	cfg       *SimConfig
 }
 
-var _ queue.Consumer[models.SimRequest] = (*SimService)(nil)
+var _ queue.Handler[models.SimRequest] = (*SimService)(nil)
 
-func NewSimService(sim sim.Simulator, publisher queue.Publisher[models.SimResult]) *SimService {
+func NewSimService(sim sim.Simulator, publisher queue.Publisher[models.SimResult], cfg *SimConfig) *SimService {
 	return &SimService{
 		simulator: sim,
 		publisher: publisher,
+		cfg:       cfg,
 	}
 }
 
 func (s *SimService) Handle(ctx context.Context, input models.SimRequest) error {
-	slog.Info("handling sim request", "input", input)
-	res, err := s.simulator.Run(ctx, &input)
+	slog.Info("handling sim request", "job_id", input.JobID, "gearset_id", input.GearsetID)
+	simCtx, simCancel := context.WithTimeout(ctx, s.cfg.MaxRuntime)
+	defer simCancel()
+	res, err := s.simulator.Run(simCtx, &input)
 	if err != nil {
-		slog.Error("simulation failed", "error", err)
-		return fmt.Errorf("simulation failed: %w", err)
+		if errors.Is(err, context.DeadlineExceeded) {
+			slog.Error("sim deadline exceeded", "job_id", input.JobID, "gearset_id", input.GearsetID)
+			return errors.Join(queue.ErrFatal, err)
+		}
+		slog.Error("sim failed", "job_id", input.JobID, "gearset_id", input.GearsetID, "error", err)
+		return err
 	}
 
-	slog.Info("simulation completed", "result", res)
-	if err := s.publisher.Publish(ctx, res); err != nil {
-		slog.Error("failed to publish result", "error", err)
+	publishCtx, publishCancel := context.WithTimeout(ctx, 1*time.Second)
+	defer publishCancel()
+	if err := s.publisher.Publish(publishCtx, res); err != nil {
+		if ctxErr := publishCtx.Err(); ctxErr != nil {
+
+		}
+		slog.Error("failed to publish result", "job_id", input.JobID, "gearset_id", input.GearsetID, "error", err)
 		return fmt.Errorf("failed to publish result: %w", err)
 	}
 
 	return nil
 }
 
-func NewConsumerConfig() *natsx.ConsumerConfig {
-	return &natsx.ConsumerConfig{
-		StreamID:   config.MustEnv("CONSUMER_STREAM_NAME"),
-		ConsumerID: config.MustEnv("CONSUMER_NAME"),
-	}
-}
-
-func NewPublisherConfig() *natsx.PublisherConfig {
-	return &natsx.PublisherConfig{
-		Subject: config.MustEnv("PUBLISHER_SUBJECT"),
-	}
-}
-
 func main() {
 	app := fx.New(
+		config.WithShutdownTimeout(),
 		fx.WithLogger(func(log *slog.Logger) fxevent.Logger {
-			return &fxevent.SlogLogger{Logger: log}
+			logger := fxevent.SlogLogger{Logger: log}
+			logger.UseLogLevel(slog.LevelDebug)
+			return &logger
 		}),
 		admin.Module,
 		natsx.Module,
 		fx.Provide(
-			NewConsumerConfig,
-			NewPublisherConfig,
+			natsx.NewConsumerConfig,
+			natsx.NewPublisherConfig,
+			NewSimConfig,
 			sim.NewSimulator,
 			fx.Annotate(natsx.NewPublisher[models.SimResult], fx.As(new(queue.Publisher[models.SimResult]))),
-			fx.Annotate(NewSimService, fx.As(new(queue.Consumer[models.SimRequest]))),
+			fx.Annotate(NewSimService, fx.As(new(queue.Handler[models.SimRequest]))),
 		),
 		fx.Invoke(natsx.RunConsumer[models.SimRequest]),
 	)

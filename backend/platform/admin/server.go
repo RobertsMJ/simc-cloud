@@ -35,7 +35,7 @@ func NewAdminServer(lc fx.Lifecycle, p AdminServerParams) (Result, error) {
 			if err != nil {
 				return err
 			}
-			slog.Info("Starting HTTP server at", "addr", server.Addr)
+			slog.Debug("Starting HTTP server at", "addr", server.Addr)
 			go server.Serve(ln)
 			return nil
 		},
