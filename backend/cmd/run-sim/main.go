@@ -76,7 +76,7 @@ func (s *SimService) Handle(ctx context.Context, input models.SimRequest) error 
 }
 
 func main() {
-	app := fx.New(
+	fx.New(
 		config.WithShutdownTimeout(),
 		fx.WithLogger(func(log *slog.Logger) fxevent.Logger {
 			logger := fxevent.SlogLogger{Logger: log}
@@ -94,7 +94,6 @@ func main() {
 			fx.Annotate(NewSimService, fx.As(new(queue.Handler[models.SimRequest]))),
 		),
 		fx.Invoke(natsx.RunConsumer[models.SimRequest]),
-	)
+	).Run()
 
-	app.Run()
 }

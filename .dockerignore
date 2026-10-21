@@ -1,0 +1,8 @@
+*
+
+!go.work
+!go.work.sum
+
+!backend/
+!simc/
+!test-utils/

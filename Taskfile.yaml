@@ -27,8 +27,19 @@ tasks:
           -v "$(realpath profiles/results):/output" \
           simulationcraftorg/simc:latest \
           /input.simc json2=/output/result.json html=/dev/null
-  build-run-sim-image:
-    desc: "Build the run-sim Docker image"
+  build:
+    desc: Build service image
     cmds:
-      - docker build -t registry.localhost:5000/run-sim:latest -f backend/cmd/run-sim/Dockerfile .
-      - docker push registry.localhost:5000/run-sim:latest
+      - docker build --build-arg SERVICE={{.SERVICE}} --target={{.TARGET | default "prod"}} -t registry.localhost:5000/{{.SERVICE}}:latest -f backend/Dockerfile .
+      - docker push registry.localhost:5000/{{.SERVICE}}:latest
+  build-all:
+    desc: Build backend docker images
+    cmds:
+      - for: [create-job, write-result]
+        task: build
+        vars:
+          SERVICE: '{{.ITEM}}'
+      - task: build
+        vars:
+          SERVICE: run-sim
+          TARGET: prod-simc

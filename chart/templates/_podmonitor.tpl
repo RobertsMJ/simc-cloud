@@ -1,10 +1,10 @@
 {{- define "simc-chart.app.podmonitor" }}
-{{- $_ := required "simc-chart.app.podmonitor: expected app context" .root -}}
+{{- $_ := required "simc-chart.app.podmonitor: expected app context" .root }}
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
 metadata:
-  name: {{ include "simc-chart.app.fullname" }}-monitor
+  name: {{ include "simc-chart.app.fullname" . }}-monitor
 spec:
   selector:
     matchLabels:

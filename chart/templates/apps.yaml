@@ -12,5 +12,6 @@
 {{- include "simc-chart.app.consumer" $ctx }}
 {{- end }}
 {{- include "simc-chart.app.env" $ctx }}
+{{- include "simc-chart.app.podmonitor" $ctx }}
 
 {{- end }}

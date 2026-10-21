@@ -5,6 +5,6 @@ Assert that the stream with the given name exists
 */}}
 {{- define "simc-chart.app.streamExists" -}}
 {{- if not (hasKey .streams .streamName) -}}
-{{- printf "Consumer %s references stream %s which does not exist" .app.consumer.durableName .app.consumer.streamName | fail -}}
+{{- printf "Consumer %s references stream %s which does not exist" .consumerName .streamName | fail -}}
 {{- end -}}
 {{- end -}}

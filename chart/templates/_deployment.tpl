@@ -1,5 +1,5 @@
-{{- define "simc-chart.app.deployment" -}}
-{{- $_ := required "simc-chart.app.deployment: expected app context (dict root/name/app)" .root -}}
+{{- define "simc-chart.app.deployment" }}
+{{- $_ := required "simc-chart.app.deployment: expected app context (dict root/name/app)" .root }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -8,6 +8,7 @@ metadata:
   labels:
     {{- include "simc-chart.app.labels" $ | nindent 4 }}
 spec:
+  replicas: {{ default 1 .app.replicas }}
   selector:
     matchLabels:
       {{- include "simc-chart.app.selectorLabels" $ | nindent 6 }}
@@ -23,6 +24,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
+      serviceAccountName: {{ include "simc-chart.app.serviceAccountName" $ }}
       {{- with .app.podSecurityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}

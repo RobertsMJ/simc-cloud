@@ -14,7 +14,7 @@ Pipeline:
 2. `create-job`: validates the request, creates the job, hands the job configuration to the gearset generator, and returns the job ID to the frontend for finding status and results.
 3. Gearset generator: expands per-slot gear options into combinations that satisfy constraints (e.g. minimum 2- or 4-piece set bonus, at most 2 crafted embellishments, an upgrade-currency budget), then publishes each one as a simc input string to an event stream.
 4. `run-sim`: Durable consumer that consumes gearsets, runs simc, and publishes results to a results stream. Autoscaled via keda based on consumer lag.
-5. `result-writer`: Idempotent on (job_id, gearset_id). Consumes results and writes result records plus job completion counters to the database. It's a separate service from `run-sim` so a DB write failure can't lose a finished simulation. Unprocessable messages go to a dead-letter stream.
+5. `write-result`: Idempotent on (job_id, gearset_id). Consumes results and writes result records plus job completion counters to the database. It's a separate service from `run-sim` so a DB write failure can't lose a finished simulation. Unprocessable messages go to a dead-letter stream.
 6. Frontend: navigates to `/{job-id}` page, listens to SSE for job status, and displays final results when processing completes.
 
 Planned deployment tooling: Helm chart for the app, ArgoCD + GitOps, Tilt for the local dev loop.

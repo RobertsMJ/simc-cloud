@@ -14,19 +14,15 @@ type SimRequest struct {
 	Input     string          `json:"input"`
 }
 
-type SimcOutput map[string]any
-
-type StatSample struct {
-	Sum          float64 `json:"sum"`
-	Count        int     `json:"count"`
-	Mean         float64 `json:"mean"`
-	Min          float64 `json:"min,omitempty"`
-	Max          float64 `json:"max,omitempty"`
-	Median       float64 `json:"median,omitempty"`
-	Variance     float64 `json:"variance,omitempty"`
-	StdDev       float64 `json:"std_dev,omitempty"`
-	MeanVariance float64 `json:"mean_variance,omitempty"`
-	MeanStdDev   float64 `json:"mean_std_dev,omitempty"`
+type SimResult struct {
+	JobID        string          `json:"job_id"`
+	GearsetID    string          `json:"gearset_id"`
+	Status       Status          `json:"status"`
+	ErrorMessage *string         `json:"error_message,omitempty"`
+	Baseline     bool            `json:"baseline"`
+	Statistics   SimStatistics   `json:"statistics"`
+	Metadata     *map[string]any `json:"metadata,omitempty"`
+	Result       json.RawMessage `json:"result"`
 }
 
 type SimStatistics struct {
@@ -41,13 +37,15 @@ type SimStatistics struct {
 	TotalDmg             StatSample `json:"total_dmg"`
 }
 
-type SimResult struct {
-	JobID        string          `json:"job_id"`
-	GearsetID    string          `json:"gearset_id"`
-	Status       Status          `json:"status"`
-	ErrorMessage *string         `json:"error_message,omitempty"`
-	Baseline     bool            `json:"baseline"`
-	Statistics   SimStatistics   `json:"statistics"`
-	Metadata     *map[string]any `json:"metadata,omitempty"`
-	Result       json.RawMessage `json:"result"`
+type StatSample struct {
+	Sum          float64 `json:"sum"`
+	Count        int     `json:"count"`
+	Mean         float64 `json:"mean"`
+	Min          float64 `json:"min,omitempty"`
+	Max          float64 `json:"max,omitempty"`
+	Median       float64 `json:"median,omitempty"`
+	Variance     float64 `json:"variance,omitempty"`
+	StdDev       float64 `json:"std_dev,omitempty"`
+	MeanVariance float64 `json:"mean_variance,omitempty"`
+	MeanStdDev   float64 `json:"mean_std_dev,omitempty"`
 }

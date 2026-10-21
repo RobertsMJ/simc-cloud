@@ -1,6 +1,6 @@
 {{- define "simc-chart.app.consumer" }}
 {{- $_ := required "simc-chart.app.consumer: expected app context" .app -}}
-{{- include "simc-chart.app.streamExists" (dict "streams" .root.Values.streams "streamName" .app.consumer.streamName) }}
+{{- include "simc-chart.app.streamExists" (dict "streams" .root.Values.streams "streamName" .app.consumer.streamName "consumerName" .app.consumer.durableName) }}
 ---
 apiVersion: jetstream.nats.io/v1beta2
 kind: Consumer

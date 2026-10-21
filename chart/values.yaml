@@ -5,6 +5,16 @@ nameOverride:
 
 # default values for applications deployed in the simc-chart
 default:
+  image:
+    registry: registry.localhost:5000
+    tag: latest
+  resources:
+    requests:
+      memory: 128Mi
+      cpu: 100m
+    limits:
+      memory: 256Mi
+      cpu: 250m
   # adminPort is the port that the app will listen on for admin endpoints (health, readiness, etc)
   adminPort: 8081
   # probes is a list of paths that will be used for liveness and readiness probes
@@ -38,9 +48,7 @@ apps:
   run-sim:
     component: worker
     image:
-      registry: registry.localhost:5000
       repository: run-sim
-      tag: latest
     replicas: 1
     resources:
       requests:
@@ -51,8 +59,8 @@ apps:
         cpu: 1000m
     consumer:
       streamName: simc-job-stream
-      durableName: simc-jobs-consumer
-      filterSubject: simc.jobs
+      durableName: simc-job-consumer
+      filterSubject: simc.job
       maxDeliver: 3
       ackWait: 10s
     # shutdownTailSeconds must cover any in-code shutdown grace period
@@ -65,3 +73,18 @@ apps:
       liveness:
         timeoutSeconds: 5
         failureThreshold: 6
+  write-result:
+    component: db
+    image:
+      repository: write-result
+    consumer:
+      streamName: simc-job-stream
+      durableName: simc-jobs-results
+      filterSubject: simc.results
+  create-job:
+    component: api
+    image:
+      repository: create-job
+    publisher:
+      streamName: simc-job-stream
+      subject: simc.job
