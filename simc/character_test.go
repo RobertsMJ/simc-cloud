@@ -1,10 +1,9 @@
-package simc_test
+package simc
 
 import (
 	"strings"
 	"testing"
 
-	"github.com/RobertsMJ/simc-cloud/simc"
 	"github.com/RobertsMJ/simc-cloud/simc/internal"
 	"github.com/stretchr/testify/suite"
 )
@@ -17,7 +16,7 @@ func TestCharacterTestSuite(t *testing.T) {
 	suite.Run(t, new(CharacterTestSuite))
 }
 
-func (suite *CharacterTestSuite) TestUnmarshalStatements() {
+func (suite *CharacterTestSuite) TestunmarshalStatements() {
 	input := `
 		demonhunter="Kestdh"
 		level=90
@@ -31,8 +30,8 @@ func (suite *CharacterTestSuite) TestUnmarshalStatements() {
 	statements, err := internal.ParseStatements(strings.NewReader(input))
 	suite.NoError(err)
 
-	expected := simc.Character{
-		Class:  simc.WowClassDH,
+	expected := Character{
+		Class:  WowClassDH,
 		Name:   `"Kestdh"`,
 		Level:  90,
 		Role:   "attack",
@@ -42,9 +41,9 @@ func (suite *CharacterTestSuite) TestUnmarshalStatements() {
 		Race:   "night_elf",
 	}
 
-	var actual simc.Character
+	var actual Character
 	for _, stmt := range statements {
-		err := actual.UnmarshalStatement(stmt)
+		err := actual.unmarshalStatement(stmt)
 		suite.NoError(err)
 	}
 

@@ -21,13 +21,13 @@ func TestStatementTestSuite(t *testing.T) {
 
 func (s *StatementTestSuite) TestParse() {
 
-	input, err := os.ReadFile("fixtures/test_dh.simc")
+	input, err := os.ReadFile("testdata/test_dh.simc")
 	s.NoError(err)
 
 	res, err := internal.ParseStatements(strings.NewReader(string(input)))
 	s.NoError(err)
 
-	path, err := filepath.Abs("./fixtures/test_dh_statements.json")
+	path, err := filepath.Abs("./testdata/test_dh_statements.json")
 	s.NoError(err)
 	expected := test.GoldenValue(s.T(), path, res)
 	s.ElementsMatch(res, expected)

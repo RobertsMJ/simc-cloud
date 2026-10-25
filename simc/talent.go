@@ -11,7 +11,7 @@ var ErrInvalidTalentStatement = fmt.Errorf("invalid talent statement")
 
 const (
 	talentHeaderTemplate = "# Saved Loadout: %s"
-	talentValueTemplate  = "talent=%s"
+	talentValueTemplate  = "talents=%s"
 )
 
 type Talent struct {
@@ -20,11 +20,10 @@ type Talent struct {
 }
 
 var (
-	_ internal.StatementUnmarshaler = (*Talent)(nil)
-	_ internal.ValueMarshaler       = Talent{}
+	_ internal.ValueMarshaler = Talent{}
 )
 
-func (t *Talent) UnmarshalStatement(s internal.Statement) error {
+func (t *Talent) unmarshalStatement(s internal.Statement) error {
 	if s.Key != "talents" {
 		return ErrInvalidTalentStatement
 	}
@@ -34,7 +33,7 @@ func (t *Talent) UnmarshalStatement(s internal.Statement) error {
 	return nil
 }
 
-func (t Talent) MarshalSimcValue() (string, error) {
+func (t Talent) MarshalSimc() (string, error) {
 	return strings.Join([]string{
 		fmt.Sprintf(talentHeaderTemplate, t.Name),
 		fmt.Sprintf(talentValueTemplate, t.Value),

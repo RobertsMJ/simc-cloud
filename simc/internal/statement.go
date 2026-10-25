@@ -39,10 +39,6 @@ type Statement struct {
 	Line     int
 }
 
-type StatementUnmarshaler interface {
-	UnmarshalStatement(Statement) error
-}
-
 const (
 	operatorAssign operator = "="
 	operatorAppend operator = "+="

@@ -92,20 +92,20 @@ func (is ItemSlot) GetSlotGroup() SlotGroup {
 }
 
 type Item struct {
-	Slot                ItemSlot        `json:"slot" simc:"-"`
-	SlotGroup           SlotGroup       `json:"slot_group,omitempty" simc:"-"`
-	Name                string          `json:"name,omitempty" simc:"-"`
-	ID                  int             `json:"id" simc:"id"`
-	EnchantID           internal.IDList `json:"enchant_id,omitempty" simc:"enchant_id,omitempty"`
-	BonusID             internal.IDList `json:"bonus_id,omitempty" simc:"bonus_id,omitempty"`
-	GemID               internal.IDList `json:"gem_id,omitempty" simc:"gem_id,omitempty"`
-	ContentTuning       *int            `json:"content_tuning,omitempty" simc:"content_tuning,omitempty"`
-	DropLevel           *int            `json:"drop_level,omitempty" simc:"drop_level,omitempty"`
-	RedirectedBaseStats *int            `json:"redirected_base_stats,omitempty" simc:"redirected_base_stats,omitempty"`
-	CraftedStats        internal.IDList `json:"crafted_stats,omitempty" simc:"crafted_stats,omitempty"`
-	GemBonusID          internal.IDList `json:"gem_bonus_id,omitempty" simc:"gem_bonus_id,omitempty"`
-	CraftingQuality     *int            `json:"crafting_quality,omitempty" simc:"crafting_quality,omitempty"`
-	TitanDiscID         *int            `json:"titan_disc_id,omitempty" simc:"titan_disc_id,omitempty"`
+	Slot                ItemSlot  `json:"slot" simc:"-"`
+	SlotGroup           SlotGroup `json:"slot_group,omitempty" simc:"-"`
+	Name                string    `json:"name,omitempty" simc:"-"`
+	ID                  int       `json:"id" simc:"id"`
+	EnchantID           IDList    `json:"enchant_id,omitempty" simc:"enchant_id,omitempty"`
+	BonusID             IDList    `json:"bonus_id,omitempty" simc:"bonus_id,omitempty"`
+	GemID               IDList    `json:"gem_id,omitempty" simc:"gem_id,omitempty"`
+	ContentTuning       *int      `json:"content_tuning,omitempty" simc:"content_tuning,omitempty"`
+	DropLevel           *int      `json:"drop_level,omitempty" simc:"drop_level,omitempty"`
+	RedirectedBaseStats *int      `json:"redirected_base_stats,omitempty" simc:"redirected_base_stats,omitempty"`
+	CraftedStats        IDList    `json:"crafted_stats,omitempty" simc:"crafted_stats,omitempty"`
+	GemBonusID          IDList    `json:"gem_bonus_id,omitempty" simc:"gem_bonus_id,omitempty"`
+	CraftingQuality     *int      `json:"crafting_quality,omitempty" simc:"crafting_quality,omitempty"`
+	TitanDiscID         *int      `json:"titan_disc_id,omitempty" simc:"titan_disc_id,omitempty"`
 }
 
 func (i Item) GetSlotGroup() SlotGroup {
@@ -113,9 +113,8 @@ func (i Item) GetSlotGroup() SlotGroup {
 }
 
 var (
-	_ internal.ValueMarshaler       = Item{}
-	_ internal.ValueUnmarshaler     = (*Item)(nil)
-	_ internal.StatementUnmarshaler = (*Item)(nil)
+	_ internal.ValueMarshaler   = Item{}
+	_ internal.ValueUnmarshaler = (*Item)(nil)
 )
 
 var itemFieldIdx = sync.OnceValue(internal.IndexSimcFields[Item])
@@ -125,7 +124,7 @@ func isItemKey(key string) bool {
 	return ok
 }
 
-func (i *Item) UnmarshalStatement(s internal.Statement) error {
+func (i *Item) unmarshalStatement(s internal.Statement) error {
 	if i == nil {
 		return fmt.Errorf("character unmarshal: %w", internal.ErrUnmarshalIntoNilPtr)
 	}
@@ -162,10 +161,10 @@ func (i *Item) UnmarshalStatement(s internal.Statement) error {
 	return nil
 }
 
-func (i Item) MarshalSimcValue() (string, error) {
+func (i Item) MarshalSimc() (string, error) {
 	panic("not implemented")
 }
 
-func (i *Item) UnmarshalSimcValue(value string) error {
+func (i *Item) UnmarshalSimc(value string) error {
 	panic("not implemented")
 }

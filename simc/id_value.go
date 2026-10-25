@@ -1,4 +1,4 @@
-package internal
+package simc
 
 import (
 	"errors"
@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/RobertsMJ/simc-cloud/simc/internal"
 	"github.com/samber/lo"
 )
 
@@ -20,24 +21,24 @@ type IDValue struct {
 }
 
 var (
-	_ ValueMarshaler   = IDValueList(nil)
-	_ ValueUnmarshaler = (*IDValueList)(nil)
-	_ ValueMarshaler   = IDValue{}
-	_ ValueUnmarshaler = (*IDValue)(nil)
+	_ internal.ValueMarshaler   = IDValueList(nil)
+	_ internal.ValueUnmarshaler = (*IDValueList)(nil)
+	_ internal.ValueMarshaler   = IDValue{}
+	_ internal.ValueUnmarshaler = (*IDValue)(nil)
 )
 
-func (i *IDValue) UnmarshalStatement(s Statement) error {
+func (i *IDValue) unmarshalStatement(s internal.Statement) error {
 	if s.Key != "omnium_talents" {
 		return ErrInvalidIDValueFormat
 	}
-	return i.UnmarshalSimcValue(s.Value)
+	return i.UnmarshalSimc(s.Value)
 }
 
-func (i IDValue) MarshalSimcValue() (string, error) {
+func (i IDValue) MarshalSimc() (string, error) {
 	return fmt.Sprintf("%d:%d", i.ID, i.Value), nil
 }
 
-func (i *IDValue) UnmarshalSimcValue(value string) error {
+func (i *IDValue) UnmarshalSimc(value string) error {
 	k, v, found := strings.Cut(value, ":")
 	if !found {
 		return ErrInvalidIDValueFormat
@@ -56,16 +57,16 @@ func (i *IDValue) UnmarshalSimcValue(value string) error {
 	return nil
 }
 
-func (i *IDValueList) UnmarshalStatement(s Statement) error {
+func (i *IDValueList) unmarshalStatement(s internal.Statement) error {
 	if s.Key != "omnium_talents" {
 		return ErrInvalidIDValueFormat
 	}
-	return i.UnmarshalSimcValue(s.Value)
+	return i.UnmarshalSimc(s.Value)
 }
 
-func (i IDValueList) MarshalSimcValue() (string, error) {
+func (i IDValueList) MarshalSimc() (string, error) {
 	res, err := lo.MapErr(i, func(idv IDValue, _ int) (string, error) {
-		return idv.MarshalSimcValue()
+		return idv.MarshalSimc()
 	})
 	if err != nil {
 		return "", err
@@ -73,11 +74,11 @@ func (i IDValueList) MarshalSimcValue() (string, error) {
 	return strings.Join(res, "/"), nil
 }
 
-func (i *IDValueList) UnmarshalSimcValue(value string) error {
+func (i *IDValueList) UnmarshalSimc(value string) error {
 	parts := strings.Split(value, "/")
 	res, err := lo.MapErr(parts, func(part string, _ int) (IDValue, error) {
 		var idv IDValue
-		err := idv.UnmarshalSimcValue(part)
+		err := idv.UnmarshalSimc(part)
 		if err != nil {
 			return IDValue{}, err
 		}

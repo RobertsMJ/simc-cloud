@@ -1,33 +1,30 @@
-package internal
+package simc
 
 import (
 	"fmt"
 	"strconv"
 	"strings"
 
+	"github.com/RobertsMJ/simc-cloud/simc/internal"
 	"github.com/samber/lo"
 )
 
 type IDList []int // List of IDs joined by '/'
 
 var (
-	_ ValueMarshaler   = IDList(nil)
-	_ ValueUnmarshaler = (*IDList)(nil)
+	_ internal.ValueMarshaler   = IDList(nil)
+	_ internal.ValueUnmarshaler = (*IDList)(nil)
 )
 
-func (i *IDList) UnmarshalStatement(s Statement) error {
-	panic("not implemented")
-}
-
-func (i IDList) MarshalSimcValue() (string, error) {
+func (i IDList) MarshalSimc() (string, error) {
 	return strings.Join(lo.Map(i, func(id int, _ int) string {
 		return strconv.Itoa(id)
 	}), "/"), nil
 }
 
-func (i *IDList) UnmarshalSimcValue(value string) error {
+func (i *IDList) UnmarshalSimc(value string) error {
 	if i == nil {
-		return fmt.Errorf("idlist unmarshal: %w", ErrUnmarshalIntoNilPtr)
+		return fmt.Errorf("idlist unmarshal: %w", internal.ErrUnmarshalIntoNilPtr)
 	}
 
 	if value == "" {

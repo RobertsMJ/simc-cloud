@@ -15,12 +15,12 @@ var (
 	_ internal.ValueMarshaler = Profile{}
 )
 
-func (p Profile) MarshalSimcValue() (string, error) {
-	character, err := p.Character.MarshalSimcValue()
+func (p Profile) MarshalSimc() (string, error) {
+	character, err := p.Character.MarshalSimc()
 	if err != nil {
 		return "", err
 	}
-	loadout, err := p.Loadout.MarshalSimcValue()
+	loadout, err := p.Loadout.MarshalSimc()
 	if err != nil {
 		return "", err
 	}
