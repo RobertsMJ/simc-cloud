@@ -4,7 +4,7 @@ Cloud-native application that runs [SimulationCraft](https://github.com/simulati
 
 ## Target architecture
 
-**This section describes the desired end state, not the current code.** Before assuming any piece exists, reference the existin implementation.
+**This section describes the desired end state, not the current code.** Before assuming any piece exists, reference the existing implementation.
 
 Go services on Kubernetes (local: k3d) in an Istio ambient-mode mesh, using NATS JetStream for async work and ScyllaDB for persistence. Each service uses [fx](https://github.com/uber-go/fx) and composes the appropriate `backend/platform` for platform implementation details. The `backend/transport` package provides a layer of abstraction above the platform implementation details.
 
@@ -17,7 +17,7 @@ Pipeline:
 5. `write-result`: Idempotent on (job_id, gearset_id). Consumes results and writes result records plus job completion counters to the database. It's a separate service from `run-sim` so a DB write failure can't lose a finished simulation. Unprocessable messages go to a dead-letter stream.
 6. Frontend: navigates to `/{job-id}` page, listens to SSE for job status, and displays final results when processing completes.
 
-Planned deployment tooling: Helm chart for the app, ArgoCD + GitOps, Tilt for the local dev loop.
+Planned deployment tooling: Helm chart for the app, GitOps + FluxCD (see `homelab` repository), CI with Github Actions using GHCR, local development with docker-compose.
 
 ## Commands
 
