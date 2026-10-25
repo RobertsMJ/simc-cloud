@@ -79,12 +79,12 @@ func RunConsumer[T any](lc fx.Lifecycle, js jetstream.JetStream, cfg *ConsumerCo
 					case jobCtx.Err() != nil:
 						slog.Info("shutdown interrupted message, nak")
 						msg.Nak()
-					case errors.Is(err, queue.ErrRetriable):
-						slog.Error("retriable error while handling message", "error", err)
-						msg.NakWithDelay(5 * time.Second)
-					default:
+					case errors.Is(err, queue.ErrFatal):
 						slog.Error("fatal error while handling message", "error", err)
-						msg.Term()
+						msg.TermWithReason(err.Error())
+					default:
+						slog.Error("retriable error while handling message", "error", err)
+						msg.Nak()
 					}
 				},
 				jetstream.PullMaxMessages(1),

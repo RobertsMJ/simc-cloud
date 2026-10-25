@@ -1,126 +1,67 @@
 package sim
 
 import (
-	"bufio"
-	"bytes"
 	"context"
-	"encoding/json"
 	"errors"
-	"fmt"
 	"log/slog"
-	"os"
-	"os/exec"
-	"runtime"
-	"slices"
-	"strings"
+	"time"
 
 	"github.com/RobertsMJ/simc-cloud/backend/models"
+	"github.com/RobertsMJ/simc-cloud/backend/transport/queue"
 )
 
-type simcOutputEnvelope struct {
-	Sim struct {
-		Statistics models.SimStatistics `json:"statistics"`
-	} `json:"sim"`
+type Service struct {
+	simulator Simulator
+	resultPub queue.Publisher[models.SimResult]
+	config    *Config
 }
 
-type Simulator interface {
-	Run(ctx context.Context, input *models.SimRequest) (models.SimResult, error)
+var _ queue.Handler[models.SimRequest] = (*Service)(nil)
+
+func NewService(simulator Simulator, resultPub queue.Publisher[models.SimResult], config *Config) *Service {
+	return &Service{
+		simulator: simulator,
+		resultPub: resultPub,
+		config:    config,
+	}
 }
 
-type simulator struct {
-}
+func (s *Service) Handle(ctx context.Context, req models.SimRequest) error {
+	slog.Info("handling sim message", "job_id", req.JobID, "gearset_id", req.GearsetID)
+	simCtx, simCancel := context.WithTimeout(ctx, s.config.MaxRuntime)
+	defer simCancel()
 
-func NewSimulator() Simulator {
-	return &simulator{}
-}
-
-func (s *simulator) Run(ctx context.Context, request *models.SimRequest) (models.SimResult, error) {
-	if request == nil {
-		return models.SimResult{}, fmt.Errorf("input cannot be nil")
+	out, err := s.simulator.Run(
+		simCtx,
+		Input{
+			Profile: req.Input,
+		},
+	)
+	if simCtx.Err() != nil {
+		return simCtx.Err()
 	}
 
-	slog.Debug(fmt.Sprintf("Starting simulation for JobID: %s, GearsetID: %s", request.JobID, request.GearsetID))
-
-	args, err := parseSimcArgs(&request.Input)
+	simResult := models.SimResult{
+		JobID:     req.JobID,
+		GearsetID: req.GearsetID,
+		Metadata:  req.Metadata,
+	}
 	if err != nil {
-		return models.SimResult{}, fmt.Errorf("failed to parse simc arguments: %w", err)
-	}
-
-	tmpDir, err := os.MkdirTemp("", "simc-*")
-	if err != nil {
-		return models.SimResult{}, fmt.Errorf("failed to create temp dir: %w", err)
-	}
-	defer os.RemoveAll(tmpDir)
-
-	outputPath := tmpDir + "/output.json"
-	threads := fmt.Sprintf("threads=%d", runtime.GOMAXPROCS(0))
-	slog.Debug("running simulation with threads", "threads", runtime.GOMAXPROCS(0))
-	args = append(args, "json2="+outputPath, "html=/dev/null", "report_details=0", "target_error=0.05", threads)
-
-	slog.Debug("parsed simc arguments", "args", args)
-
-	cmd := exec.CommandContext(ctx, "/app/simc", args...)
-	var stderr bytes.Buffer
-	cmd.Stderr = &stderr
-
-	stdout, err := cmd.StdoutPipe()
-	if err != nil {
-		return models.SimResult{}, fmt.Errorf("failed to get stdout pipe: %w", err)
-	}
-
-	if err := cmd.Start(); err != nil {
-		slog.Error("failed to start simc command", "err", err, "stderr", stderr.String())
-		return models.SimResult{}, fmt.Errorf("simc execution failed: %w, stderr: %s", err, stderr.String())
-	}
-
-	scanner := bufio.NewScanner(stdout)
-	for scanner.Scan() {
-		txt := strings.TrimSpace(scanner.Text())
-		if txt != "" {
-			slog.Debug(scanner.Text())
+		simResult.Status = models.StatusError
+		errMsg := err.Error()
+		simResult.ErrorMessage = &errMsg
+		if errors.Is(err, context.DeadlineExceeded) {
+			slog.Error("sim deadline exceeded", "job_id", req.JobID, "gearset_id", req.GearsetID)
 		}
-	}
-	if err := scanner.Err(); err != nil {
-		slog.Error("scanner errored", "err", err)
-	}
-
-	if err := cmd.Wait(); err != nil {
-		if ctxErr := context.Cause(ctx); ctxErr != nil {
-			slog.Error("simc command terminated by context", "ctxErr", ctxErr, "err", err)
-			return models.SimResult{}, errors.Join(ctxErr, err)
-		}
-		slog.Error("simc command failed", "err", err, "stderr", stderr.String())
-		return models.SimResult{}, err
+		slog.Error("sim failed", "job_id", req.JobID, "gearset_id", req.GearsetID, "error", err)
+	} else {
+		simResult.Status = models.StatusCompleted
+		simResult.Statistics = out.Statistics
+		simResult.Result = out.Report
 	}
 
-	outputBytes, err := os.ReadFile(outputPath)
-	if err != nil {
-		return models.SimResult{}, fmt.Errorf("failed to read simc output: %w", err)
-	}
+	publishCtx, publishCancel := context.WithTimeout(ctx, 1*time.Second)
+	defer publishCancel()
 
-	var envelope simcOutputEnvelope
-	if err := json.Unmarshal(outputBytes, &envelope); err != nil {
-		return models.SimResult{}, fmt.Errorf("failed to parse simc output: %w", err)
-	}
-
-	slog.Info("sim completed successfully", "job_id", request.JobID, "gearset_id", request.GearsetID, "threads", threads, "cpu_time", envelope.Sim.Statistics.ElapsedCpuSeconds)
-
-	return models.SimResult{
-		JobID:      request.JobID,
-		GearsetID:  request.GearsetID,
-		Status:     models.StatusCompleted,
-		Statistics: envelope.Sim.Statistics,
-		Metadata:   request.Metadata,
-		Result:     outputBytes,
-	}, nil
-}
-
-func parseSimcArgs(input *string) ([]string, error) {
-	if input == nil {
-		return nil, fmt.Errorf("simc input string cannot be nil")
-	}
-	args := strings.Split(strings.ReplaceAll(*input, "\r\n", "\n"), "\n")
-	return slices.DeleteFunc(args, func(s string) bool {
-		return s == "" || strings.HasPrefix(s, "#")
-	}), nil
+	return s.resultPub.Publish(publishCtx, simResult)
 }

@@ -1,18 +1,26 @@
 package job
 
-type CreateJobInput struct{}
-type CreateJobOutput struct{}
+import (
+	"context"
+	"log/slog"
 
-type Service interface {
-	CreateJob(input CreateJobInput) (CreateJobOutput, error)
+	"github.com/RobertsMJ/simc-cloud/backend/models"
+	"github.com/RobertsMJ/simc-cloud/backend/transport/queue"
+)
+
+type Service struct {
+	repo Repo
 }
 
-type service struct{}
-
-func NewService() Service {
-	return &service{}
+func NewService(repo Repo) *Service {
+	return &Service{
+		repo: repo,
+	}
 }
 
-func (s *service) CreateJob(input CreateJobInput) (CreateJobOutput, error) {
-	panic("not implemented")
+var _ queue.Publisher[models.SimRequest] = (*Service)(nil)
+
+func (s *Service) Publish(ctx context.Context, sim models.SimRequest) error {
+	slog.Info("publishing sim request", "result", sim)
+	return nil
 }

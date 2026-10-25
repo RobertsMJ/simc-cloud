@@ -2,7 +2,6 @@
 # SimC Addon 12.1.0-03
 # WoW 12.1.5.70391, TOC 120105
 # Requires SimulationCraft 1000-01 or newer
-
 warrior="Kestw"
 level=90
 race=night_elf

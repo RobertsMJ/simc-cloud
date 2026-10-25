@@ -6,14 +6,13 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/RobertsMJ/simc-cloud/backend/config"
 	"go.uber.org/fx"
 )
 
 type AdminServerParams struct {
 	fx.In
 
-	Config *config.Config
+	Config *Config
 	Mux    *http.ServeMux
 }
 
@@ -26,7 +25,7 @@ type Result struct {
 func NewAdminServer(lc fx.Lifecycle, p AdminServerParams) (Result, error) {
 
 	server := &http.Server{
-		Addr:    p.Config.AdminHost + ":" + p.Config.AdminPort,
+		Addr:    p.Config.Host + ":" + p.Config.Port,
 		Handler: p.Mux,
 	}
 	lc.Append(fx.Hook{

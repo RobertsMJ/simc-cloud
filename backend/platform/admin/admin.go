@@ -3,14 +3,13 @@ package admin
 import (
 	"net/http"
 
-	"github.com/RobertsMJ/simc-cloud/backend/config"
 	"go.uber.org/fx"
 )
 
 var Module = fx.Module(
 	"admin",
 	fx.Provide(
-		config.NewAppConfig,
+		NewConfig,
 		NewAdminServer,
 		NewLogger,
 		fx.Annotate(NewServeMux, fx.ParamTags(`group:"admin"`)),

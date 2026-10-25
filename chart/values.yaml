@@ -42,7 +42,14 @@ streams:
   simc-job-stream:
     subjects: ["simc.*"]
     storage: file
-    maxAge: 1h
+    maxAge: 4h
+    retention: limits
+  simc-dlq:
+    subjects:
+      - $JS.EVENT.ADVISORY.CONSUMER.MAX_DELIVERIES.simc-job-stream.*
+      - $JS.EVENT.ADVISORY.CONSUMER.MSG_TERMINATED.simc-job-stream.*
+    storage: file
+    maxAge: 1
 
 apps:
   run-sim:
@@ -62,6 +69,7 @@ apps:
       durableName: simc-job-consumer
       filterSubject: simc.job
       maxDeliver: 3
+      backoff: [5s, 30s, 1m]
       ackWait: 10s
     # shutdownTailSeconds must cover any in-code shutdown grace period
     shutdownTailSeconds: 10

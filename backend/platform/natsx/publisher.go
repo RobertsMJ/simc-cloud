@@ -38,7 +38,7 @@ func NewPublisher[T any](js jetstream.JetStream, cfg *PublisherConfig) *Publishe
 }
 
 func (p *Publisher[T]) Publish(ctx context.Context, msg T) error {
-	slog.Info("stub publishing result", "result", msg)
+	slog.Info("publishing result", "stream", p.cfg.StreamID, "subject", p.cfg.Subject, "result", msg)
 
 	res, err := json.Marshal(msg)
 	if err != nil {
@@ -51,7 +51,7 @@ func (p *Publisher[T]) Publish(ctx context.Context, msg T) error {
 		slog.Error("failed to publish message", "error", err)
 		switch {
 		case errors.Is(err, nats.ErrMaxPayload):
-			return errors.Join(queue.ErrFatal)
+			return errors.Join(queue.ErrFatal, err)
 		}
 		return err
 	}

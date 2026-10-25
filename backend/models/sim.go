@@ -1,6 +1,10 @@
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+
+	"github.com/RobertsMJ/simc-cloud/simc"
+)
 
 // Models for single simulations
 // Request: Single job and gearset with a simc input string
@@ -20,32 +24,7 @@ type SimResult struct {
 	Status       Status          `json:"status"`
 	ErrorMessage *string         `json:"error_message,omitempty"`
 	Baseline     bool            `json:"baseline"`
-	Statistics   SimStatistics   `json:"statistics"`
+	Statistics   simc.Statistics `json:"statistics"`
 	Metadata     *map[string]any `json:"metadata,omitempty"`
 	Result       json.RawMessage `json:"result"`
-}
-
-type SimStatistics struct {
-	ElapsedCpuSeconds    float64    `json:"elapsed_cpu_seconds"`
-	ElapsedTimeSeconds   float64    `json:"elapsed_time_seconds"`
-	InitTimeSeconds      float64    `json:"init_time_seconds"`
-	MergeTimeSeconds     float64    `json:"merge_time_seconds"`
-	AnalyzeTimeSeconds   float64    `json:"analyze_time_seconds"`
-	TotalEventsProcessed int64      `json:"total_events_processed"`
-	SimulationLength     StatSample `json:"simulation_length"`
-	RaidDps              StatSample `json:"raid_dps"`
-	TotalDmg             StatSample `json:"total_dmg"`
-}
-
-type StatSample struct {
-	Sum          float64 `json:"sum"`
-	Count        int     `json:"count"`
-	Mean         float64 `json:"mean"`
-	Min          float64 `json:"min,omitempty"`
-	Max          float64 `json:"max,omitempty"`
-	Median       float64 `json:"median,omitempty"`
-	Variance     float64 `json:"variance,omitempty"`
-	StdDev       float64 `json:"std_dev,omitempty"`
-	MeanVariance float64 `json:"mean_variance,omitempty"`
-	MeanStdDev   float64 `json:"mean_std_dev,omitempty"`
 }
