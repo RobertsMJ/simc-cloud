@@ -3,7 +3,7 @@ info:
   title: Simc Api
   version: 1.0.0
 servers:
-  - url: "https://simc.yggdrasil.home/api"
+  - url: "https://simc.yggdrasil.home"
 paths:
   /api/test:
     get:
