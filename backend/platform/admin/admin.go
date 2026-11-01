@@ -14,7 +14,12 @@ func NewAdminHandler() http.Handler {
 	mux := http.NewServeMux()
 
 	// TODO: Derive this from health checkers
-	mux.Handle("GET /health", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	mux.Handle("/health", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("ok"))
+	}))
+	// TODO: Derive this from readiness checkers
+	mux.Handle("/ready", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("ok"))
 	}))

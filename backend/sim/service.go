@@ -40,8 +40,8 @@ func (s *Service) Handle(ctx context.Context, req models.SimRequest) error {
 	if ctx.Err() != nil {
 		return ctx.Err()
 	}
-	if simCtx.Err() != nil {
-		return simCtx.Err()
+	if errors.Is(simCtx.Err(), context.DeadlineExceeded) {
+		err = context.DeadlineExceeded
 	}
 
 	simResult := models.SimResult{

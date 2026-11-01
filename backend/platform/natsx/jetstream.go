@@ -16,6 +16,7 @@ func NewJetstream(lc fx.Lifecycle, cfg *NatsConfig) (jetstream.JetStream, error)
 	drained := make(chan bool)
 	nc, err := nats.Connect(
 		cfg.Url,
+		nats.MaxReconnects(-1),
 		nats.ClosedHandler(
 			func(c *nats.Conn) {
 				close(drained)

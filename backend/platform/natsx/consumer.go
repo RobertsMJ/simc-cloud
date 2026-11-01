@@ -17,9 +17,10 @@ type Consumer[T any] struct {
 	logger *slog.Logger
 	config *ConsumerConfig
 
-	js      jetstream.JetStream
-	sub     jetstream.ConsumeContext
-	handler queue.Handler[T]
+	onTerminalError func() error
+	js              jetstream.JetStream
+	sub             jetstream.ConsumeContext
+	handler         queue.Handler[T]
 
 	abort             context.CancelFunc
 	heartbeatInterval time.Duration
@@ -32,12 +33,14 @@ func NewConsumer[T any](
 	config *ConsumerConfig,
 	js jetstream.JetStream,
 	handler queue.Handler[T],
+	onTerminalError func() error,
 ) *Consumer[T] {
 	return &Consumer[T]{
-		config:  config,
-		js:      js,
-		handler: handler,
-		logger:  logger.With("stream", config.StreamName, "consumer", config.DurableName),
+		onTerminalError: onTerminalError,
+		config:          config,
+		js:              js,
+		handler:         handler,
+		logger:          logger.With("stream", config.StreamName, "consumer", config.DurableName),
 	}
 }
 
@@ -57,12 +60,24 @@ func (c *Consumer[T]) Start(ctx context.Context) error {
 			c.onMsg(abortCtx, msg)
 		},
 		jetstream.PullMaxMessages(c.config.MaxMessages),
+		jetstream.ConsumeErrHandler(c.onConsumeErr),
 	)
 	if err != nil {
 		c.abort()
 		return fmt.Errorf("failed to consume messages: %w", err)
 	}
 	return nil
+}
+
+func (c *Consumer[T]) onConsumeErr(_ jetstream.ConsumeContext, err error) {
+	if !errors.Is(err, jetstream.ErrConsumerDeleted) && !errors.Is(err, jetstream.ErrBadRequest) {
+		c.logger.Warn("consume error", "error", err)
+		return
+	}
+	c.logger.Error("terminal consume error, shutting down", "error", err)
+	if err := c.onTerminalError(); err != nil {
+		c.logger.Error("failed to trigger shutdown", "error", err)
+	}
 }
 
 func (c *Consumer[T]) Stop(ctx context.Context) error {

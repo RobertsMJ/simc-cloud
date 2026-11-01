@@ -18,6 +18,7 @@ type ConsumerTestSuite struct {
 	suite.Suite
 
 	handler  *recordingHandler
+	shutdown *fakeShutdowner
 	consumer *Consumer[testPayload]
 }
 
@@ -27,11 +28,13 @@ func TestConsumerTestSuite(t *testing.T) {
 
 func (s *ConsumerTestSuite) SetupTest() {
 	s.handler = &recordingHandler{}
+	s.shutdown = &fakeShutdowner{called: make(chan struct{}, 1)}
 	s.consumer = NewConsumer[testPayload](
 		slog.Default(),
 		&ConsumerConfig{StreamName: "stream", DurableName: "consumer"},
 		nil,
 		s.handler,
+		s.shutdown.Shutdown,
 	)
 	s.consumer.heartbeatInterval = time.Minute
 }
@@ -157,6 +160,15 @@ func (s *ConsumerTestSuite) TestOnMsg() {
 			s.Equal(tt.wantPayload, s.handler.payloads())
 		})
 	}
+}
+
+type fakeShutdowner struct {
+	called chan struct{}
+}
+
+func (f *fakeShutdowner) Shutdown() error {
+	f.called <- struct{}{}
+	return nil
 }
 
 type handlerFunc func(ctx context.Context, msg testPayload) error
@@ -310,4 +322,27 @@ func (s *ConsumerTestSuite) TestHeartbeat_ExtendsAckWhileHandling() {
 
 	s.waitFor(done)
 	s.Equal([]string{"ack"}, msg.recorded())
+}
+
+func (s *ConsumerTestSuite) TestOnConsumeErr() {
+	tests := []struct {
+		name         string
+		err          error
+		wantShutdown bool
+	}{
+		{name: "consumer deleted shuts down", err: jetstream.ErrConsumerDeleted, wantShutdown: true},
+		{name: "wrapped bad request shuts down", err: fmt.Errorf("pull: %w", jetstream.ErrBadRequest), wantShutdown: true},
+		{name: "missing heartbeat is survivable", err: jetstream.ErrNoHeartbeat},
+		{name: "leadership change is survivable", err: jetstream.ErrConsumerLeadershipChanged},
+	}
+
+	for _, tt := range tests {
+		s.Run(tt.name, func() {
+			s.SetupTest()
+
+			s.consumer.onConsumeErr(nil, tt.err)
+
+			s.Equal(tt.wantShutdown, len(s.shutdown.called) == 1)
+		})
+	}
 }

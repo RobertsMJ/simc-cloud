@@ -5,6 +5,7 @@ Cloud-native application that runs [SimulationCraft](https://github.com/simulati
 ## Instructions
 
 - Prioritize simplicity; avoid over-complication at all costs. Whenever you suggest an approach, it should eliminate un-needed complexity.
+- Produce the minimum amount of code necessary to solve the problem.
 
 ## Documentation Guidelines
 
