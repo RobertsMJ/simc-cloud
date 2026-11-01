@@ -37,7 +37,11 @@ func (s SimcExec) Run(ctx context.Context, in sim.Input) (sim.Output, error) {
 	if err != nil {
 		return sim.Output{}, fmt.Errorf("create temp dir: %w", err)
 	}
-	defer os.RemoveAll(tmpDir)
+	defer func() {
+		if err := os.RemoveAll(tmpDir); err != nil {
+			slog.Warn("failed to remove simc temp dir", "path", tmpDir, "error", err)
+		}
+	}()
 
 	inputPath := tmpDir + "/input.simc"
 	if err := os.WriteFile(inputPath, []byte(in.Profile), 0644); err != nil {
@@ -47,7 +51,7 @@ func (s SimcExec) Run(ctx context.Context, in sim.Input) (sim.Output, error) {
 	slog.Debug("running simulation with threads", "threads", s.config.Threads)
 
 	outputPath := tmpDir + "/output.json"
-	cmd := exec.CommandContext(ctx, "/app/simc", inputPath, "json2="+outputPath, "html=/dev/null", "report_details=0", fmt.Sprintf("threads=%d", s.config.Threads))
+	cmd := exec.CommandContext(ctx, s.config.BinPath, inputPath, "json2="+outputPath, "html=/dev/null", "report_details=0", fmt.Sprintf("threads=%d", s.config.Threads))
 	var stderr bytes.Buffer
 	cmd.Stderr = &stderr
 

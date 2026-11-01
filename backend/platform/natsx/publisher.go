@@ -7,55 +7,41 @@ import (
 	"fmt"
 	"log/slog"
 
-	"github.com/RobertsMJ/simc-cloud/backend/config"
 	"github.com/RobertsMJ/simc-cloud/backend/transport/queue"
 	"github.com/nats-io/nats.go"
 	"github.com/nats-io/nats.go/jetstream"
 )
 
-type PublisherConfig struct {
-	StreamID string
-	Subject  string
-}
-
-func NewPublisherConfig() *PublisherConfig {
-	return &PublisherConfig{
-		StreamID: config.MustEnv("PUBLISHER_STREAM_NAME"),
-		Subject:  config.MustEnv("PUBLISHER_SUBJECT"),
-	}
-}
-
 type Publisher[T any] struct {
-	js  jetstream.JetStream
-	cfg *PublisherConfig
+	logger *slog.Logger
+	js     jetstream.JetStream
+	cfg    *PublisherConfig
 }
 
-func NewPublisher[T any](js jetstream.JetStream, cfg *PublisherConfig) *Publisher[T] {
+func NewPublisher[T any](logger *slog.Logger, cfg *PublisherConfig, js jetstream.JetStream) *Publisher[T] {
 	return &Publisher[T]{
-		js:  js,
-		cfg: cfg,
+		logger: logger.With("stream", cfg.StreamName, "subject", cfg.Subject),
+		js:     js,
+		cfg:    cfg,
 	}
 }
 
 func (p *Publisher[T]) Publish(ctx context.Context, msg T) error {
-	slog.Info("publishing result", "stream", p.cfg.StreamID, "subject", p.cfg.Subject, "result", msg)
-
-	res, err := json.Marshal(msg)
+	data, err := json.Marshal(msg)
 	if err != nil {
-		slog.Error("failed to marshal message", "error", err)
+		p.logger.Error("failed to marshal message", "error", err)
 		return errors.Join(queue.ErrFatal, fmt.Errorf("failed to marshal message: %w", err))
 	}
 
-	ack, err := p.js.Publish(ctx, p.cfg.Subject, res)
+	ack, err := p.js.Publish(ctx, p.cfg.Subject, data)
 	if err != nil {
-		slog.Error("failed to publish message", "error", err)
-		switch {
-		case errors.Is(err, nats.ErrMaxPayload):
+		p.logger.Error("failed to publish message", "error", err)
+		if errors.Is(err, nats.ErrMaxPayload) {
 			return errors.Join(queue.ErrFatal, err)
 		}
 		return err
 	}
 
-	slog.Info("message published successfully", "ack", ack)
+	p.logger.Debug("message published", "sequence", ack.Sequence)
 	return nil
 }

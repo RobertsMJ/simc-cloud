@@ -1,0 +1,17 @@
+openapi: 3.1.0
+info:
+  title: Simc Api
+  version: 1.0.0
+servers:
+  - url: "https://simc.yggdrasil.home"
+paths:
+  /api/test:
+    get:
+      description: test endpoint
+      responses:
+        "200":
+          description: success
+          content:
+            application/json:
+              schema:
+                type: integer

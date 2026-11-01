@@ -9,144 +9,159 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/RobertsMJ/simc-cloud/backend/config"
 	"github.com/RobertsMJ/simc-cloud/backend/transport/queue"
 	"github.com/nats-io/nats.go/jetstream"
-	"go.uber.org/fx"
 )
 
-type ConsumerConfig struct {
-	StreamID   string
-	ConsumerID string
+type Consumer[T any] struct {
+	logger *slog.Logger
+	config *ConsumerConfig
+
+	onTerminalError func() error
+	js              jetstream.JetStream
+	sub             jetstream.ConsumeContext
+	handler         queue.Handler[T]
+
+	abort             context.CancelFunc
+	heartbeatInterval time.Duration
+
+	draining atomic.Bool
 }
 
-func NewConsumerConfig() *ConsumerConfig {
-	return &ConsumerConfig{
-		StreamID:   config.MustEnv("CONSUMER_STREAM_NAME"),
-		ConsumerID: config.MustEnv("CONSUMER_NAME"),
+func NewConsumer[T any](
+	logger *slog.Logger,
+	config *ConsumerConfig,
+	js jetstream.JetStream,
+	handler queue.Handler[T],
+	onTerminalError func() error,
+) *Consumer[T] {
+	return &Consumer[T]{
+		onTerminalError: onTerminalError,
+		config:          config,
+		js:              js,
+		handler:         handler,
+		logger:          logger.With("stream", config.StreamName, "consumer", config.DurableName),
 	}
 }
 
-func RunConsumer[T any](lc fx.Lifecycle, js jetstream.JetStream, cfg *ConsumerConfig, handler queue.Handler[T]) error {
-	var draining atomic.Bool
-	jobCtx, jobCancel := context.WithCancel(context.Background())
+func (c *Consumer[T]) Start(ctx context.Context) error {
+	consumer, err := c.js.Consumer(ctx, c.config.StreamName, c.config.DurableName)
+	if err != nil {
+		return fmt.Errorf("failed to bind consumer: %w", err)
+	}
+	c.heartbeatInterval = consumer.CachedInfo().Config.AckWait * 30 / 100
+	c.logger.Info("bound to consumer")
 
-	// Root consumer handling context - indicates if this consumer is still accepting messages
-	var consumerCtx jetstream.ConsumeContext
+	var abortCtx context.Context
+	abortCtx, c.abort = context.WithCancel(context.Background())
 
-	lc.Append(fx.Hook{
-		OnStart: func(ctx context.Context) error {
-			consumer, err := js.Consumer(ctx, cfg.StreamID, cfg.ConsumerID)
-			if err != nil {
-				jobCancel()
-				return fmt.Errorf("failed to get consumer: %w", err)
-			}
-			slog.Info("created consumer", "stream", cfg.StreamID, "consumer", cfg.ConsumerID)
-			pulseInterval := consumer.CachedInfo().Config.AckWait / 3
-
-			consumerCtx, err = consumer.Consume(
-				func(msg jetstream.Msg) {
-					// nak any pending messages while shutdown in progress
-					if draining.Load() {
-						msg.Nak()
-						return
-					}
-
-					var data T
-					if err := json.Unmarshal(msg.Data(), &data); err != nil {
-						slog.Error("failed to unmarshal message", "error", err)
-						msg.Term()
-						return
-					}
-
-					err := invokeHandler(
-						jobCtx,
-						func(ctx context.Context) error {
-							return handler.Handle(ctx, data)
-						},
-						invokeParams{
-							pulseInterval: pulseInterval,
-							onPulse:       msg.InProgress,
-						},
-					)
-
-					switch {
-					case err == nil:
-						slog.Debug("message handled successfully, acknowledging")
-						if err := msg.Ack(); err != nil {
-							slog.Error("failed to acknowledge message", "error", err)
-						}
-					case jobCtx.Err() != nil:
-						slog.Info("shutdown interrupted message, nak")
-						msg.Nak()
-					case errors.Is(err, queue.ErrFatal):
-						slog.Error("fatal error while handling message", "error", err)
-						msg.TermWithReason(err.Error())
-					default:
-						slog.Error("retriable error while handling message", "error", err)
-						msg.Nak()
-					}
-				},
-				jetstream.PullMaxMessages(1),
-			)
-			if err != nil {
-				jobCancel()
-				return fmt.Errorf("failed to consume messages: %w", err)
-			}
-			return nil
+	c.sub, err = consumer.Consume(
+		func(msg jetstream.Msg) {
+			c.onMsg(abortCtx, msg)
 		},
-		OnStop: func(ctx context.Context) error {
-			slog.Info("stopping consumer")
-			defer jobCancel()
-			draining.Store(true)
-			consumerCtx.Drain() // no more new messages please
-
-			select {
-			case <-consumerCtx.Closed():
-				slog.Info("consumer drained cleanly")
-			case <-ctx.Done():
-				slog.Warn("stop deadline reached with message still being processed")
-			}
-			return nil
-		},
-	})
+		jetstream.PullMaxMessages(c.config.MaxMessages),
+		jetstream.ConsumeErrHandler(c.onConsumeErr),
+	)
+	if err != nil {
+		c.abort()
+		return fmt.Errorf("failed to consume messages: %w", err)
+	}
 	return nil
 }
 
-type invokeParams struct {
-	pulseInterval time.Duration
-	onPulse       func() error
+func (c *Consumer[T]) onConsumeErr(_ jetstream.ConsumeContext, err error) {
+	if !errors.Is(err, jetstream.ErrConsumerDeleted) && !errors.Is(err, jetstream.ErrBadRequest) {
+		c.logger.Warn("consume error", "error", err)
+		return
+	}
+	c.logger.Error("terminal consume error, shutting down", "error", err)
+	if err := c.onTerminalError(); err != nil {
+		c.logger.Error("failed to trigger shutdown", "error", err)
+	}
 }
 
-func invokeHandler(ctx context.Context, handler func(context.Context) error, params invokeParams) error {
-	// context termination reasons:
-	//   lost connection with nats
-	//   application is shutting down
-	// on done, kills the pulse
-	invokeCtx, cancel := context.WithCancelCause(ctx)
-	defer cancel(nil)
+func (c *Consumer[T]) Stop(ctx context.Context) error {
+	c.logger.Info("stopping consumer")
+	defer c.abort()
+	c.draining.Store(true)
+	c.sub.Drain() // no more new messages please
+
+	select {
+	case <-c.sub.Closed():
+		c.logger.Info("consumer drained cleanly")
+	case <-ctx.Done():
+		c.logger.Warn("stop deadline reached with message still being processed")
+	}
+	return nil
+}
+
+func (c *Consumer[T]) onMsg(ctx context.Context, msg jetstream.Msg) {
+
+	// nak any pending messages while shutdown in progress
+	if c.draining.Load() {
+		if err := msg.Nak(); err != nil {
+			c.logger.Error("failed to negatively acknowledge message", "error", err)
+		}
+		return
+	}
+
+	ctx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
+	var payload T
+	if err := json.Unmarshal(msg.Data(), &payload); err != nil {
+		c.logger.Error("failed to unmarshal message", "error", err)
+		if err := msg.TermWithReason("failed to unmarshal message: " + err.Error()); err != nil {
+			c.logger.Error("failed to terminate message", "error", err)
+		}
+		return
+	}
+
+	stopHeartbeat := c.runHeartbeat(ctx, cancel, msg)
+	err := c.handler.Handle(ctx, payload)
+	stopHeartbeat()
+
+	switch {
+	case err == nil:
+		c.logger.Debug("message handled successfully, acknowledging")
+		if err := msg.Ack(); err != nil {
+			c.logger.Error("failed to acknowledge message", "error", err)
+		}
+	case errors.Is(err, queue.ErrFatal):
+		c.logger.Error("fatal error while handling message", "error", err)
+		if err := msg.TermWithReason(err.Error()); err != nil {
+			c.logger.Error("failed to terminate message", "error", err)
+		}
+	default:
+		c.logger.Error("retriable error while handling message", "error", err)
+		if err := msg.Nak(); err != nil {
+			c.logger.Error("failed to negatively acknowledge message", "error", err)
+		}
+	}
+}
+
+func (c *Consumer[T]) runHeartbeat(ctx context.Context, cancel context.CancelFunc, msg jetstream.Msg) func() {
 
 	done := make(chan struct{})
 	go func() {
 		defer close(done)
-		pulse := time.NewTicker(params.pulseInterval)
-		defer pulse.Stop()
+		heartbeat := time.NewTicker(c.heartbeatInterval)
+		defer heartbeat.Stop()
+
 		for {
 			select {
-			case <-invokeCtx.Done():
+			case <-ctx.Done():
 				return
-			case <-pulse.C:
-				if err := params.onPulse(); err != nil {
-					slog.Warn("heartbeat failed", "error", err)
-					cancel(err)
-					continue
+			case <-heartbeat.C:
+				if err := msg.InProgress(); err != nil {
+					c.logger.Warn("heartbeat failed", "error", err)
 				}
 			}
 		}
 	}()
-	err := handler(invokeCtx)
-	cancel(nil) // stop the pulse...
-	<-done      // ...and wait for it, so no InProgress lands after the Ack
 
-	return err
+	return func() {
+		cancel()
+		<-done
+	}
 }

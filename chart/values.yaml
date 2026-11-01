@@ -89,10 +89,3 @@ apps:
       streamName: simc-job-stream
       durableName: simc-jobs-results
       filterSubject: simc.results
-  create-job:
-    component: api
-    image:
-      repository: create-job
-    publisher:
-      streamName: simc-job-stream
-      subject: simc.job

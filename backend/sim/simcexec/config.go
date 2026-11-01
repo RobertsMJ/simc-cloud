@@ -7,14 +7,15 @@ import (
 )
 
 type Config struct {
-	BinPath string
-	Threads int
+	BinPath string `env:"SIM_BINARY_PATH" envDefault:"/app/simc"`
+	Threads int    `env:"-"`
 }
 
-func NewConfig() *Config {
-	bin := config.OptionalEnv("SIM_BINARY_PATH", "/app/simc")
-	return &Config{
-		BinPath: bin,
-		Threads: runtime.GOMAXPROCS(0),
+func NewConfig() (*Config, error) {
+	cfg, err := config.Parse[Config]("")
+	if err != nil {
+		return nil, err
 	}
+	cfg.Threads = runtime.GOMAXPROCS(0)
+	return cfg, nil
 }

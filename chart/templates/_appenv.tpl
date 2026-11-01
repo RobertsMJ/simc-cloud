@@ -31,6 +31,7 @@ data:
 {{- $_ := set $env "MAX_RUNTIME" (printf "%ds" (int .)) -}}
 {{- end -}}
 {{- $_ := set $env "TERMINATION_PERIOD" (printf "%ss" (include "simc-chart.app.terminationGraceSeconds" .)) }}
+{{- $_ := set $env "ADMIN_PORT" (toString .app.adminPort) }}
 {{- if .app.consumer -}}
 {{- $env = merge $env (include "simc-chart.app.consumerData" . | fromYaml) -}}
 {{- end -}}

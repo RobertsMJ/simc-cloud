@@ -1,26 +1,18 @@
 package job
 
 import (
-	"context"
-	"log/slog"
-
 	"github.com/RobertsMJ/simc-cloud/backend/models"
 	"github.com/RobertsMJ/simc-cloud/backend/transport/queue"
 )
 
 type Service struct {
-	repo Repo
+	repo      Repo
+	publisher queue.Publisher[models.SimRequest]
 }
 
-func NewService(repo Repo) *Service {
+func NewService(repo Repo, publisher queue.Publisher[models.SimRequest]) *Service {
 	return &Service{
-		repo: repo,
+		repo:      repo,
+		publisher: publisher,
 	}
-}
-
-var _ queue.Publisher[models.SimRequest] = (*Service)(nil)
-
-func (s *Service) Publish(ctx context.Context, sim models.SimRequest) error {
-	slog.Info("publishing sim request", "result", sim)
-	return nil
 }
