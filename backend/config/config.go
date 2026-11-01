@@ -1,21 +1,12 @@
 package config
 
-import (
-	"fmt"
-	"os"
-)
+import "github.com/caarlos0/env/v11"
 
-func MustEnv(key string) string {
-	v := os.Getenv(key)
-	if v == "" {
-		panic(fmt.Sprintf("required environment variable %q is not set", key))
+// Parse reads T from the environment using `env` struct tags. Every variable name is prefixed with prefix.
+func Parse[T any](prefix string) (*T, error) {
+	var cfg T
+	if err := env.ParseWithOptions(&cfg, env.Options{Prefix: prefix}); err != nil {
+		return nil, err
 	}
-	return v
-}
-
-func OptionalEnv(key, fallback string) string {
-	if v := os.Getenv(key); v != "" {
-		return v
-	}
-	return fallback
+	return &cfg, nil
 }

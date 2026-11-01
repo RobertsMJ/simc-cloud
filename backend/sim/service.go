@@ -37,6 +37,9 @@ func (s *Service) Handle(ctx context.Context, req models.SimRequest) error {
 			Profile: req.Input,
 		},
 	)
+	if ctx.Err() != nil {
+		return ctx.Err()
+	}
 	if simCtx.Err() != nil {
 		return simCtx.Err()
 	}
@@ -52,6 +55,7 @@ func (s *Service) Handle(ctx context.Context, req models.SimRequest) error {
 		simResult.ErrorMessage = &errMsg
 		if errors.Is(err, context.DeadlineExceeded) {
 			slog.Error("sim deadline exceeded", "job_id", req.JobID, "gearset_id", req.GearsetID)
+			return queue.ErrFatal
 		}
 		slog.Error("sim failed", "job_id", req.JobID, "gearset_id", req.GearsetID, "error", err)
 	} else {

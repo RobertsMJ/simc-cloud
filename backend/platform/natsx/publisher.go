@@ -7,23 +7,10 @@ import (
 	"fmt"
 	"log/slog"
 
-	"github.com/RobertsMJ/simc-cloud/backend/config"
 	"github.com/RobertsMJ/simc-cloud/backend/transport/queue"
 	"github.com/nats-io/nats.go"
 	"github.com/nats-io/nats.go/jetstream"
 )
-
-type PublisherConfig struct {
-	StreamID string
-	Subject  string
-}
-
-func NewPublisherConfig() *PublisherConfig {
-	return &PublisherConfig{
-		StreamID: config.MustEnv("PUBLISHER_STREAM_NAME"),
-		Subject:  config.MustEnv("PUBLISHER_SUBJECT"),
-	}
-}
 
 type Publisher[T any] struct {
 	js  jetstream.JetStream
@@ -38,7 +25,7 @@ func NewPublisher[T any](js jetstream.JetStream, cfg *PublisherConfig) *Publishe
 }
 
 func (p *Publisher[T]) Publish(ctx context.Context, msg T) error {
-	slog.Info("publishing result", "stream", p.cfg.StreamID, "subject", p.cfg.Subject, "result", msg)
+	slog.Info("publishing result", "stream", p.cfg.StreamName, "subject", p.cfg.Subject, "result", msg)
 
 	res, err := json.Marshal(msg)
 	if err != nil {

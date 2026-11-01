@@ -5,21 +5,10 @@ import (
 	"fmt"
 	"log/slog"
 
-	"github.com/RobertsMJ/simc-cloud/backend/config"
 	"github.com/nats-io/nats.go"
 	"github.com/nats-io/nats.go/jetstream"
 	"go.uber.org/fx"
 )
-
-type NatsConfig struct {
-	Url string
-}
-
-func NewNatsConfig() *NatsConfig {
-	return &NatsConfig{
-		Url: config.MustEnv("QUEUE_URL"),
-	}
-}
 
 func NewJetstream(lc fx.Lifecycle, cfg *NatsConfig) (jetstream.JetStream, error) {
 	slog.Debug("initializing jetstream connection")

@@ -7,15 +7,9 @@ import (
 )
 
 type Config struct {
-	MaxRuntime time.Duration
+	MaxRuntime time.Duration `env:"MAX_RUNTIME,required"`
 }
 
-func NewConfig() *Config {
-	maxRuntime, err := time.ParseDuration(config.MustEnv("MAX_RUNTIME"))
-	if err != nil {
-		panic("failed to parse maxRuntime")
-	}
-	return &Config{
-		MaxRuntime: maxRuntime,
-	}
+func NewConfig() (*Config, error) {
+	return config.Parse[Config]("")
 }

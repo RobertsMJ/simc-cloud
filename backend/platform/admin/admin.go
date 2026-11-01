@@ -3,19 +3,21 @@ package admin
 import (
 	"net/http"
 
-	"go.uber.org/fx"
+	"github.com/RobertsMJ/simc-cloud/backend/platform/httpx"
 )
 
-var Module = fx.Module(
-	"admin",
-	fx.Provide(
-		NewConfig,
-		NewAdminServer,
-		NewLogger,
-		fx.Annotate(NewServeMux, fx.ParamTags(`group:"admin"`)),
-		AsAdminRoute(NewHealthCheckHandler),
-		AsAdminRoute(NewReadyCheckHandler),
-		AsAdminRoute(NewMetricsHandler),
-	),
-	fx.Invoke(func(*http.Server) {}),
-)
+func NewAdminServerConfig() (*httpx.Config, error) {
+	return httpx.NewConfigWithPrefix("admin", "8081")
+}
+
+func NewAdminHandler() http.Handler {
+	mux := http.NewServeMux()
+
+	// TODO: Derive this from health checkers
+	mux.Handle("GET /health", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("ok"))
+	}))
+
+	return mux
+}

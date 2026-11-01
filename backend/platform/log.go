@@ -1,4 +1,4 @@
-package admin
+package platform
 
 import (
 	"log/slog"
