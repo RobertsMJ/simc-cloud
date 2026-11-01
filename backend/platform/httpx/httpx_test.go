@@ -29,7 +29,7 @@ func (s *HttpxTestSuite) TestShutdown() {
 		stubHandler{},
 	)
 
-	server.Start()
+	s.Require().NoError(server.Start())
 	s.NoError(server.Stop(context.Background()))
 	s.NoError(server.Stop(context.Background()))
 }

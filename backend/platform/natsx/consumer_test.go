@@ -1,6 +1,7 @@
 package natsx
 
 import (
+	"bytes"
 	"context"
 	"errors"
 	"fmt"
@@ -65,6 +66,7 @@ func (h *recordingHandler) payloads() []testPayload {
 type fakeMsg struct {
 	jetstream.Msg
 	data []byte
+	err  error
 
 	mu         sync.Mutex
 	calls      []string
@@ -80,10 +82,10 @@ func (m *fakeMsg) record(call string) {
 }
 
 func (m *fakeMsg) Ack() error { m.record("ack"); return nil }
-func (m *fakeMsg) Nak() error { m.record("nak"); return nil }
+func (m *fakeMsg) Nak() error { m.record("nak"); return m.err }
 func (m *fakeMsg) TermWithReason(string) error {
 	m.record("term")
-	return nil
+	return m.err
 }
 
 func (m *fakeMsg) InProgress() error {
@@ -158,6 +160,37 @@ func (s *ConsumerTestSuite) TestOnMsg() {
 
 			s.Equal(tt.wantCalls, msg.recorded())
 			s.Equal(tt.wantPayload, s.handler.payloads())
+		})
+	}
+}
+
+func (s *ConsumerTestSuite) TestOnMsgLogsAcknowledgementFailures() {
+	tests := []struct {
+		name       string
+		data       string
+		handlerErr error
+		draining   bool
+		wantLog    string
+	}{
+		{name: "draining", draining: true, wantLog: "failed to negatively acknowledge message"},
+		{name: "invalid json", data: "invalid", wantLog: "failed to terminate message"},
+		{name: "fatal error", data: `{}`, handlerErr: queue.ErrFatal, wantLog: "failed to terminate message"},
+		{name: "retriable error", data: `{}`, handlerErr: errors.New("transient"), wantLog: "failed to negatively acknowledge message"},
+	}
+
+	for _, tt := range tests {
+		s.Run(tt.name, func() {
+			s.SetupTest()
+			var logs bytes.Buffer
+			s.consumer.logger = slog.New(slog.NewTextHandler(&logs, nil))
+			s.consumer.draining.Store(tt.draining)
+			s.handler.err = tt.handlerErr
+			msg := &fakeMsg{data: []byte(tt.data), err: errors.New("ack failure")}
+
+			s.consumer.onMsg(context.Background(), msg)
+
+			s.Contains(logs.String(), tt.wantLog)
+			s.Contains(logs.String(), "ack failure")
 		})
 	}
 }

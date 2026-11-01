@@ -99,7 +99,9 @@ func (c *Consumer[T]) onMsg(ctx context.Context, msg jetstream.Msg) {
 
 	// nak any pending messages while shutdown in progress
 	if c.draining.Load() {
-		msg.Nak()
+		if err := msg.Nak(); err != nil {
+			c.logger.Error("failed to negatively acknowledge message", "error", err)
+		}
 		return
 	}
 
@@ -109,7 +111,9 @@ func (c *Consumer[T]) onMsg(ctx context.Context, msg jetstream.Msg) {
 	var payload T
 	if err := json.Unmarshal(msg.Data(), &payload); err != nil {
 		c.logger.Error("failed to unmarshal message", "error", err)
-		msg.TermWithReason("failed to unmarshal message: " + err.Error())
+		if err := msg.TermWithReason("failed to unmarshal message: " + err.Error()); err != nil {
+			c.logger.Error("failed to terminate message", "error", err)
+		}
 		return
 	}
 
@@ -125,10 +129,14 @@ func (c *Consumer[T]) onMsg(ctx context.Context, msg jetstream.Msg) {
 		}
 	case errors.Is(err, queue.ErrFatal):
 		c.logger.Error("fatal error while handling message", "error", err)
-		msg.TermWithReason(err.Error())
+		if err := msg.TermWithReason(err.Error()); err != nil {
+			c.logger.Error("failed to terminate message", "error", err)
+		}
 	default:
 		c.logger.Error("retriable error while handling message", "error", err)
-		msg.Nak()
+		if err := msg.Nak(); err != nil {
+			c.logger.Error("failed to negatively acknowledge message", "error", err)
+		}
 	}
 }
 

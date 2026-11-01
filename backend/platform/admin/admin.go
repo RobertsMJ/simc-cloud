@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"log/slog"
 	"net/http"
 
 	"github.com/RobertsMJ/simc-cloud/backend/platform/httpx"
@@ -16,12 +17,16 @@ func NewAdminHandler() http.Handler {
 	// TODO: Derive this from health checkers
 	mux.Handle("/health", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("ok"))
+		if _, err := w.Write([]byte("ok")); err != nil {
+			slog.Warn("failed to write health response", "error", err)
+		}
 	}))
 	// TODO: Derive this from readiness checkers
 	mux.Handle("/ready", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("ok"))
+		if _, err := w.Write([]byte("ok")); err != nil {
+			slog.Warn("failed to write readiness response", "error", err)
+		}
 	}))
 
 	return mux
