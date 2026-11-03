@@ -1,4 +1,4 @@
-# AGENTS.md
+# AGENTS
 
 Cloud-native application that runs [SimulationCraft](https://github.com/simulationcraft/simc) simulations: first, comparing a World of Warcraft character's gear and talent combinations; long term, group simulations along a dungeon route (route building à la Mythic Dungeon Tools). It's a learning project for system design and distributed systems, so aim suggestions at the target architecture.
 
@@ -6,6 +6,7 @@ Cloud-native application that runs [SimulationCraft](https://github.com/simulati
 
 - Prioritize simplicity; avoid over-complication at all costs. Whenever you suggest an approach, it should eliminate un-needed complexity.
 - Produce the minimum amount of code necessary to solve the problem.
+- Code should be grounded in real API contracts.
 
 ## Documentation Guidelines
 

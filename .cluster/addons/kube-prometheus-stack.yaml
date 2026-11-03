@@ -14,7 +14,7 @@ spec:
         enabled: true
         forceConflicts: true
     cleanPrometheusOperatorObjectNames: true
-    alertManager:
+    alertmanager:
       enabled: false
     grafana:
       adminUser: admin

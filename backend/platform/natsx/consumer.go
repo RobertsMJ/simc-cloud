@@ -26,6 +26,7 @@ type Consumer[T any] struct {
 	heartbeatInterval time.Duration
 
 	draining atomic.Bool
+	metrics  consumerMetrics
 }
 
 func NewConsumer[T any](
@@ -34,6 +35,7 @@ func NewConsumer[T any](
 	js jetstream.JetStream,
 	handler queue.Handler[T],
 	onTerminalError func() error,
+	metrics *Metrics,
 ) *Consumer[T] {
 	return &Consumer[T]{
 		onTerminalError: onTerminalError,
@@ -41,6 +43,7 @@ func NewConsumer[T any](
 		js:              js,
 		handler:         handler,
 		logger:          logger.With("stream", config.StreamName, "consumer", config.DurableName),
+		metrics:         metrics.forConsumer(config),
 	}
 }
 
@@ -64,6 +67,7 @@ func (c *Consumer[T]) Start(ctx context.Context) error {
 	)
 	if err != nil {
 		c.abort()
+		c.metrics.errors.WithLabelValues(string(ErrorOpConsume)).Inc()
 		return fmt.Errorf("failed to consume messages: %w", err)
 	}
 	return nil
@@ -102,6 +106,7 @@ func (c *Consumer[T]) onMsg(ctx context.Context, msg jetstream.Msg) {
 		if err := msg.Nak(); err != nil {
 			c.logger.Error("failed to negatively acknowledge message", "error", err)
 		}
+		c.metrics.unhandled.WithLabelValues(string(UnhandledDraining)).Inc()
 		return
 	}
 
@@ -114,18 +119,22 @@ func (c *Consumer[T]) onMsg(ctx context.Context, msg jetstream.Msg) {
 		if err := msg.TermWithReason("failed to unmarshal message: " + err.Error()); err != nil {
 			c.logger.Error("failed to terminate message", "error", err)
 		}
+		c.metrics.unhandled.WithLabelValues(string(UnhandledMalformed)).Inc()
 		return
 	}
 
 	stopHeartbeat := c.runHeartbeat(ctx, cancel, msg)
+	start := time.Now()
 	err := c.handler.Handle(ctx, payload)
 	stopHeartbeat()
+	c.metrics.handled.WithLabelValues(string(handlerOutcome(err))).Observe(time.Since(start).Seconds())
 
 	switch {
 	case err == nil:
 		c.logger.Debug("message handled successfully, acknowledging")
 		if err := msg.Ack(); err != nil {
 			c.logger.Error("failed to acknowledge message", "error", err)
+			c.metrics.errors.WithLabelValues(string(ErrorOpAck)).Inc()
 		}
 	case errors.Is(err, queue.ErrFatal):
 		c.logger.Error("fatal error while handling message", "error", err)
@@ -155,6 +164,7 @@ func (c *Consumer[T]) runHeartbeat(ctx context.Context, cancel context.CancelFun
 			case <-heartbeat.C:
 				if err := msg.InProgress(); err != nil {
 					c.logger.Warn("heartbeat failed", "error", err)
+					c.metrics.errors.WithLabelValues(string(ErrorOpHeartbeat)).Inc()
 				}
 			}
 		}

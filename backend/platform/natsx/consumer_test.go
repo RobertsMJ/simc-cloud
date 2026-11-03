@@ -12,6 +12,7 @@ import (
 
 	"github.com/RobertsMJ/simc-cloud/backend/transport/queue"
 	"github.com/nats-io/nats.go/jetstream"
+	"github.com/prometheus/client_golang/prometheus"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -30,12 +31,15 @@ func TestConsumerTestSuite(t *testing.T) {
 func (s *ConsumerTestSuite) SetupTest() {
 	s.handler = &recordingHandler{}
 	s.shutdown = &fakeShutdowner{called: make(chan struct{}, 1)}
-	s.consumer = NewConsumer[testPayload](
+	consCfg := ConsumerConfig{StreamName: "stream", DurableName: "consumer"}
+	metrics := NewMetrics(prometheus.NewRegistry())
+	s.consumer = NewConsumer(
 		slog.Default(),
-		&ConsumerConfig{StreamName: "stream", DurableName: "consumer"},
+		&consCfg,
 		nil,
 		s.handler,
 		s.shutdown.Shutdown,
+		metrics,
 	)
 	s.consumer.heartbeatInterval = time.Minute
 }

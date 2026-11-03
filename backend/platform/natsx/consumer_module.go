@@ -23,10 +23,11 @@ func NewConsumerModule[T any](
 				js jetstream.JetStream,
 				handler queue.Handler[T],
 				shutdowner fx.Shutdowner,
+				metrics *Metrics,
 			) *Consumer[T] {
 				return NewConsumer(logger, config, js, handler, func() error {
 					return shutdowner.Shutdown(fx.ExitCode(1))
-				})
+				}, metrics)
 			},
 		),
 		fx.Invoke(

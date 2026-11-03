@@ -7,6 +7,7 @@ import (
 
 	"github.com/nats-io/nats.go"
 	"github.com/nats-io/nats.go/jetstream"
+	"github.com/prometheus/client_golang/prometheus"
 	"go.uber.org/fx"
 )
 
@@ -39,7 +40,7 @@ func NewJetstream(lc fx.Lifecycle, cfg *NatsConfig) (jetstream.JetStream, error)
 		}),
 	)
 	if err != nil {
-		slog.Error("failed to connect to NATS", "error", err)
+		slog.Error("failed to connect to NATS", "error", err, "url", cfg.Url)
 		return nil, fmt.Errorf("failed to connect to NATS: %w", err)
 	}
 
@@ -64,4 +65,19 @@ func NewJetstream(lc fx.Lifecycle, cfg *NatsConfig) (jetstream.JetStream, error)
 		},
 	})
 	return js, nil
+}
+
+func registerConnMetrics(reg prometheus.Registerer, js jetstream.JetStream) {
+	conn := js.Conn()
+	reg.MustRegister(
+		prometheus.NewGaugeFunc(prometheus.GaugeOpts{Namespace: "natsx", Name: "connected"}, func() float64 {
+			if conn.IsConnected() {
+				return 1
+			}
+			return 0
+		}),
+		prometheus.NewCounterFunc(prometheus.CounterOpts{Namespace: "natsx", Name: "reconnects_total"}, func() float64 {
+			return float64(conn.Stats().Reconnects)
+		}),
+	)
 }

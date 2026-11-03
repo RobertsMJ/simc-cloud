@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run Sim",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/backend/cmd/run-sim",
+            "envFile": "${workspaceFolder}/backend/cmd/run-sim/.env",
+            "console": "integratedTerminal"
+        }
+    ]
+}
