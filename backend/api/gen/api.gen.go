@@ -10,14 +10,15 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 )
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 
-	// (GET /api/test)
-	GetApiTest(w http.ResponseWriter, r *http.Request)
+	// (POST /api/profile)
+	PostApiProfile(w http.ResponseWriter, r *http.Request)
 }
 
 // ServerInterfaceWrapper converts contexts to parameters.
@@ -29,11 +30,11 @@ type ServerInterfaceWrapper struct {
 
 type MiddlewareFunc func(http.Handler) http.Handler
 
-// GetApiTest operation middleware
-func (siw *ServerInterfaceWrapper) GetApiTest(w http.ResponseWriter, r *http.Request) {
+// PostApiProfile operation middleware
+func (siw *ServerInterfaceWrapper) PostApiProfile(w http.ResponseWriter, r *http.Request) {
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.GetApiTest(w, r)
+		siw.Handler.PostApiProfile(w, r)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -163,21 +164,22 @@ func HandlerWithOptions(si ServerInterface, options StdHTTPServerOptions) http.H
 		ErrorHandlerFunc:   options.ErrorHandlerFunc,
 	}
 
-	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/api/test", wrapper.GetApiTest)
+	m.HandleFunc(http.MethodPost+" "+options.BaseURL+"/api/profile", wrapper.PostApiProfile)
 
 	return m
 }
 
-type GetApiTestRequestObject struct {
+type PostApiProfileRequestObject struct {
+	Body *PostApiProfileTextRequestBody
 }
 
-type GetApiTestResponseObject interface {
-	VisitGetApiTestResponse(w http.ResponseWriter) error
+type PostApiProfileResponseObject interface {
+	VisitPostApiProfileResponse(w http.ResponseWriter) error
 }
 
-type GetApiTest200JSONResponse int
+type PostApiProfile200JSONResponse map[string]interface{}
 
-func (response GetApiTest200JSONResponse) VisitGetApiTestResponse(w http.ResponseWriter) error {
+func (response PostApiProfile200JSONResponse) VisitPostApiProfileResponse(w http.ResponseWriter) error {
 
 	var buf bytes.Buffer
 	if err := json.NewEncoder(&buf).Encode(response); err != nil {
@@ -189,11 +191,53 @@ func (response GetApiTest200JSONResponse) VisitGetApiTestResponse(w http.Respons
 	return err
 }
 
+type PostApiProfile400JSONResponse Error
+
+func (response PostApiProfile400JSONResponse) VisitPostApiProfileResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(400)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type PostApiProfile429JSONResponse Error
+
+func (response PostApiProfile429JSONResponse) VisitPostApiProfileResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type PostApiProfile500JSONResponse Error
+
+func (response PostApiProfile500JSONResponse) VisitPostApiProfileResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
 // StrictServerInterface represents all server handlers.
 type StrictServerInterface interface {
 
-	// (GET /api/test)
-	GetApiTest(ctx context.Context, request GetApiTestRequestObject) (GetApiTestResponseObject, error)
+	// (POST /api/profile)
+	PostApiProfile(ctx context.Context, request PostApiProfileRequestObject) (PostApiProfileResponseObject, error)
 }
 
 type StrictHandlerFunc func(ctx context.Context, w http.ResponseWriter, r *http.Request, request any) (any, error)
@@ -235,23 +279,31 @@ type strictHandler struct {
 	options     StrictHTTPServerOptions
 }
 
-// GetApiTest operation middleware
-func (sh *strictHandler) GetApiTest(w http.ResponseWriter, r *http.Request) {
-	var request GetApiTestRequestObject
+// PostApiProfile operation middleware
+func (sh *strictHandler) PostApiProfile(w http.ResponseWriter, r *http.Request) {
+	var request PostApiProfileRequestObject
+
+	data, err := io.ReadAll(r.Body)
+	if err != nil {
+		sh.options.RequestErrorHandlerFunc(w, r, fmt.Errorf("can't read body: %w", err))
+		return
+	}
+	body := PostApiProfileTextRequestBody(data)
+	request.Body = &body
 
 	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
-		return sh.ssi.GetApiTest(ctx, request.(GetApiTestRequestObject))
+		return sh.ssi.PostApiProfile(ctx, request.(PostApiProfileRequestObject))
 	}
 	for _, middleware := range sh.middlewares {
-		handler = middleware(handler, "GetApiTest")
+		handler = middleware(handler, "PostApiProfile")
 	}
 
 	response, err := handler(r.Context(), w, r, request)
 
 	if err != nil {
 		sh.options.ResponseErrorHandlerFunc(w, r, err)
-	} else if validResponse, ok := response.(GetApiTestResponseObject); ok {
-		if err := validResponse.VisitGetApiTestResponse(w); err != nil {
+	} else if validResponse, ok := response.(PostApiProfileResponseObject); ok {
+		if err := validResponse.VisitPostApiProfileResponse(w); err != nil {
 			sh.options.ResponseErrorHandlerFunc(w, r, err)
 		}
 	} else if response != nil {
