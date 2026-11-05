@@ -13,7 +13,23 @@ tasks:
     desc: Run the backend tests
     cmds:
       - go test ./...
-  test-integration:
+  test:integration:
     desc: Run the backend integration tests
     cmds:
       - go test -tags=integration ./...
+  build:
+    desc: Build service image
+    cmds:
+      - docker build --build-arg SERVICE={{.SERVICE}} --target={{.TARGET | default "prod"}} -t registry.localhost:5000/{{.SERVICE}}:latest -f Dockerfile .
+      - docker push registry.localhost:5000/{{.SERVICE}}:latest
+  build-all:
+    desc: Build backend docker images
+    cmds:
+      - for: [write-result]
+        task: build
+        vars:
+          SERVICE: '{{.ITEM}}'
+      - task: build
+        vars:
+          SERVICE: run-sim
+          TARGET: prod-simc

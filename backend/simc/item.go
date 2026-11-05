@@ -8,7 +8,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/RobertsMJ/simc-cloud/simc/internal"
+	"github.com/RobertsMJ/simc-cloud/backend/simc/internal"
 	"github.com/samber/lo"
 )
 

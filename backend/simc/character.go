@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"sync"
 
-	"github.com/RobertsMJ/simc-cloud/simc/internal"
+	"github.com/RobertsMJ/simc-cloud/backend/simc/internal"
 )
 
 type Character struct {

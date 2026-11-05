@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/RobertsMJ/simc-cloud/simc/internal"
+	"github.com/RobertsMJ/simc-cloud/backend/simc/internal"
 	"github.com/stretchr/testify/suite"
 )
 

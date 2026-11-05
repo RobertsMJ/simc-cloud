@@ -1,0 +1,16 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: '3'
+
+vars:
+  GREETING: Hello, world!
+
+tasks:
+  lint:
+    desc: Lint the chart
+    cmds:
+      - helm lint .
+  validate:
+    desc: Validate the chart against kubeconform
+    cmds:
+      - helm template . | kubeconform -ignore-missing-schemas

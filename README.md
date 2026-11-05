@@ -19,7 +19,7 @@ Platform scope:
 1. ScyllaDB for job/results storage - nosql db, we'll see how it goes
 1. Wrap application in a Helm chart for deployment
 1. FluxCD + gitops for deployment management
-1. docker compose for local development
+1. native workflow for local development
 
 Data model:
 1. Job - parent entity to group sim results, counts, and statuses of simulations for the run

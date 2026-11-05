@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/RobertsMJ/simc-cloud/simc/internal"
+	"github.com/RobertsMJ/simc-cloud/backend/simc/internal"
 )
 
 var ErrInvalidTalentStatement = fmt.Errorf("invalid talent statement")

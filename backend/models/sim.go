@@ -3,7 +3,7 @@ package models
 import (
 	"encoding/json"
 
-	"github.com/RobertsMJ/simc-cloud/simc"
+	"github.com/RobertsMJ/simc-cloud/backend/simc"
 )
 
 // Models for single simulations

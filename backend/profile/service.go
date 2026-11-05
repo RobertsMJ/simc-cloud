@@ -4,7 +4,7 @@ import (
 	"context"
 	"strings"
 
-	"github.com/RobertsMJ/simc-cloud/simc"
+	"github.com/RobertsMJ/simc-cloud/backend/simc"
 )
 
 type Service struct {

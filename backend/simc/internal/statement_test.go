@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/RobertsMJ/simc-cloud/simc/internal"
-	"github.com/RobertsMJ/simc-cloud/test-utils"
+	"github.com/RobertsMJ/simc-cloud/backend/simc/internal"
+	"github.com/RobertsMJ/simc-cloud/backend/test"
 	"github.com/stretchr/testify/suite"
 )
 

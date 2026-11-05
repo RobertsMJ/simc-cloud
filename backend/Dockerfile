@@ -3,31 +3,21 @@ FROM simulationcraftorg/simc:latest@sha256:f1a582dc7d9e0712e43aa6d02341b5f84027d
 FROM golang:1.27.3-alpine3.24 AS build-deps
 WORKDIR /app
 
-COPY go.work .
-COPY go.work.sum .
-
-COPY test-utils/go.mod test-utils/go.mod
-
-COPY simc/go.mod simc/go.mod
-COPY simc/go.sum simc/go.sum
-
-COPY backend/go.mod backend/go.mod
-COPY backend/go.sum backend/go.sum
+COPY go.mod go.mod
+COPY go.sum go.sum
 
 RUN go mod download
 
 
 ARG SERVICE
 FROM build-deps AS build
-COPY simc/ simc/
-COPY test-utils/ test-utils/
-COPY backend/ backend/
+COPY . .
 
 RUN --mount=type=cache,target=/root/.cache/go-build CGO_ENABLED=0 \
     GOOS=linux \
     go build \
     -ldflags="-s -w" \
-    -o main ./backend/cmd/${SERVICE}/
+    -o main ./cmd/${SERVICE}/
 
 
 FROM alpine:3.24 AS simc-runtime

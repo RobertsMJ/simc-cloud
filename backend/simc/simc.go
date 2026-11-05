@@ -4,7 +4,7 @@ import (
 	"io"
 	"log/slog"
 
-	"github.com/RobertsMJ/simc-cloud/simc/internal"
+	"github.com/RobertsMJ/simc-cloud/backend/simc/internal"
 )
 
 // Some expected strings:

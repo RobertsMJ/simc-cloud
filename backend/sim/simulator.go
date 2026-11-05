@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 
-	"github.com/RobertsMJ/simc-cloud/simc"
+	"github.com/RobertsMJ/simc-cloud/backend/simc"
 )
 
 type Input struct {

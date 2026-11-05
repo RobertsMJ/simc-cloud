@@ -28,7 +28,7 @@ Pipeline:
 5. `write-result`: Idempotent on (job_id, gearset_id). Consumes results and writes result records plus job completion counters to the database. It's a separate service from `run-sim` so a DB write failure can't lose a finished simulation. Unprocessable messages go to a dead-letter stream.
 6. Frontend: navigates to `/{job-id}` page, listens to SSE for job status, and displays final results when processing completes.
 
-Planned deployment tooling: Helm chart for the app, GitOps + FluxCD (see `homelab` repository), CI with Github Actions using GHCR, local development with docker-compose.
+Planned deployment tooling: Helm chart for the app, GitOps + FluxCD (see `homelab` repository), CI with Github Actions using GHCR, local development with port-forwarded k8s resources.
 
 ## Commands
 

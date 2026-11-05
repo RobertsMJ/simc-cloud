@@ -13,7 +13,7 @@ import (
 	"strings"
 
 	"github.com/RobertsMJ/simc-cloud/backend/sim"
-	"github.com/RobertsMJ/simc-cloud/simc"
+	"github.com/RobertsMJ/simc-cloud/backend/simc"
 )
 
 type SimcExec struct {
