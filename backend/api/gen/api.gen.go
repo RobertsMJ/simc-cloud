@@ -14,6 +14,17 @@ import (
 	"net/http"
 )
 
+// Error defines model for Error.
+type Error struct {
+	Message string `json:"message"`
+}
+
+// PostApiProfileTextBody defines parameters for PostApiProfile.
+type PostApiProfileTextBody = string
+
+// PostApiProfileTextRequestBody defines body for PostApiProfile for text/plain ContentType.
+type PostApiProfileTextRequestBody = PostApiProfileTextBody
+
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 
