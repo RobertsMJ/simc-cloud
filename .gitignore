@@ -16,9 +16,6 @@
 *.tmp
 *.swp
 vendor/
-# Go workspace file
-go.work
-go.work.sum
 
 # Node.js
 node_modules/
