@@ -1,5 +1,5 @@
-{{- define "simc-chart.stream" }}
-{{- $_ := .stream.subjects | required "A stream must have at least one subject defined" -}}
+{{- define "simc-chart.stream" -}}
+{{- $_ := .stream.subjects | required "A stream must have at least one subject defined" }}
 ---
 apiVersion: jetstream.nats.io/v1beta2
 kind: Stream

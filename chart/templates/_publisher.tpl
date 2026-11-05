@@ -2,7 +2,7 @@
 {{- define "simc-chart.app.publisherEnvName" }}
 {{- $_ := required "simc-chart.app.publisherEnvName: expected app context" .app -}}
 {{- printf "%s-pub-env" .name }}
-{{- end -}}
+{{- end }}
 
 {{- define "simc-chart.app.publisherData" }}
 {{- $_ := required "simc-chart.app.publisherData: expected app context" .app -}}

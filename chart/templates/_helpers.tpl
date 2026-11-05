@@ -76,7 +76,7 @@ App pod annotations: config checksums merged with podAnnotations.
 {{- end }}
 {{- with $annotations -}}
 {{- toYaml . -}}
-{{- end -}}
+{{- end }}
 {{- end }}
 
 {{/*
@@ -86,15 +86,15 @@ App termination grace period
 {{- define "simc-chart.app.terminationGraceSeconds" -}}
 {{- $tail := int (default 15 (default .root.Values.default.shutdownTailSeconds .app.shutdownTailSeconds)) -}}
 {{- $grace := int (default 30 .app.terminationGracePeriodSeconds) -}}
-{{- if .app.maxRuntimeSeconds  -}}
+{{- if .app.maxRuntimeSeconds }}
   {{- $min := add (int .app.maxRuntimeSeconds) $tail -}}
-  {{- if .app.terminationGracePeriodSeconds -}}
-    {{- if lt $grace $min -}}
+  {{- if .app.terminationGracePeriodSeconds }}
+    {{- if lt $grace $min }}
       {{- fail (printf "%s: terminationGracePeriodSeconds (%d) < maxRuntimeSeconds + shutdownTailSeconds (%d)" .name $grace $min) -}}
-    {{- end -}}
-  {{- else -}}
+    {{- end }}
+  {{- else }}
     {{- $grace = $min -}}
-  {{- end -}}
-{{- end -}}
-{{ $grace }}
-{{- end -}}
+  {{- end }}
+{{- end }}
+{{- $grace }}
+{{- end }}

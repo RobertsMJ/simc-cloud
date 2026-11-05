@@ -8,7 +8,7 @@ helm.sh/chart: {{ include "simc-chart.chart.chartLabel" . }}
 app.kubernetes.io/part-of: {{ include "simc-chart.chart.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end -}}
+{{- end }}
 
 {{/*
 App common labels
@@ -17,7 +17,7 @@ App common labels
 {{- define "simc-chart.app.version" -}}
 {{- $_ := required "simc-chart.app.labels: expected app context" .app -}}
 {{ .app.image.tag | replace "+" "_" | trunc 63 | trimSuffix "-" | quote }}
-{{- end -}}
+{{- end }}
 
 {{/*
 App common labels
@@ -31,7 +31,7 @@ app.kubernetes.io/version: {{ include "simc-chart.app.version" . }}
 {{- if .app.component }}
 app.kubernetes.io/component: {{ .app.component | quote }}
 {{- end }}
-{{- end -}}
+{{- end }}
 
 {{/*
 App selector labels
@@ -41,7 +41,7 @@ App selector labels
 {{- $_ := required "simc-chart.app.selectorLabels: expected app context" .root -}}
 app.kubernetes.io/name: {{ .name }}
 app.kubernetes.io/instance: {{ .root.Release.Name }}
-{{- end -}}
+{{- end }}
 
 {{/*
 App pod labels
@@ -55,4 +55,4 @@ app.kubernetes.io/version: {{ include "simc-chart.app.version" . }}
 {{- if .app.component }}
 app.kubernetes.io/component: {{ .app.component | quote }}
 {{- end }}
-{{- end -}}
+{{- end }}

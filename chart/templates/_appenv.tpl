@@ -1,4 +1,4 @@
-{{- define "simc-chart.app.env" }}
+{{- define "simc-chart.app.env" -}}
 {{- $_ := required "simc-chart.app.env: expected app context" .app -}}
 {{- $data := include "simc-chart.app.envData" . }}
 {{- if $data }}
@@ -12,7 +12,7 @@ metadata:
 data:
   {{- $data | nindent 2 }}
 {{- end }}
-{{- end -}}
+{{- end }}
 
 {{- define "simc-chart.app.envName" -}}
 {{- $_ := required "simc-chart.app.envName: expected app context" .app -}}
@@ -21,24 +21,24 @@ data:
 {{- printf "%s-env-%s" $appName $hash }}
 {{- end }}
 
-{{- define "simc-chart.app.envData" }}
+{{- define "simc-chart.app.envData" -}}
 {{- $_ := required "simc-chart.app.envData: expected app context" .app -}}
 {{- $env := dict -}}
 {{- if .app.env }}
 {{- $env = merge $env .app.env -}}
-{{- end -}}
+{{- end }}
 {{- with .app.maxRuntimeSeconds -}}
 {{- $_ := set $env "MAX_RUNTIME" (printf "%ds" (int .)) -}}
-{{- end -}}
+{{- end }}
 {{- $_ := set $env "TERMINATION_PERIOD" (printf "%ss" (include "simc-chart.app.terminationGraceSeconds" .)) }}
 {{- $_ := set $env "ADMIN_PORT" (toString .app.adminPort) }}
-{{- if .app.consumer -}}
+{{- if .app.consumer }}
 {{- $env = merge $env (include "simc-chart.app.consumerData" . | fromYaml) -}}
-{{- end -}}
-{{- if .app.publisher -}}
+{{- end }}
+{{- if .app.publisher }}
 {{- $env = merge $env (include "simc-chart.app.publisherData" . | fromYaml) -}}
-{{- end -}}
+{{- end }}
 {{- with $env -}}
 {{- toYaml . }}
-{{- end -}}
+{{- end }}
 {{- end }}

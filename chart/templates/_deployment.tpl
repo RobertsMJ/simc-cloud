@@ -1,4 +1,4 @@
-{{- define "simc-chart.app.deployment" }}
+{{- define "simc-chart.app.deployment" -}}
 {{- $_ := required "simc-chart.app.deployment: expected app context (dict root/name/app)" .root }}
 ---
 apiVersion: apps/v1
@@ -100,4 +100,4 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-{{- end -}}
+{{- end }}

@@ -24,7 +24,7 @@ spec:
   {{- end }}
   ackPolicy: {{ default "explicit" .app.consumer.ackPolicy }}
   ackWait: {{ default "30s" .app.consumer.ackWait }}
-{{- end -}}
+{{- end }}
 
 {{- define "simc-chart.app.consumerData" }}
 {{- $_ := required "simc-chart.app.consumerData: expected app context" .app -}}

@@ -44,12 +44,13 @@ streams:
     storage: file
     maxAge: 4h
     retention: limits
-  simc-dlq:
-    subjects:
-      - $JS.EVENT.ADVISORY.CONSUMER.MAX_DELIVERIES.simc-job-stream.*
-      - $JS.EVENT.ADVISORY.CONSUMER.MSG_TERMINATED.simc-job-stream.*
-    storage: file
-    maxAge: 1
+  # TODO
+  # simc-dlq:
+  #   subjects:
+  #     - $JS.EVENT.ADVISORY.CONSUMER.MAX_DELIVERIES.simc-job-stream.*
+  #     - $JS.EVENT.ADVISORY.CONSUMER.MSG_TERMINATED.simc-job-stream.*
+  #   storage: file
+  #   maxAge: 1
 
 apps:
   run-sim:

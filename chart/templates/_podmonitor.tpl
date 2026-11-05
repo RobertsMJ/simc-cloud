@@ -1,4 +1,4 @@
-{{- define "simc-chart.app.podmonitor" }}
+{{- define "simc-chart.app.podmonitor" -}}
 {{- $_ := required "simc-chart.app.podmonitor: expected app context" .root }}
 ---
 apiVersion: monitoring.coreos.com/v1

@@ -6,12 +6,12 @@
 {{- $_ := $app.image.tag | required "App image must have a tag defined " -}}
 {{- $ctx := dict "root" $ "name" $name "app" $app }}
 
-{{- include "simc-chart.app.deployment" $ctx }}
-{{- include "simc-chart.app.serviceaccount" $ctx }}
-{{- if $ctx.app.consumer -}}
-{{- include "simc-chart.app.consumer" $ctx }}
+{{ include "simc-chart.app.deployment" $ctx }}
+{{ include "simc-chart.app.serviceaccount" $ctx }}
+{{- if $ctx.app.consumer }}
+{{ include "simc-chart.app.consumer" $ctx }}
 {{- end }}
-{{- include "simc-chart.app.env" $ctx }}
-{{- include "simc-chart.app.podmonitor" $ctx }}
+{{ include "simc-chart.app.env" $ctx }}
+{{ include "simc-chart.app.podmonitor" $ctx }}
 
 {{- end }}
