@@ -30,7 +30,6 @@ yarn.lock
 # Vite/Vue
 dist/
 *.local
-.env
 .env.*
 !.env.example
 .vitepress/dist
