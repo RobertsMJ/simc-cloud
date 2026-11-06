@@ -16,7 +16,7 @@ func TestCharacterTestSuite(t *testing.T) {
 	suite.Run(t, new(CharacterTestSuite))
 }
 
-func (suite *CharacterTestSuite) TestunmarshalStatements() {
+func (suite *CharacterTestSuite) TestUnmarshalStatements() {
 	input := `
 		demonhunter="Kestdh"
 		level=90
@@ -43,7 +43,7 @@ func (suite *CharacterTestSuite) TestunmarshalStatements() {
 
 	var actual Character
 	for _, stmt := range statements {
-		err := actual.unmarshalStatement(stmt)
+		err := actual.UnmarshalStatement(stmt)
 		suite.NoError(err)
 	}
 

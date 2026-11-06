@@ -23,7 +23,7 @@ var (
 	_ internal.ValueMarshaler = Talent{}
 )
 
-func (t *Talent) unmarshalStatement(s internal.Statement) error {
+func (t *Talent) UnmarshalStatement(s internal.Statement) error {
 	if s.Key != "talents" {
 		return ErrInvalidTalentStatement
 	}

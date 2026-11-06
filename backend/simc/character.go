@@ -61,7 +61,7 @@ func (c Character) MarshalSimc() (string, error) {
 	panic("not impl")
 }
 
-func (c *Character) unmarshalStatement(s internal.Statement) error {
+func (c *Character) UnmarshalStatement(s internal.Statement) error {
 	if c == nil {
 		return fmt.Errorf("character unmarshal: %w", internal.ErrUnmarshalIntoNilPtr)
 	}

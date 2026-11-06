@@ -16,7 +16,7 @@ func TestItemTestSuite(t *testing.T) {
 	suite.Run(t, new(ItemTestSuite))
 }
 
-func (s *ItemTestSuite) TestunmarshalStatement() {
+func (s *ItemTestSuite) TestUnmarshalStatement() {
 	in := `
 	# New Helmet
 	head=,id=251109,enchant_id=8017,bonus_id=13440/6652/12667/13577/12699/12806,foo=bar
@@ -34,7 +34,7 @@ func (s *ItemTestSuite) TestunmarshalStatement() {
 	}
 
 	var actual Item
-	err := actual.unmarshalStatement(stmt[0])
+	err := actual.UnmarshalStatement(stmt[0])
 	s.NoError(err)
 	s.Equal(expected, actual)
 }

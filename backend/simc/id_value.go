@@ -27,7 +27,7 @@ var (
 	_ internal.ValueUnmarshaler = (*IDValue)(nil)
 )
 
-func (i *IDValue) unmarshalStatement(s internal.Statement) error {
+func (i *IDValue) UnmarshalStatement(s internal.Statement) error {
 	if s.Key != "omnium_talents" {
 		return ErrInvalidIDValueFormat
 	}
@@ -57,7 +57,7 @@ func (i *IDValue) UnmarshalSimc(value string) error {
 	return nil
 }
 
-func (i *IDValueList) unmarshalStatement(s internal.Statement) error {
+func (i *IDValueList) UnmarshalStatement(s internal.Statement) error {
 	if s.Key != "omnium_talents" {
 		return ErrInvalidIDValueFormat
 	}
