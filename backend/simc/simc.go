@@ -30,7 +30,7 @@ func NewSimulationDocument(doc io.Reader) (sd SimulationDocument, err error) {
 	for _, statement := range statements {
 		switch {
 		case isCharacterKey(statement.Key):
-			if err := sd.Character.unmarshalStatement(statement); err != nil {
+			if err := sd.Character.UnmarshalStatement(statement); err != nil {
 				slog.Error("could not unmarshal character statement", "err", err, "statement", statement)
 				return sd, err
 			}
@@ -65,7 +65,7 @@ func NewSimulationDocument(doc io.Reader) (sd SimulationDocument, err error) {
 
 func (sd *SimulationDocument) handleTalent(statement internal.Statement) error {
 	var talent Talent
-	if err := talent.unmarshalStatement(statement); err != nil {
+	if err := talent.UnmarshalStatement(statement); err != nil {
 		return err
 	}
 	if statement.Disabled {
@@ -82,7 +82,7 @@ func (sd *SimulationDocument) handleTalent(statement internal.Statement) error {
 
 func (sd *SimulationDocument) handleItem(statement internal.Statement) error {
 	var item Item
-	if err := item.unmarshalStatement(statement); err != nil {
+	if err := item.UnmarshalStatement(statement); err != nil {
 		return err
 	}
 
@@ -102,7 +102,7 @@ func (sd *SimulationDocument) handleItem(statement internal.Statement) error {
 
 func (sd *SimulationDocument) handleOmniumTalents(statement internal.Statement) error {
 	om := IDValueList{}
-	if err := om.unmarshalStatement(statement); err != nil {
+	if err := om.UnmarshalStatement(statement); err != nil {
 		return err
 	}
 

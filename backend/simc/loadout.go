@@ -9,6 +9,7 @@ import (
 var ErrInvalidLoadoutStatement = errors.New("invalid loadout statement")
 
 type Loadout struct {
+	ID            string
 	Talent        Talent
 	Items         map[ItemSlot]Item
 	OmniumTalents IDValueList
@@ -27,16 +28,16 @@ var (
 	_ internal.ValueUnmarshaler = (*LoadoutOptions)(nil)
 )
 
-func (l *Loadout) unmarshalStatement(s internal.Statement) error {
+func (l *Loadout) UnmarshalStatement(s internal.Statement) error {
 	if s.Key == "talents" {
-		return l.Talent.unmarshalStatement(s)
+		return l.Talent.UnmarshalStatement(s)
 	}
 	if s.Key == "omnium_talents" {
-		return l.OmniumTalents.unmarshalStatement(s)
+		return l.OmniumTalents.UnmarshalStatement(s)
 	}
 	if itemSlot, ok := ItemSlotFromString(s.Key); ok {
 		var item Item
-		if err := item.unmarshalStatement(s); err != nil {
+		if err := item.UnmarshalStatement(s); err != nil {
 			return err
 		}
 		if l.Items == nil {
@@ -56,10 +57,10 @@ func (l Loadout) UnmarshalSimc(value string) error {
 	panic("not implemented")
 }
 
-func (lo *LoadoutOptions) unmarshalStatement(s internal.Statement) error {
+func (lo *LoadoutOptions) UnmarshalStatement(s internal.Statement) error {
 	if s.Key == "talents" {
 		var talent Talent
-		if err := talent.unmarshalStatement(s); err != nil {
+		if err := talent.UnmarshalStatement(s); err != nil {
 			return err
 		}
 		lo.Talents = append(lo.Talents, talent)
@@ -67,7 +68,7 @@ func (lo *LoadoutOptions) unmarshalStatement(s internal.Statement) error {
 	}
 	if s.Key == "omnium_talents" {
 		var omniumTalents IDValueList
-		if err := omniumTalents.unmarshalStatement(s); err != nil {
+		if err := omniumTalents.UnmarshalStatement(s); err != nil {
 			return err
 		}
 		lo.OmniumTalents = append(lo.OmniumTalents, omniumTalents)
@@ -75,7 +76,7 @@ func (lo *LoadoutOptions) unmarshalStatement(s internal.Statement) error {
 	}
 	if itemSlot, ok := ItemSlotFromString(s.Key); ok {
 		var item Item
-		if err := item.unmarshalStatement(s); err != nil {
+		if err := item.UnmarshalStatement(s); err != nil {
 			return err
 		}
 		item.Slot = itemSlot

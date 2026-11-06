@@ -124,7 +124,7 @@ func isItemKey(key string) bool {
 	return ok
 }
 
-func (i *Item) unmarshalStatement(s internal.Statement) error {
+func (i *Item) UnmarshalStatement(s internal.Statement) error {
 	if i == nil {
 		return fmt.Errorf("character unmarshal: %w", internal.ErrUnmarshalIntoNilPtr)
 	}
