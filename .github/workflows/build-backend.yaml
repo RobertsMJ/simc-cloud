@@ -1,4 +1,4 @@
-name: Backend Build and Test
+name: Backend Integration
 on:
   push:
     branches:
