@@ -2,8 +2,9 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ .Release.Name }}-dashboards
+  namespace: monitoring
   labels:
     grafana_dashboard: "1"
 data:
-  natsx.yaml: |-
-{{ .Files.Get "dashboards/natsx.yaml" | indent 4 }}
+  natsx.json: |-
+{{ .Files.Get "dashboards/natsx.json" | indent 4 }}

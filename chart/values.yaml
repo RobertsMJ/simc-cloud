@@ -6,8 +6,8 @@ nameOverride:
 # default values for applications deployed in the simc-chart
 default:
   image:
-    registry: registry.localhost:5000
-    tag: latest
+    registry: registry.localhost:5000/simc
+    tag: dev
   resources:
     requests:
       memory: 128Mi

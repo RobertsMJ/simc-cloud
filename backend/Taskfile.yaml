@@ -20,16 +20,8 @@ tasks:
   build:
     desc: Build service image
     cmds:
-      - docker build --build-arg SERVICE={{.SERVICE}} --target={{.TARGET | default "prod"}} -t registry.localhost:5000/{{.SERVICE}}:latest -f Dockerfile .
-      - docker push registry.localhost:5000/{{.SERVICE}}:latest
-  build-all:
-    desc: Build backend docker images
+      - docker bake --file docker-bake.hcl
+  push:
+    desc: Push service image
     cmds:
-      - for: [write-result]
-        task: build
-        vars:
-          SERVICE: "{{.ITEM}}"
-      - task: build
-        vars:
-          SERVICE: run-sim
-          TARGET: prod-simc
+      - docker bake --file docker-bake.hcl --push
