@@ -67,4 +67,4 @@ jobs:
         run: |
           github_sha_hash=${{ github.sha }}
           github_sha_short="${github_sha_hash:0:7}"
-          REGISTRY=ghcr.io/robertsmj/simc TAG="main-${github_sha_short}" task backend:publish
+          REGISTRY=ghcr.io/robertsmj/simc TAG="main-${github_sha_short}" task backend:push
