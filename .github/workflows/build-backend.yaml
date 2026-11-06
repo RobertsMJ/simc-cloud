@@ -1,0 +1,44 @@
+name: Backend Build and Test
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "backend/**"
+      - ".github/workflows/build-backend.yaml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "backend/**"
+      - ".github/workflows/build-backend.yaml"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: 1.27
+
+      - name: Install Task
+        uses: go-task/setup-task@v2
+
+      - name: Format
+        run: |
+          task backend:format
+          git diff --exit-code
+
+      - name: Setup golangci-lint
+        uses: golangci/golangci-lint-action@v9
+        with:
+          version: v2.15.0
+
+      - name: Lint
+        run: task backend:lint
+
+      - name: Test
+        run: task backend:test

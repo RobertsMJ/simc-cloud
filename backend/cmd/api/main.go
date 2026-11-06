@@ -11,11 +11,13 @@ import (
 func BuildOptions() []fx.Option {
 	return []fx.Option{
 		fx.Provide(
+			api.NewConfig,
 			profile.NewService,
+			api.NewProfileHandler,
 		),
 		httpx.New(
 			"api",
-			api.NewHandler,
+			api.NewAPI,
 		),
 	}
 }
