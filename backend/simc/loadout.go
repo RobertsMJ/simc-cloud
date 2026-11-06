@@ -9,6 +9,7 @@ import (
 var ErrInvalidLoadoutStatement = errors.New("invalid loadout statement")
 
 type Loadout struct {
+	ID            string
 	Talent        Talent
 	Items         map[ItemSlot]Item
 	OmniumTalents IDValueList
