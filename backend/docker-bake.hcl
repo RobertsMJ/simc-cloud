@@ -11,6 +11,10 @@ target "app" {
   args = { SERVICE = "${SERVICE}" }
   target = "prod"
   tags = ["${REGISTRY}/${SERVICE}:${TAG}"]
+  labels = {
+    "org.opencontainers.image.source" = "https://github.com/RobertsMJ/simc-cloud"
+  }
+
 }
 
 target "run-sim" {

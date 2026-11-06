@@ -31,8 +31,6 @@ COPY --from=simc /app/SimulationCraft/simc simc
 
 
 FROM simc-runtime AS prod-simc
-LABEL org.opencontainers.image.source=https://github.com/robertsmj/simc-cloud
-LABEL org.opencontainers.image.license=MIT
 
 WORKDIR /app
 COPY --from=build /app/main main
@@ -41,8 +39,6 @@ EXPOSE 8081
 
 # For services that don't use simc at runtime
 FROM alpine:3.23 AS prod
-LABEL org.opencontainers.image.source=https://github.com/robertsmj/simc-cloud
-LABEL org.opencontainers.image.license=MIT
 
 WORKDIR /app
 COPY --from=build /app/main main
