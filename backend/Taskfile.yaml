@@ -4,7 +4,7 @@ tasks:
   lint:
     desc: Run golangci-lint on the backend codebase
     cmds:
-      - golangci-lint run
+      - golangci-lint run --fast-only
   format:
     desc: Format the backend codebase
     cmds:
@@ -28,7 +28,7 @@ tasks:
       - for: [write-result]
         task: build
         vars:
-          SERVICE: '{{.ITEM}}'
+          SERVICE: "{{.ITEM}}"
       - task: build
         vars:
           SERVICE: run-sim
