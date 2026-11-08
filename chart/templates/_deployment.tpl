@@ -8,7 +8,9 @@ metadata:
   labels:
     {{- include "simc-chart.app.labels" $ | nindent 4 }}
 spec:
+  {{- if not .app.autoscaling }}
   replicas: {{ default 1 .app.replicas }}
+  {{- end }}
   selector:
     matchLabels:
       {{- include "simc-chart.app.selectorLabels" $ | nindent 6 }}
