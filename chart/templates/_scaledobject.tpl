@@ -13,7 +13,10 @@ spec:
   minReplicaCount: {{ .app.autoscaling.minReplicas }}
   maxReplicaCount: {{ .app.autoscaling.maxReplicas }}
   {{- with .app.autoscaling.cooldownPeriod }}
-  cooldownPeriod: {{ . | quote }}
+  cooldownPeriod: {{ . | int }}
+  {{- end }}
+  {{- with .app.autoscaling.pollingInterval }}
+  pollingInterval: {{ . | int }}
   {{- end }}
   triggers:
     - type: nats-jetstream
