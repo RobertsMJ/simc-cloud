@@ -8,7 +8,7 @@
 
 {{ include "simc-chart.app.deployment" $ctx }}
 {{ include "simc-chart.app.serviceaccount" $ctx }}
-{{- if and $ctx.app.consumer }}
+{{- if $ctx.app.consumer }}
 {{ include "simc-chart.app.consumer" $ctx }}
 {{- end }}
 {{ include "simc-chart.app.env" $ctx }}
