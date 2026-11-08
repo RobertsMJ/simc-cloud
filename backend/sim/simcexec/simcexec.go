@@ -65,6 +65,16 @@ func (s SimcExec) Run(ctx context.Context, in sim.Input) (sim.Output, error) {
 	}
 
 	scanner := bufio.NewScanner(stdout)
+	scanner.Split(func(data []byte, atEOF bool) (int, []byte, error) {
+		if i := bytes.IndexAny(data, "\r\n"); i >= 0 {
+			return i + 1, data[:i], nil
+		}
+		if atEOF && len(data) > 0 {
+			return len(data), data, nil
+		}
+		return 0, nil, nil
+	})
+
 	for scanner.Scan() {
 		if line := strings.TrimSpace(scanner.Text()); line != "" {
 			slog.Debug(line)

@@ -53,11 +53,7 @@ func (s *Service) Handle(ctx context.Context, req models.SimRequest) error {
 		simResult.Status = models.StatusError
 		errMsg := err.Error()
 		simResult.ErrorMessage = &errMsg
-		if errors.Is(err, context.DeadlineExceeded) {
-			slog.Error("sim deadline exceeded", "job_id", req.JobID, "gearset_id", req.GearsetID)
-			return queue.ErrFatal
-		}
-		slog.Error("sim failed", "job_id", req.JobID, "gearset_id", req.GearsetID, "error", err)
+		slog.Error("sim error", "job_id", req.JobID, "gearset_id", req.GearsetID, "error", err)
 	} else {
 		simResult.Status = models.StatusCompleted
 		simResult.Statistics = out.Statistics

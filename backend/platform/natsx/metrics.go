@@ -17,8 +17,9 @@ type Metrics struct {
 func NewMetrics(reg prometheus.Registerer) *Metrics {
 	m := &Metrics{
 		handled: prometheus.NewHistogramVec(prometheus.HistogramOpts{
-			Name: "natsx_consumer_handle_duration_seconds",
-			Help: "Duration of handled NATS messages",
+			Name:    "natsx_consumer_handle_duration_seconds",
+			Help:    "Duration of handled NATS messages",
+			Buckets: prometheus.ExponentialBuckets(1, 2, 10),
 		}, []string{"stream", "consumer", "outcome"}),
 		unhandled: prometheus.NewCounterVec(prometheus.CounterOpts{
 			Name: "natsx_consumer_messages_unhandled_total",

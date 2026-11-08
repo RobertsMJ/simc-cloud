@@ -3,6 +3,8 @@ appDefaults:
     registry: registry.localhost:5000/simc
     tag: dev
     pullPolicy: Always
+  env:
+    LOG_LEVEL: debug
 gateway:
   hostnames:
     - simc.k3d.localhost

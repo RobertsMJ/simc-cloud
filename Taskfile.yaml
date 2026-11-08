@@ -18,7 +18,7 @@ tasks:
   install-deps:
     desc: Install development dependencies
     cmds:
-      - brew install kubectl k3d helm istioctl golangci-lint kubeconform
+      - brew install kubectl k3d helm istioctl golangci-lint kubeconform nats-io/nats-tools/nats
 
   run-simc:
     desc: "Run simc directly via Docker, writes JSON to profiles/results/result.json. Usage: task run-simc -- profiles/sample.simc"

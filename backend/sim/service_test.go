@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/RobertsMJ/simc-cloud/backend/models"
-	"github.com/RobertsMJ/simc-cloud/backend/transport/queue"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -37,22 +36,6 @@ type resultPublisher struct {
 func (p *resultPublisher) Publish(_ context.Context, result models.SimResult) error {
 	p.results = append(p.results, result)
 	return nil
-}
-
-func (s *ServiceTestSuite) TestHandle_RuntimeDeadlineIsFatal() {
-	service := NewService(
-		simulatorFunc(func(ctx context.Context, _ Input) (Output, error) {
-			<-ctx.Done()
-			return Output{}, ctx.Err()
-		}),
-		s.publisher,
-		&Config{MaxRuntime: time.Millisecond},
-	)
-
-	err := service.Handle(context.Background(), models.SimRequest{})
-
-	s.ErrorIs(err, queue.ErrFatal)
-	s.Empty(s.publisher.results)
 }
 
 func (s *ServiceTestSuite) TestHandle_CallerCancellationIsReturned() {

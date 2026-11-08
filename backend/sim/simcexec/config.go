@@ -1,8 +1,6 @@
 package simcexec
 
 import (
-	"runtime"
-
 	"github.com/RobertsMJ/simc-cloud/backend/config"
 )
 
@@ -16,6 +14,6 @@ func NewConfig() (*Config, error) {
 	if err != nil {
 		return nil, err
 	}
-	cfg.Threads = runtime.GOMAXPROCS(0)
+	cfg.Threads = 1
 	return cfg, nil
 }

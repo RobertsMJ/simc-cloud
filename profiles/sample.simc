@@ -12,6 +12,8 @@ professions=herbalism=21/mining=17
 spec=arms
 # loot_spec=arms
 
+target_error=0.01
+
 talents=CcEASWsDSHNyPDXnbxuIhH3ZdjZmZmFzYmZGAAAghphxYmZzMzMzYmxMDAAAAgxyMDMhxy2AbgBMDTIzgNwMDDDmlZ2GgZGAMDDA
 
 # Saved Loadout: M+
