@@ -1,0 +1,40 @@
+name: Backend
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "backend/**"
+      - ".github/workflows/backend.yaml"
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up Go
+        uses: actions/setup-go@v7
+        with:
+          go-version-file: backend/go.mod
+
+      - name: Install Task
+        uses: go-task/setup-task@v2
+
+      - name: Format
+        run: |
+          task backend:format
+          git diff --exit-code
+
+      - name: Setup golangci-lint
+        uses: golangci/golangci-lint-action@v9
+        with:
+          version: v2.15.0
+          working-directory: backend
+
+      - name: Test
+        run: task backend:test
+
+      - name: Build
+        run: task backend:build

@@ -2,12 +2,21 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Run Sim",
+            "name": "Debug Run Sim",
             "type": "go",
             "request": "launch",
             "mode": "auto",
             "program": "${workspaceFolder}/backend/cmd/run-sim",
             "envFile": "${workspaceFolder}/backend/cmd/run-sim/.env",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Debug API",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/backend/cmd/api",
+            "envFile": "${workspaceFolder}/backend/cmd/api/.env",
             "console": "integratedTerminal"
         }
     ]
