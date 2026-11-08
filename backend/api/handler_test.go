@@ -38,6 +38,7 @@ func (suite *ApiHandlerTestSuite) TestPostProfile_Stub() {
 	suite.NoError(err)
 
 	doc, err := simc.NewSimulationDocument(bytes.NewReader(inProfile))
+	suite.NoError(err)
 	expected := api.ProfileResponseBody{
 		Profile: doc,
 	}
