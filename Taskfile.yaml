@@ -33,4 +33,4 @@ tasks:
   deploy:
     desc: Deploy the application using Helm
     cmds:
-      - helm upgrade --install simc -n simc chart --values overrides-k3d-values.yaml
+      - helm upgrade --install simc -n simc chart --values overrides-k3d-values.yaml --kube-context k3d-dev-cluster
