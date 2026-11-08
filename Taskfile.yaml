@@ -30,3 +30,7 @@ tasks:
           -v "$(realpath profiles/results):/output" \
           simulationcraftorg/simc:latest \
           /input.simc json2=/output/result.json html=/dev/null
+  deploy:
+    desc: Deploy the application using Helm
+    cmds:
+      - helm upgrade --install simc -n simc chart --values overrides-k3d-values.yaml

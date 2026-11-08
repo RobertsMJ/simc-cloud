@@ -1,0 +1,111 @@
+# Kestw - Arms - 2026-10-15 21:45 - US/Illidan
+# SimC Addon 12.1.0-03
+# WoW 12.1.5.70391, TOC 120105
+# Requires SimulationCraft 1000-01 or newer
+warrior="Kestw"
+level=90
+race=night_elf
+region=us
+server=illidan
+role=attack
+professions=herbalism=21/mining=17
+spec=arms
+# loot_spec=arms
+
+talents=CcEASWsDSHNyPDXnbxuIhH3ZdjZmZmFzYmZGAAAghphxYmZzMzMzYmxMDAAAAgxyMDMhxy2AbgBMDTIzgNwMDDDmlZ2GgZGAMDDA
+
+# Saved Loadout: M+
+# talents=CcEASWsDSHNyPDXnbxuIhH3ZdjZmZmFzYmZGAAAghxwYMzsZmZmZMzYmBAAAAwYZmBGYssNwGYAzwAMD2AzMMMYWmZbAmZAwMMA
+# Saved Loadout: raid
+# talents=CcEASWsDSHNyPDXnbxuIhH3ZdDzMzsMzMmZGAAAghxwYMzsZmZmZwYmBAAAAwMLzMAYssMwCYAzwAMD2AzM2GbDsMzyAMzAgZYA
+
+omnium_talents=136814:1/136821:1/136817:1/136819:1/136822:1
+
+# Tempered Horns of the Jade Warlord (321)
+head=,id=271456,enchant_id=8017,bonus_id=6652/13696/13440/13692/13698/12846,redirected_base_stats=251229
+# Serpentine Talisman (305)
+neck=,id=272229,gem_id=240983,bonus_id=12841/6652/13668,content_tuning=6015
+# Raging Pauldrons of the Jade Warlord (295)
+shoulder=,id=271454,enchant_id=8001,bonus_id=40/12834/13694/13697/1548,redirected_base_stats=272260
+# Bloodthorn Burnous (311)
+back=,id=251190,bonus_id=12843/13440/6652/13662/12699,content_tuning=1279
+# Cuirass of the Jade Warlord (315)
+chest=,id=271459,enchant_id=7987,bonus_id=6652/13690/13698/12844,redirected_base_stats=272255
+# Spellbreaker's Bracers (305)
+wrist=,id=237834,bonus_id=12214/13667/12497/13751/14001/12715/8790/13696,content_tuning=3615,crafted_stats=32/49,crafting_quality=5
+# Jeweled Gauntlets of the Jade Warlord (308)
+hands=,id=271457,bonus_id=6652/12842/13440/13691/13697/1561,redirected_base_stats=251214
+# Spellbreaker's Girdle (331)
+waist=,id=237830,bonus_id=12214/13667/12497/13751/14001/13767/8960/8790/13836/13696,content_tuning=3615,crafted_stats=40/49,crafting_quality=5
+# Legplates of Charged Duality (311)
+legs=,id=159435,enchant_id=8159,bonus_id=12843/13440/6652/13662/12699,content_tuning=1279
+# Scaleguard's Stalwart Greatboots (311)
+feet=,id=193728,enchant_id=7963,bonus_id=12843/13440/40/13662/12699,content_tuning=1279
+# Sickening Signet of Atroxus (311)
+finger1=,id=252258,enchant_id=7967,gem_id=240906,bonus_id=12843/13440/6652/13668/12699,content_tuning=1279
+# Colubrine Band (295)
+finger2=,id=272147,enchant_id=7967,gem_id=240906,bonus_id=12834/6652/13668,content_tuning=6015
+# Coiled Fangstone (321)
+trinket1=,id=273795,bonus_id=13440/6652/12699/12846,content_tuning=1279
+# Fiber of Living Agony (321)
+trinket2=,id=265657,bonus_id=6652/12846,content_tuning=6015
+# Blood Knight's Impetus (331)
+main_hand=,id=237847,enchant_id=8689,bonus_id=12214/13667/12497/13751/14004/12693/8960/8790/13836,content_tuning=3615,crafted_stats=49/36,crafting_quality=5
+
+### Gear from Bags
+#
+# Amulet of the Twin Fangs (298)
+# neck=,id=268251,gem_id=240983,bonus_id=6652/13668/13333/12835,content_tuning=4240
+#
+# Serpentine Talisman (295)
+# neck=,id=272229,bonus_id=12834/6652/13668,content_tuning=6015
+#
+# Galerider's Mantle (282)
+# shoulder=,id=272252,bonus_id=12826/43/11215/13662,content_tuning=6015
+#
+# Wings of Flame (305)
+# back=,id=171670,bonus_id=8902/12841/7756/13662/12699,content_tuning=806
+#
+# Galerider's Mesh Wraps (292)
+# wrist=,id=272254,bonus_id=12833/6652/13696/11215/13662,content_tuning=6015
+#
+# Pledgebearer's Gauntlets (305)
+# hands=,id=272257,bonus_id=12841/6652/13662,content_tuning=6015
+#
+# Pledgebearer's Gauntlets (292)
+# hands=,id=272257,bonus_id=12833/6652/11215/13662,content_tuning=6015
+#
+# Pledgebearer's Girdle (295)
+# waist=,id=272261,bonus_id=12834/6652/13696/13662,content_tuning=6015
+#
+# Anguine Gyre (295)
+# finger1=,id=272148,enchant_id=7967,gem_id=240906,bonus_id=12834/6652/13668,content_tuning=6015
+#
+# Crucible of Erratic Energies (295)
+# trinket1=,id=264507,bonus_id=12830,content_tuning=4240
+#
+# Effigy of Ula'tek's Faithful (295)
+# trinket1=,id=274493,bonus_id=12834/6652,content_tuning=6015
+#
+# Soulsealer's Headstone (282)
+# main_hand=,id=272269,bonus_id=12826/6652/11215,content_tuning=6015
+#
+# Searing Blazecaster (73)
+# main_hand=,id=195490,bonus_id=7981/6652/1498/8767,content_tuning=2160
+#
+# Realm Splitter (272)
+# main_hand=,id=272274,bonus_id=12819/6652,content_tuning=6015
+
+### Additional Character Info
+#
+# catalyst_currencies=2813:8/3269:8/3116:8/3378:8/3465:3
+#
+# upgrade_currencies=c:3442:39/c:3443:30/c:3444:2/c:3446:97/i:274476:1
+#
+# slot_high_watermarks=0:321:321/1:305:315/2:295:321/3:315:321/4:331:331/5:311:311/6:311:311/7:305:305/8:308:308/9:295:318/10:321:321/11:311:315/12:331:331/13:10:233/14:165:331/15:85:311/16:85:263
+#
+# upgrade_achievements=19326/19397/19398/19577/19578/40107/40115/40118/40942/40943/40944/40945/41886/41887/41888/41892/42767/42768/42769/42770/61809/62410/62411
+#
+# bonus_roll_currencies=3418:2/3511:0
+
+# Checksum: 5d4071dc

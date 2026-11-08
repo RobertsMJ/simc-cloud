@@ -4,4 +4,6 @@ description: A cloud-native chart for SimulationCraft simulations
 
 type: application
 version: 0.1.0
-appVersion: "1.0.0-alpha.1"
+appVersion: "dev"
+sources:
+  - https://github.com/RobertsMJ/simc-cloud

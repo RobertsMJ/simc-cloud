@@ -1,9 +1,9 @@
 {{- range $name, $rawApp := .Values.apps }}
-{{- $app := mergeOverwrite (deepCopy $.Values.default) $rawApp }}
+{{- $app := mergeOverwrite (deepCopy $.Values.appDefaults) $rawApp }}
 {{- $_ := $app.image | required "The app must have an image defined" -}}
 {{- $_ := $app.image.registry | required "App image must have a registry defined " -}}
 {{- $_ := $app.image.repository | required "App image must have a repository defined " -}}
-{{- $_ := $app.image.tag | required "App image must have a tag defined " -}}
+{{- $_ := set $app.image "tag" ($app.image.tag | default $.Chart.AppVersion) }}
 {{- $ctx := dict "root" $ "name" $name "app" $app }}
 
 {{ include "simc-chart.app.deployment" $ctx }}
@@ -13,5 +13,11 @@
 {{- end }}
 {{ include "simc-chart.app.env" $ctx }}
 {{ include "simc-chart.app.podmonitor" $ctx }}
+{{- if $app.ports }}
+{{ include "simc-chart.app.service" $ctx }}
+{{- end }}
+{{- if $app.route }}
+{{ include "simc-chart.app.httproute" $ctx }}
+{{- end }}
 
 {{- end }}

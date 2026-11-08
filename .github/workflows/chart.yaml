@@ -1,0 +1,34 @@
+name: Chart
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "chart/**"
+      - ".github/workflows/chart.yaml"
+  workflow_call:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v5
+        with:
+          version: v4.3.1
+
+      - name: Set up Kubeconform
+        uses: bmuschko/setup-kubeconform@v1
+        with:
+          kubeconform-version: 0.8.0
+
+      - name: Install Task
+        uses: go-task/setup-task@v2
+
+      - name: Lint
+        run: task chart:lint
+
+      - name: Validate
+        run: task chart:validate

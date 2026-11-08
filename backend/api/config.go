@@ -8,5 +8,5 @@ type Config struct {
 }
 
 func NewConfig() (*Config, error) {
-	return config.Parse[Config]("API_")
+	return config.Parse[Config]("APP_")
 }

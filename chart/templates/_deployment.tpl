@@ -49,11 +49,9 @@ spec:
           ports:
             - name: admin
               containerPort: {{ .app.adminPort }}
-              protocol: TCP
-            {{- with .app.service }}
-            - name: http
-              containerPort: {{ .port }}
-              protocol: TCP
+            {{- range $name, $port := .app.ports }}
+            - name: {{ $name }}
+              containerPort: {{ $port }}
             {{- end }}
           readinessProbe:
             httpGet:

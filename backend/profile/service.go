@@ -7,13 +7,17 @@ import (
 	"github.com/RobertsMJ/simc-cloud/backend/simc"
 )
 
-type Service struct {
+type Service interface {
+	Parse(ctx context.Context, raw string) (simc.SimulationDocument, error)
 }
 
-func NewService() *Service {
-	return &Service{}
+type service struct {
 }
 
-func (s Service) Parse(ctx context.Context, raw string) (simc.SimulationDocument, error) {
+func NewService() Service {
+	return &service{}
+}
+
+func (s *service) Parse(ctx context.Context, raw string) (simc.SimulationDocument, error) {
 	return simc.NewSimulationDocument(strings.NewReader(raw))
 }

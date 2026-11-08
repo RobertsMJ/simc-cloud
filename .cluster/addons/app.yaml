@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: app
+  name: simc
   labels:
     istio.io/dataplane-mode: ambient
 ---

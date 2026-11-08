@@ -1,0 +1,13 @@
+appDefaults:
+  image:
+    registry: registry.localhost:5000/simc
+    tag: dev
+    pullPolicy: Always
+gateway:
+  hostnames:
+    - simc.k3d.localhost
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      name: shared-gateway
+      kind: Gateway
+      namespace: istio-system

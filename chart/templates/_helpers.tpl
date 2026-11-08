@@ -84,7 +84,7 @@ App termination grace period
 {{ include "simc-chart.app.terminationGraceSeconds" $ctx }}
 */}}
 {{- define "simc-chart.app.terminationGraceSeconds" -}}
-{{- $tail := int (default 15 (default .root.Values.default.shutdownTailSeconds .app.shutdownTailSeconds)) -}}
+{{- $tail := int (default 15 .app.shutdownTailSeconds) -}}
 {{- $grace := int (default 30 .app.terminationGracePeriodSeconds) -}}
 {{- if .app.maxRuntimeSeconds }}
   {{- $min := add (int .app.maxRuntimeSeconds) $tail -}}

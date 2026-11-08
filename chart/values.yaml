@@ -1,13 +1,10 @@
-# fullnameOverride allows the chart name to be set
 fullnameOverride:
-# nameOverride allows the release name to be set
 nameOverride:
 
-# default values for applications deployed in the simc-chart
-default:
+appDefaults:
   image:
-    registry: registry.localhost:5000/simc
-    tag: dev
+    registry: ghcr.io/robertsmj/simc
+    pullPolicy: IfNotPresent
   resources:
     requests:
       memory: 128Mi
@@ -15,9 +12,7 @@ default:
     limits:
       memory: 256Mi
       cpu: 250m
-  # adminPort is the port that the app will listen on for admin endpoints (health, readiness, etc)
   adminPort: 8081
-  # probes is a list of paths that will be used for liveness and readiness probes
   probes:
     # liveness is the configuration for the platform liveness probe
     liveness:
@@ -52,6 +47,10 @@ streams:
   #   storage: file
   #   maxAge: 1
 
+gateway:
+  hostnames:
+  parentRefs:
+
 apps:
   run-sim:
     component: worker
@@ -70,7 +69,6 @@ apps:
       durableName: simc-job-consumer
       filterSubject: simc.job
       maxDeliver: 3
-      backoff: [5s, 30s, 1m]
       ackWait: 10s
     # shutdownTailSeconds must cover any in-code shutdown grace period
     shutdownTailSeconds: 10
@@ -90,3 +88,15 @@ apps:
       streamName: simc-job-stream
       durableName: simc-jobs-results
       filterSubject: simc.results
+  api:
+    component: api
+    image:
+      repository: api
+    ports:
+      http: 8080
+    route:
+      rules:
+        - matches:
+            - path:
+                type: PathPrefix
+                value: /api

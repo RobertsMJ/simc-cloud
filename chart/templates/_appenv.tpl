@@ -27,6 +27,7 @@ data:
 {{- if .app.env }}
 {{- $env = merge $env .app.env -}}
 {{- end }}
+{{- $_ := set $env "APP_VERSION" .root.Chart.AppVersion -}}
 {{- with .app.maxRuntimeSeconds -}}
 {{- $_ := set $env "MAX_RUNTIME" (printf "%ds" (int .)) -}}
 {{- end }}

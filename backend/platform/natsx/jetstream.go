@@ -18,6 +18,7 @@ func NewJetstream(lc fx.Lifecycle, cfg *NatsConfig) (jetstream.JetStream, error)
 	nc, err := nats.Connect(
 		cfg.Url,
 		nats.MaxReconnects(-1),
+		nats.RetryOnFailedConnect(true),
 		nats.ClosedHandler(
 			func(c *nats.Conn) {
 				close(drained)
