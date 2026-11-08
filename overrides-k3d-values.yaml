@@ -7,7 +7,6 @@ gateway:
   hostnames:
     - simc.k3d.localhost
   parentRefs:
-    - group: gateway.networking.k8s.io
-      name: shared-gateway
-      kind: Gateway
-      namespace: istio-system
+    - name: shared-gateway
+      namespace: gateway
+      sectionName: http

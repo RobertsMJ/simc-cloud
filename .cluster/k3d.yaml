@@ -12,17 +12,10 @@ ports:
   - port: 80:80
     nodeFilters:
       - loadbalancer:*
-  - port: 443:443
-    nodeFilters:
-      - loadbalancer:*
 registries:
   create:
     name: registry.localhost
     hostPort: "5000"
-volumes:
-  - volume: ${PWD}/.cluster/addons:/var/lib/rancher/k3s/server/manifests/addons
-    nodeFilters:
-      - server:*
 options:
   k3s:
     extraArgs:

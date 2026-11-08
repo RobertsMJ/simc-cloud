@@ -1,15 +1,21 @@
 version: "3"
 
+vars:
+  HOMELAB_DIR: '{{.HOMELAB_DIR | default (print .ROOT_DIR "/../homelab")}}'
+
 tasks:
   create:
     desc: Create a local k3d cluster for development
+    preconditions:
+      - sh: test -f {{.HOMELAB_DIR}}/Taskfile.yml
+        msg: "homelab checkout not found at {{.HOMELAB_DIR}} (override with HOMELAB_DIR=...)"
     cmds:
       - k3d cluster create --config k3d.yaml
+      - task -d {{.HOMELAB_DIR}} bootstrap CLUSTER=k3d-dev-cluster
+      - kubectl --context k3d-dev-cluster -n flux-system wait --for=condition=Ready fluxinstance/flux --timeout=5m
+      - kubectl --context k3d-dev-cluster -n flux-system wait --for=create kustomization/apps kustomization/monitoring-configs --timeout=5m
+      - kubectl --context k3d-dev-cluster -n flux-system wait --for=condition=Ready kustomization/apps kustomization/monitoring-configs --timeout=20m
   delete:
     desc: Destroy the local k3d cluster
     cmds:
       - k3d cluster delete dev-cluster
-  ls:
-    cmds:
-      - ls
-      - echo $PWD

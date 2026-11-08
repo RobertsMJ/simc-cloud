@@ -33,9 +33,10 @@ Prerequisites:
 - Install Docker (https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository)
 - Install dependencies (`task install-deps`)
 - Create cluster (`task cluster:create`)
+- Homelab repo at `../homelab`
 
 Local deployment
 
 - `task cluster:create`
-- `task build-all`
-- `helm install -n app simc chart/`
+- `task backend:push`
+- `task deploy`

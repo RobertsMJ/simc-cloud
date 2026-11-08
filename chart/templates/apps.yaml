@@ -19,5 +19,8 @@
 {{- if $app.route }}
 {{ include "simc-chart.app.httproute" $ctx }}
 {{- end }}
+{{- if $app.autoscaling }}
+{{ include "simc-chart.app.scaledobject" $ctx }}
+{{- end }}
 
 {{- end }}
