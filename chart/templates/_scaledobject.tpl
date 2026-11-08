@@ -12,6 +12,9 @@ spec:
     name: {{ include "simc-chart.app.fullname" $ }}
   minReplicaCount: {{ .app.autoscaling.minReplicas }}
   maxReplicaCount: {{ .app.autoscaling.maxReplicas }}
+  {{- with .app.autoscaling.cooldownPeriod }}
+  cooldownPeriod: {{ . | quote }}
+  {{- end }}
   triggers:
     - type: nats-jetstream
       metadata:
