@@ -20,7 +20,7 @@ RUN --mount=type=cache,target=/root/.cache/go-build CGO_ENABLED=0 \
     -o main ./cmd/${SERVICE}/
 
 
-FROM alpine:3.23 AS simc-runtime
+FROM alpine:3.24 AS simc-runtime
 WORKDIR /app
 RUN \
     apk --no-cache add  \
@@ -38,7 +38,7 @@ ENTRYPOINT ["./main"]
 EXPOSE 8081
 
 # For services that don't use simc at runtime
-FROM alpine:3.23 AS prod
+FROM alpine:3.24 AS prod
 
 WORKDIR /app
 COPY --from=build /app/main main
