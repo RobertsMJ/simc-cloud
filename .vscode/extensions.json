@@ -1,5 +1,11 @@
 {
     "recommendations": [
-        "mystler.simulationcraft"
+        "mystler.simulationcraft",
+        "ms-azuretools.vscode-containers",
+        "ms-azuretools.vscode-docker",
+        "docker.docker",
+        "golang.go",
+        "ms-kubernetes-tools.vscode-kubernetes-tools",
+        "redhat.vscode-yaml"
     ]
 }
