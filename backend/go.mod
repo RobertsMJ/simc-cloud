@@ -5,7 +5,7 @@ go 1.26.7
 require (
 	github.com/caarlos0/env/v11 v11.4.2
 	github.com/danielgtaylor/huma/v2 v2.40.0
-	github.com/nats-io/nats.go v1.54.0
+	github.com/nats-io/nats.go v1.55.0
 	github.com/prometheus/client_golang v1.24.1
 	github.com/samber/lo v1.53.0
 	github.com/stretchr/testify v1.12.1
