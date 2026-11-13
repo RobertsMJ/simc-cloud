@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM simulationcraftorg/simc:latest@sha256:f1a582dc7d9e0712e43aa6d02341b5f84027d7cd3f57d34e010d8d3a2bea213b AS simc
+FROM simulationcraftorg/simc:1215-2026-10-23-73a372b AS simc
 FROM golang:1.27-alpine3.23 AS build-deps
 WORKDIR /app
 
