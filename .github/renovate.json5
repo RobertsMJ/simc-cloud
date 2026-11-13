@@ -1,12 +1,13 @@
 {
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
   extends: ["config:recommended"],
+  postUpdateOptions: ["gomodTidy"],
   packageRules: [
     {
       matchFileNames: [
         ".github/workflows/**",
         "backend/go.mod",
-        "backend/Dockerfile"
+        "backend/Dockerfile",
       ],
       matchUpdateTypes: ["minor", "patch", "digest"],
       automerge: true,
