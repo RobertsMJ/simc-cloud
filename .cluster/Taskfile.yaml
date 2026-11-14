@@ -19,3 +19,7 @@ tasks:
     desc: Destroy the local k3d cluster
     cmds:
       - k3d cluster delete dev-cluster
+  port-forward-nats:
+    desc: Port forward the NATS service
+    cmds:
+      - kubectl --context k3d-dev-cluster -n nats port-forward svc/nats 4222:4222

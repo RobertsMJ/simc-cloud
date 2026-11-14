@@ -3,8 +3,8 @@ package api
 import (
 	"context"
 	"log/slog"
+	"net/http"
 
-	"github.com/RobertsMJ/simc-cloud/backend/profile"
 	"github.com/RobertsMJ/simc-cloud/backend/simc"
 	"github.com/danielgtaylor/huma/v2"
 )
@@ -14,19 +14,33 @@ type ProfileRequest struct {
 }
 
 type ProfileResponseBody struct {
-	Profile simc.SimulationDocument `json:"profile" doc:"Parsed simulation profile"`
+	Profile *simc.Profile `json:"profile" doc:"Parsed simulation profile"`
+}
+
+type ProfileParser interface {
+	Parse(ctx context.Context, raw string) (*simc.Profile, error)
 }
 
 type ProfileHandler struct {
 	log *slog.Logger
-	svc profile.Service
+	svc ProfileParser
 }
 
-func NewProfileHandler(svc profile.Service, log *slog.Logger) *ProfileHandler {
+var _ Handler = (*ProfileHandler)(nil)
+
+func NewProfileHandler(log *slog.Logger, svc ProfileParser) *ProfileHandler {
 	return &ProfileHandler{
 		log: log,
 		svc: svc,
 	}
+}
+
+func (h *ProfileHandler) RegisterHandler(api huma.API) {
+	huma.Register(api, huma.Operation{
+		OperationID: "parse-profile",
+		Method:      http.MethodPost,
+		Path:        "/profile",
+	}, h.HandleProfileParse)
 }
 
 func (h *ProfileHandler) HandleProfileParse(ctx context.Context, request *ProfileRequest) (*Response[ProfileResponseBody], error) {

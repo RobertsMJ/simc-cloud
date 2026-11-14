@@ -20,8 +20,8 @@ func (s *ConfigTestSuite) TestReadsChartEnvKeys() {
 	s.T().Setenv("QUEUE_URL", "nats://nats:4222")
 	s.T().Setenv("CONSUMER_STREAM_NAME", "in-stream")
 	s.T().Setenv("CONSUMER_NAME", "in-consumer")
-	s.T().Setenv("PUBLISHER_STREAM_NAME", "out-stream")
-	s.T().Setenv("PUBLISHER_SUBJECT", "out.subject")
+	s.T().Setenv("TEST_ID_PUBLISHER_STREAM_NAME", "out-stream")
+	s.T().Setenv("TEST_ID_PUBLISHER_SUBJECT", "out.subject")
 
 	nc, err := natsx.NewNatsConfig()
 	s.Require().NoError(err)
@@ -31,7 +31,7 @@ func (s *ConfigTestSuite) TestReadsChartEnvKeys() {
 	s.Require().NoError(err)
 	s.Equal(natsx.ConsumerConfig{StreamName: "in-stream", DurableName: "in-consumer", MaxMessages: 1}, *cc)
 
-	pc, err := natsx.NewPublisherConfig()
+	pc, err := natsx.NewPublisherConfig("test-id")
 	s.Require().NoError(err)
 	s.Equal(natsx.PublisherConfig{StreamName: "out-stream", Subject: "out.subject"}, *pc)
 }

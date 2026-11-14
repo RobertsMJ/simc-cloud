@@ -1,10 +1,12 @@
 module github.com/RobertsMJ/simc-cloud/backend
 
-go 1.26.7
+go 1.27.4
 
 require (
 	github.com/caarlos0/env/v11 v11.4.2
 	github.com/danielgtaylor/huma/v2 v2.40.0
+	github.com/go-playground/validator/v10 v10.30.6
+	github.com/google/uuid v1.6.0
 	github.com/nats-io/nats.go v1.55.0
 	github.com/prometheus/client_golang v1.25.0
 	github.com/samber/lo v1.53.0
@@ -15,7 +17,11 @@ require (
 require (
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
+	github.com/gabriel-vasile/mimetype v1.4.16 // indirect
+	github.com/go-playground/locales v0.14.2 // indirect
+	github.com/go-playground/universal-translator v0.18.2 // indirect
 	github.com/klauspost/compress v1.20.3 // indirect
+	github.com/leodido/go-urn v1.5.0 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/nats-io/nkeys v0.4.16 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect

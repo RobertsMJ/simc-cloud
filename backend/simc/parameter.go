@@ -4,8 +4,8 @@ import "strings"
 
 // Parameter contains an arbitrary key-value pair
 type Parameter struct {
-	Key   string
-	Value string
+	Key   string `json:"key"`
+	Value string `json:"value"`
 }
 
 func NewParameter(s string) Parameter {

@@ -7,7 +7,7 @@ group "default" {
 
 target "app" {
   name = "${SERVICE}"
-  matrix = { SERVICE = ["api", "write-result", "run-sim"] }
+  matrix = { SERVICE = ["api", "write-result", "run-sim", "generate-gearsets"] }
   args = { SERVICE = "${SERVICE}" }
   target = "prod"
   tags = ["${REGISTRY}/${SERVICE}:${TAG}"]

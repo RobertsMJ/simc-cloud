@@ -2,23 +2,50 @@ package main
 
 import (
 	"github.com/RobertsMJ/simc-cloud/backend/api"
+	"github.com/RobertsMJ/simc-cloud/backend/db"
+	"github.com/RobertsMJ/simc-cloud/backend/job"
+	"github.com/RobertsMJ/simc-cloud/backend/models"
 	"github.com/RobertsMJ/simc-cloud/backend/platform"
 	"github.com/RobertsMJ/simc-cloud/backend/platform/httpx"
+	"github.com/RobertsMJ/simc-cloud/backend/platform/natsx"
 	"github.com/RobertsMJ/simc-cloud/backend/profile"
 	"go.uber.org/fx"
 )
 
+func AsApiHandler(h any) any {
+	return fx.Annotate(
+		h,
+		fx.As(new(api.Handler)),
+		fx.ResultTags(`group:"api"`),
+	)
+}
+
 func BuildOptions() []fx.Option {
 	return []fx.Option{
+		natsx.Module,
 		fx.Provide(
 			api.NewConfig,
-			profile.NewService,
-			api.NewProfileHandler,
+			fx.Annotate(
+				db.NewJobRepository,
+				fx.As(new(job.Repo)),
+			),
+			fx.Annotate(
+				profile.NewService,
+				fx.As(new(api.ProfileParser)),
+			),
+			fx.Annotate(
+				job.NewService,
+				fx.As(new(api.JobService)),
+			),
+			AsApiHandler(api.NewProfileHandler),
+			AsApiHandler(api.NewJobHandler),
+			fx.Annotate(
+				api.NewAPI,
+				fx.ParamTags(``, ``, `group:"api"`),
+			),
 		),
-		httpx.New(
-			"api",
-			api.NewAPI,
-		),
+		natsx.NewPublisherModule[models.GenerateGearsetRequest]("generate-gearsets"),
+		httpx.New("api"),
 	}
 }
 

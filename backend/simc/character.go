@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log/slog"
 	"reflect"
+	"strings"
 	"sync"
 
 	"github.com/RobertsMJ/simc-cloud/backend/simc/internal"
@@ -58,7 +59,14 @@ var getCharacterKeys = sync.OnceValue(func() map[string]bool {
 var charFieldIdx = sync.OnceValue(internal.IndexSimcFields[Character])
 
 func (c Character) MarshalSimc() (string, error) {
-	panic("not impl")
+	nameClass := fmt.Sprintf("%s=%s", c.Class, c.Name)
+
+	marshaledFields, err := internal.MarshalFields(c)
+	if err != nil {
+		return "", err
+	}
+
+	return strings.Join(append([]string{nameClass}, marshaledFields...), "\n"), nil
 }
 
 func (c *Character) UnmarshalStatement(s internal.Statement) error {

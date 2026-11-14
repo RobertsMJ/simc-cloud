@@ -27,7 +27,7 @@ func NewService(simulator Simulator, resultPub queue.Publisher[models.SimResult]
 }
 
 func (s *Service) Handle(ctx context.Context, req models.SimRequest) error {
-	slog.Info("handling sim message", "job_id", req.JobID, "gearset_id", req.GearsetID)
+	slog.Info("handling sim message", "job_id", req.JobID)
 	simCtx, simCancel := context.WithTimeout(ctx, s.config.MaxRuntime)
 	defer simCancel()
 
@@ -45,17 +45,16 @@ func (s *Service) Handle(ctx context.Context, req models.SimRequest) error {
 	}
 
 	simResult := models.SimResult{
-		JobID:     req.JobID,
-		GearsetID: req.GearsetID,
-		Metadata:  req.Metadata,
+		JobID:    req.JobID,
+		Metadata: req.Metadata,
 	}
 	if err != nil {
 		simResult.Status = models.StatusError
 		errMsg := err.Error()
 		simResult.ErrorMessage = &errMsg
-		slog.Error("sim error", "job_id", req.JobID, "gearset_id", req.GearsetID, "error", err)
+		slog.Error("sim error", "job_id", req.JobID, "error", err)
 	} else {
-		simResult.Status = models.StatusCompleted
+		simResult.Status = models.StatusDone
 		simResult.Statistics = out.Statistics
 		simResult.Result = out.Report
 	}

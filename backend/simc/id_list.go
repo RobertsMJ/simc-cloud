@@ -9,7 +9,8 @@ import (
 	"github.com/samber/lo"
 )
 
-type IDList []int // List of IDs joined by '/'
+// IDList represents a list of IDs joined by '/'
+type IDList []int
 
 var (
 	_ internal.ValueMarshaler   = IDList(nil)

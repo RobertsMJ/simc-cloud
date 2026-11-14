@@ -8,5 +8,5 @@ func NewResultRepository() *ResultRepository {
 
 // TODO: contract and implement for results
 func (r *ResultRepository) Create() error {
-	panic("not implemented")
+	return nil
 }

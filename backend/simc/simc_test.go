@@ -23,13 +23,30 @@ func (s *SimcTestSuite) TestNewSimulationDocument() {
 	input, err := os.ReadFile("internal/testdata/test_dh.simc")
 	s.NoError(err)
 
-	res, err := NewSimulationDocument(bytes.NewReader(input))
+	res, err := NewProfile(bytes.NewReader(input))
 	s.NoError(err)
 	s.NotNil(res)
 
 	path, err := filepath.Abs("internal/testdata/test_dh_sim_doc.json")
 	s.NoError(err)
-	expected := test.GoldenValue(s.T(), path, res)
+	expected := test.GoldenValueJSON(s.T(), path, res)
 	s.Equal(expected, res)
 
+}
+
+func (s *SimcTestSuite) TestMarshal() {
+	input, err := os.ReadFile("internal/testdata/test_dh.simc")
+	s.NoError(err)
+
+	path, err := filepath.Abs("internal/testdata/test_dh_profile.simc")
+	s.NoError(err)
+
+	res, err := NewProfile(bytes.NewReader(input))
+	s.NoError(err)
+	s.NotNil(res)
+
+	actual, err := res.MarshalSimc()
+	s.NoError(err)
+	expected := test.GoldenValueRaw(s.T(), path, []byte(actual))
+	s.Equal(string(expected), actual)
 }

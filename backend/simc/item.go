@@ -17,6 +17,91 @@ var (
 	ErrInvalidValue    = errors.New("invalid value for type")
 )
 
+type Item struct {
+	Slot                ItemSlot  `json:"slot" simc:"-"`
+	SlotGroup           SlotGroup `json:"slot_group,omitempty" simc:"-"`
+	Name                string    `json:"name,omitempty" simc:"-"`
+	ID                  int       `json:"id" simc:"id"`
+	EnchantID           IDList    `json:"enchant_id,omitempty" simc:"enchant_id,omitempty"`
+	BonusID             IDList    `json:"bonus_id,omitempty" simc:"bonus_id,omitempty"`
+	GemID               IDList    `json:"gem_id,omitempty" simc:"gem_id,omitempty"`
+	ContentTuning       *int      `json:"content_tuning,omitempty" simc:"content_tuning,omitempty"`
+	DropLevel           *int      `json:"drop_level,omitempty" simc:"drop_level,omitempty"`
+	RedirectedBaseStats *int      `json:"redirected_base_stats,omitempty" simc:"redirected_base_stats,omitempty"`
+	CraftedStats        IDList    `json:"crafted_stats,omitempty" simc:"crafted_stats,omitempty"`
+	GemBonusID          IDList    `json:"gem_bonus_id,omitempty" simc:"gem_bonus_id,omitempty"`
+	CraftingQuality     *int      `json:"crafting_quality,omitempty" simc:"crafting_quality,omitempty"`
+	TitanDiscID         *int      `json:"titan_disc_id,omitempty" simc:"titan_disc_id,omitempty"`
+}
+
+var (
+	_ internal.ValueMarshaler = Item{}
+)
+
+var itemFieldIdx = sync.OnceValue(internal.IndexSimcFields[Item])
+
+func (i Item) GetSlotGroup() SlotGroup {
+	return i.Slot.GetSlotGroup()
+}
+
+func (i *Item) UnmarshalStatement(s internal.Statement) error {
+	if i == nil {
+		return fmt.Errorf("character unmarshal: %w", internal.ErrUnmarshalIntoNilPtr)
+	}
+
+	slot, ok := ItemSlotFromString(s.Key)
+	if !ok {
+		return ErrInvalidItemSlot
+	}
+	i.Slot = slot
+	i.SlotGroup = i.Slot.GetSlotGroup()
+	i.Name = s.Comment
+
+	vals := lo.Map(lo.Filter(lo.Map(strings.Split(s.Value, ","), func(v string, _ int) string {
+		return strings.TrimSpace(v)
+	}), func(v string, _ int) bool {
+		return v != ""
+	}), func(v string, _ int) Parameter {
+		return NewParameter(v)
+	})
+
+	fields := itemFieldIdx()
+	for _, v := range vals {
+		idx, ok := fields[v.Key]
+		if !ok {
+			slog.Debug("attempted to assign unmapped field to an item", "key", v.Key, "value", v.Value)
+			continue
+		}
+
+		field := reflect.ValueOf(i).Elem().Field(idx)
+		if err := internal.AssignToField(field, v.Value); err != nil {
+			return fmt.Errorf("item unmarshal into field(%v): %w", s.Key, err)
+		}
+	}
+	return nil
+}
+
+func (i Item) MarshalSimc() (string, error) {
+	res := []string{}
+	if i.Name != "" {
+		res = append(res, fmt.Sprintf("# %s", i.Name))
+	}
+
+	itemParams := []string{
+		fmt.Sprintf(`%s="%s"`, i.Slot, i.Name),
+	}
+
+	fields, err := internal.MarshalFields(i)
+	if err != nil {
+		return "", err
+	}
+
+	itemParams = append(itemParams, fields...)
+	res = append(res, strings.Join(itemParams, ","))
+
+	return strings.Join(res, "\n"), nil
+}
+
 type ItemSlot string
 
 const (
@@ -62,23 +147,28 @@ func ItemSlotFromString(s string) (ItemSlot, bool) {
 	}
 }
 
+func isItemKey(key string) bool {
+	_, ok := ItemSlotFromString(key)
+	return ok
+}
+
 type SlotGroup string
 
 const (
-	SlotGroupHead     ItemSlot  = "head"
-	SlotGroupNeck     ItemSlot  = "neck"
-	SlotGroupShoulder ItemSlot  = "shoulder"
-	SlotGroupBack     ItemSlot  = "back"
-	SlotGroupChest    ItemSlot  = "chest"
-	SlotGroupWrist    ItemSlot  = "wrist"
-	SlotGroupHands    ItemSlot  = "hands"
-	SlotGroupWaist    ItemSlot  = "waist"
-	SlotGroupLegs     ItemSlot  = "legs"
-	SlotGroupFeet     ItemSlot  = "feet"
+	SlotGroupHead     SlotGroup = SlotGroup(ItemSlotHead)
+	SlotGroupNeck     SlotGroup = SlotGroup(ItemSlotNeck)
+	SlotGroupShoulder SlotGroup = SlotGroup(ItemSlotShoulder)
+	SlotGroupBack     SlotGroup = SlotGroup(ItemSlotBack)
+	SlotGroupChest    SlotGroup = SlotGroup(ItemSlotChest)
+	SlotGroupWrist    SlotGroup = SlotGroup(ItemSlotWrist)
+	SlotGroupHands    SlotGroup = SlotGroup(ItemSlotHands)
+	SlotGroupWaist    SlotGroup = SlotGroup(ItemSlotWaist)
+	SlotGroupLegs     SlotGroup = SlotGroup(ItemSlotLegs)
+	SlotGroupFeet     SlotGroup = SlotGroup(ItemSlotFeet)
 	SlotGroupFinger   SlotGroup = "finger"
 	SlotGroupTrinket  SlotGroup = "trinket"
-	SlotGroupMainHand ItemSlot  = "main_hand"
-	SlotGroupOffHand  ItemSlot  = "off_hand"
+	SlotGroupMainHand SlotGroup = SlotGroup(ItemSlotMainHand)
+	SlotGroupOffHand  SlotGroup = SlotGroup(ItemSlotOffHand)
 )
 
 func (is ItemSlot) GetSlotGroup() SlotGroup {
@@ -88,83 +178,5 @@ func (is ItemSlot) GetSlotGroup() SlotGroup {
 	case ItemSlotFinger1, ItemSlotFinger2:
 		return SlotGroupFinger
 	}
-	return ""
-}
-
-type Item struct {
-	Slot                ItemSlot  `json:"slot" simc:"-"`
-	SlotGroup           SlotGroup `json:"slot_group,omitempty" simc:"-"`
-	Name                string    `json:"name,omitempty" simc:"-"`
-	ID                  int       `json:"id" simc:"id"`
-	EnchantID           IDList    `json:"enchant_id,omitempty" simc:"enchant_id,omitempty"`
-	BonusID             IDList    `json:"bonus_id,omitempty" simc:"bonus_id,omitempty"`
-	GemID               IDList    `json:"gem_id,omitempty" simc:"gem_id,omitempty"`
-	ContentTuning       *int      `json:"content_tuning,omitempty" simc:"content_tuning,omitempty"`
-	DropLevel           *int      `json:"drop_level,omitempty" simc:"drop_level,omitempty"`
-	RedirectedBaseStats *int      `json:"redirected_base_stats,omitempty" simc:"redirected_base_stats,omitempty"`
-	CraftedStats        IDList    `json:"crafted_stats,omitempty" simc:"crafted_stats,omitempty"`
-	GemBonusID          IDList    `json:"gem_bonus_id,omitempty" simc:"gem_bonus_id,omitempty"`
-	CraftingQuality     *int      `json:"crafting_quality,omitempty" simc:"crafting_quality,omitempty"`
-	TitanDiscID         *int      `json:"titan_disc_id,omitempty" simc:"titan_disc_id,omitempty"`
-}
-
-func (i Item) GetSlotGroup() SlotGroup {
-	return i.Slot.GetSlotGroup()
-}
-
-var (
-	_ internal.ValueMarshaler   = Item{}
-	_ internal.ValueUnmarshaler = (*Item)(nil)
-)
-
-var itemFieldIdx = sync.OnceValue(internal.IndexSimcFields[Item])
-
-func isItemKey(key string) bool {
-	_, ok := ItemSlotFromString(key)
-	return ok
-}
-
-func (i *Item) UnmarshalStatement(s internal.Statement) error {
-	if i == nil {
-		return fmt.Errorf("character unmarshal: %w", internal.ErrUnmarshalIntoNilPtr)
-	}
-
-	slot, ok := ItemSlotFromString(s.Key)
-	if !ok {
-		return ErrInvalidItemSlot
-	}
-	i.Slot = slot
-	i.SlotGroup = i.Slot.GetSlotGroup()
-	i.Name = s.Comment
-
-	vals := lo.Map(lo.Filter(lo.Map(strings.Split(s.Value, ","), func(v string, _ int) string {
-		return strings.TrimSpace(v)
-	}), func(v string, _ int) bool {
-		return v != ""
-	}), func(v string, _ int) Parameter {
-		return NewParameter(v)
-	})
-
-	fields := itemFieldIdx()
-	for _, v := range vals {
-		idx, ok := fields[v.Key]
-		if !ok {
-			slog.Debug("attempted to assign unmapped field to an item", "key", v.Key, "value", v.Value)
-			continue
-		}
-
-		field := reflect.ValueOf(i).Elem().Field(idx)
-		if err := internal.AssignToField(field, v.Value); err != nil {
-			return fmt.Errorf("item unmarshal into field(%v): %w", s.Key, err)
-		}
-	}
-	return nil
-}
-
-func (i Item) MarshalSimc() (string, error) {
-	panic("not implemented")
-}
-
-func (i *Item) UnmarshalSimc(value string) error {
-	panic("not implemented")
+	return SlotGroup(is)
 }

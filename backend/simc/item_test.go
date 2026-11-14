@@ -26,7 +26,7 @@ func (s *ItemTestSuite) TestUnmarshalStatement() {
 
 	expected := Item{
 		Slot:      ItemSlotHead,
-		SlotGroup: "",
+		SlotGroup: SlotGroupHead,
 		Name:      "New Helmet",
 		ID:        251109,
 		EnchantID: IDList{8017},

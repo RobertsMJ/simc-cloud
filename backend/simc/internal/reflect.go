@@ -2,6 +2,7 @@ package internal
 
 import (
 	"errors"
+	"fmt"
 	"log/slog"
 	"reflect"
 	"strconv"
@@ -12,6 +13,7 @@ var (
 	ErrNotAssignableField  = errors.New("field is not assignable")
 	ErrNotAddressableField = errors.New("field is not addressable")
 	ErrIncompatibleField   = errors.New("field is not compatible with value")
+	ErrNilMarshal          = errors.New("t is nil")
 )
 
 func AssignToField(field reflect.Value, raw string) error {
@@ -22,7 +24,6 @@ func AssignToField(field reflect.Value, raw string) error {
 		return ErrNotAddressableField
 	}
 
-	val := reflect.ValueOf(raw)
 	if field.Kind() == reflect.Pointer ||
 		field.Kind() == reflect.Slice ||
 		field.Kind() == reflect.Struct {
@@ -41,6 +42,7 @@ func AssignToField(field reflect.Value, raw string) error {
 		}
 	}
 
+	val := reflect.ValueOf(raw)
 	if unmarshaler, ok := field.Addr().Interface().(ValueUnmarshaler); ok {
 		return unmarshaler.UnmarshalSimc(raw)
 	} else if val.Type().ConvertibleTo(field.Type()) {
@@ -78,6 +80,64 @@ func AssignToField(field reflect.Value, raw string) error {
 		}
 		return ErrIncompatibleField
 	}
+}
+
+func MarshalFields(t any) ([]string, error) {
+	v := reflect.ValueOf(t)
+	if v.Kind() == reflect.Pointer {
+		if v.IsNil() {
+			return nil, ErrNilMarshal
+		}
+		v = v.Elem()
+	}
+	typ := v.Type()
+
+	res := []string{}
+
+	for i := 0; i < typ.NumField(); i++ {
+		fieldType := typ.Field(i)
+		fieldValue := v.Field(i)
+
+		if !fieldType.IsExported() {
+			continue
+		}
+
+		tag := fieldType.Tag.Get("simc")
+		if tag == "" || tag == "-" {
+			continue
+		}
+		simcTag := NewSimcTag(tag)
+		key := simcTag.Key
+
+		if simcTag.Omitempty && fieldValue.IsZero() {
+			continue
+		}
+
+		if fieldType.Type.Kind() == reflect.Slice && simcTag.Omitempty && fieldValue.Len() == 0 {
+			continue
+		}
+
+		if fieldValue.Kind() == reflect.Pointer {
+			if fieldValue.IsNil() {
+				continue
+			}
+			fieldValue = fieldValue.Elem()
+		}
+
+		var val string
+		if marshaler, ok := fieldValue.Interface().(ValueMarshaler); ok {
+			var err error
+			val, err = marshaler.MarshalSimc()
+			if err != nil {
+				return nil, fmt.Errorf("%s: %w", key, err)
+			}
+		} else {
+			val = fmt.Sprintf("%v", fieldValue.Interface())
+		}
+
+		res = append(res, fmt.Sprintf("%s=%s", key, val))
+	}
+	return res, nil
 }
 
 func IndexSimcFields[T any]() map[string]int {

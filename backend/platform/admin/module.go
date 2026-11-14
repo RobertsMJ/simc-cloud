@@ -19,5 +19,9 @@ var Module = fx.Module(
 			fx.As(new(prometheus.Gatherer)),
 		),
 	),
-	httpx.NewWithConfig(adminModule, NewAdminHandler, NewAdminServerConfig),
+	fx.Provide(
+		NewAdminHandler,
+		fx.Private,
+	),
+	httpx.NewWithConfig(adminModule, NewAdminServerConfig),
 )

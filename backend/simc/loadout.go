@@ -2,6 +2,10 @@ package simc
 
 import (
 	"errors"
+	"fmt"
+	"maps"
+	"slices"
+	"strings"
 
 	"github.com/RobertsMJ/simc-cloud/backend/simc/internal"
 )
@@ -9,23 +13,15 @@ import (
 var ErrInvalidLoadoutStatement = errors.New("invalid loadout statement")
 
 type Loadout struct {
-	ID            string
-	Talent        Talent
-	Items         map[ItemSlot]Item
-	OmniumTalents IDValueList
-}
+	ID    string            `json:"id,omitempty"`
+	Items map[ItemSlot]Item `json:"items"`
 
-type LoadoutOptions struct {
-	Talents       []Talent
-	Items         []Item
-	OmniumTalents []IDValueList
+	Talent        Talent      `json:"talents"`
+	OmniumTalents IDValueList `json:"omnium_talents,omitempty" simc:"omnium_talents"`
 }
 
 var (
-	_ internal.ValueMarshaler   = Loadout{}
-	_ internal.ValueUnmarshaler = (*Loadout)(nil)
-	_ internal.ValueMarshaler   = LoadoutOptions{}
-	_ internal.ValueUnmarshaler = (*LoadoutOptions)(nil)
+	_ internal.ValueMarshaler = Loadout{}
 )
 
 func (l *Loadout) UnmarshalStatement(s internal.Statement) error {
@@ -50,12 +46,45 @@ func (l *Loadout) UnmarshalStatement(s internal.Statement) error {
 }
 
 func (l Loadout) MarshalSimc() (string, error) {
-	panic("not implemented")
+	res := []string{}
+
+	for _, slot := range slices.Sorted(maps.Keys(l.Items)) {
+		item := l.Items[slot]
+		str, err := item.MarshalSimc()
+		if err != nil {
+			return "", err
+		}
+		res = append(res, str)
+	}
+
+	fields, err := internal.MarshalFields(l)
+	if err != nil {
+		return "", err
+	}
+	res = append(res, fields...)
+	if l.ID != "" {
+		prefix := l.ID
+		for i, str := range res {
+			if i == 0 {
+				res[i] = fmt.Sprintf(`profileset."%s"=%s`, prefix, str)
+			} else {
+				res[i] = fmt.Sprintf(`profileset."%s"+=%s`, prefix, str)
+			}
+		}
+	}
+
+	return strings.Join(res, "\n"), nil
 }
 
-func (l Loadout) UnmarshalSimc(value string) error {
-	panic("not implemented")
+type LoadoutOptions struct {
+	Talents       []Talent             `json:"talents,omitempty"`
+	Items         map[SlotGroup][]Item `json:"items,omitempty"`
+	OmniumTalents []IDValueList        `json:"omnium_talents,omitempty"`
 }
+
+var (
+	_ internal.ValueMarshaler = LoadoutOptions{}
+)
 
 func (lo *LoadoutOptions) UnmarshalStatement(s internal.Statement) error {
 	if s.Key == "talents" {
@@ -80,16 +109,14 @@ func (lo *LoadoutOptions) UnmarshalStatement(s internal.Statement) error {
 			return err
 		}
 		item.Slot = itemSlot
-		lo.Items = append(lo.Items, item)
+		slotGroup := itemSlot.GetSlotGroup()
+		lo.Items[slotGroup] = append(lo.Items[slotGroup], item)
 		return nil
 	}
 	return ErrInvalidLoadoutStatement
 }
 
+// TODO
 func (lo LoadoutOptions) MarshalSimc() (string, error) {
-	panic("not implemented")
-}
-
-func (lo LoadoutOptions) UnmarshalSimc(value string) error {
-	panic("not implemented")
+	return "", nil
 }
