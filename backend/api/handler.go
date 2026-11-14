@@ -8,6 +8,10 @@ import (
 	"github.com/danielgtaylor/huma/v2/adapters/humago"
 )
 
+type Handler interface {
+	RegisterHandler(api huma.API)
+}
+
 const BasePath = "/api"
 
 type Request[ReqBody any] struct {
@@ -27,7 +31,7 @@ func NewLogMiddleware(log *slog.Logger) func(ctx huma.Context, next func(huma.Co
 	}
 }
 
-func NewAPI(config *Config, log *slog.Logger, profileHandler *ProfileHandler) http.Handler {
+func NewAPI(config *Config, log *slog.Logger, handlers []Handler) http.Handler {
 
 	router := http.NewServeMux()
 	logMiddleware := NewLogMiddleware(log)
@@ -36,14 +40,9 @@ func NewAPI(config *Config, log *slog.Logger, profileHandler *ProfileHandler) ht
 	api := humago.NewWithPrefix(router, BasePath, cfg)
 	api.UseMiddleware(logMiddleware)
 
-	RegisterRoutes(api, profileHandler)
-	return router
-}
+	for _, handler := range handlers {
+		handler.RegisterHandler(api)
+	}
 
-func RegisterRoutes(api huma.API, profileHandler *ProfileHandler) {
-	huma.Register(api, huma.Operation{
-		OperationID: "parse-profile",
-		Method:      http.MethodPost,
-		Path:        "/profile",
-	}, profileHandler.HandleProfileParse)
+	return router
 }

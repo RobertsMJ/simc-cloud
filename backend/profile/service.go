@@ -2,22 +2,22 @@ package profile
 
 import (
 	"context"
+	"log/slog"
 	"strings"
 
 	"github.com/RobertsMJ/simc-cloud/backend/simc"
 )
 
-type Service interface {
-	Parse(ctx context.Context, raw string) (simc.SimulationDocument, error)
+type Service struct {
+	log *slog.Logger
 }
 
-type service struct {
+func NewService(log *slog.Logger) *Service {
+	return &Service{
+		log: log,
+	}
 }
 
-func NewService() Service {
-	return &service{}
-}
-
-func (s *service) Parse(ctx context.Context, raw string) (simc.SimulationDocument, error) {
+func (s *Service) Parse(ctx context.Context, raw string) (simc.SimulationDocument, error) {
 	return simc.NewSimulationDocument(strings.NewReader(raw))
 }

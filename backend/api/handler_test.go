@@ -27,9 +27,10 @@ func TestApiHandlerTestSuite(t *testing.T) {
 
 func (suite *ApiHandlerTestSuite) SetupTest() {
 	_, suite.Api = humatest.New(suite.T())
-	profileSvc := profile.NewService()
-	profileHandler := api.NewProfileHandler(profileSvc, slog.Default())
-	api.RegisterRoutes(suite.Api, profileHandler)
+	log := slog.Default()
+	profileSvc := profile.NewService(log)
+	profileHandler := api.NewProfileHandler(log, profileSvc)
+	profileHandler.RegisterHandler(suite.Api)
 }
 
 func (suite *ApiHandlerTestSuite) TestPostProfile_Stub() {

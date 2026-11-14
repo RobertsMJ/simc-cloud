@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
-	"net/http"
 
 	"go.uber.org/fx"
 )
@@ -14,15 +13,13 @@ const httpxModule = "httpx"
 // New produces an fx module with the provided handler and the default APP configuration
 func New(
 	modulePrefix string,
-	handler any,
 ) fx.Option {
-	return NewWithConfig(modulePrefix, handler, NewConfig)
+	return NewWithConfig(modulePrefix, NewConfig)
 }
 
 // NewWithConfig produces an fx module with the provided handler and configuration
 func NewWithConfig(
 	modulePrefix string,
-	handler any,
 	config func() (*Config, error),
 ) fx.Option {
 	return fx.Module(
@@ -30,7 +27,6 @@ func NewWithConfig(
 		fx.Provide(
 			fx.Private,
 			config,
-			fx.Annotate(handler, fx.As(new(http.Handler))),
 			NewServer,
 		),
 		fx.Invoke(func(lc fx.Lifecycle, sd fx.Shutdowner, logger *slog.Logger, server *Server) {
