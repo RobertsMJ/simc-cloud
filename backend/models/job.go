@@ -1,31 +1,32 @@
 package models
 
-import "github.com/RobertsMJ/simc-cloud/backend/simc"
+import (
+	"github.com/RobertsMJ/simc-cloud/backend/simc"
+)
 
-type CreateJobRequest struct {
-	Character simc.Character      `json:"character"`
-	Baseline  simc.Loadout        `json:"baseline"`
-	Options   simc.LoadoutOptions `json:"options"`
+type CreateJobRequestBody struct {
+	Character simc.Character      `json:"character" validate:"required"`
+	Baseline  simc.Loadout        `json:"baseline" validate:"required"`
+	Options   simc.LoadoutOptions `json:"options" validate:"required"`
+	Config    simc.Config         `json:"config"`
 }
 
-type CreateJobResponse struct {
-	ID     string `json:"id"`
+type CreateJobResponseBody struct {
+	Id     string `json:"id"`
 	Status Status `json:"status"`
 }
 
 type Status string
 
 const (
+	StatusPending    Status = "pending"
 	StatusInProgress Status = "in_progress"
-	StatusCompleted  Status = "completed"
+	StatusDone       Status = "done"
 	StatusError      Status = "error"
 )
 
 type Job struct {
-	ID             string `json:"id"`
-	Status         Status `json:"status"`
-	TotalCount     int    `json:"total_count"`
-	CompletedCount int    `json:"completed_count"`
-	FailedCount    int    `json:"failed_count"`
-	CreatedAt      string `json:"created_at"`
+	ID        string `json:"id"`
+	Status    Status `json:"status"`
+	CreatedAt string `json:"created_at"`
 }

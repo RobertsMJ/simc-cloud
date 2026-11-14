@@ -16,7 +16,6 @@ paths:
 - All changes should be formatted by go fmt (`go fmt ./...`).
 - All changes should be validated by static analysis tools (e.g., `golangci-lint run`).
 
-
 ## Testing
 
 - Tests use testify/suite: a <Thing>TestSuite struct embedding suite.Suite, a Test<Thing>TestSuite runner, and one method per case.
@@ -26,9 +25,8 @@ paths:
 
 - Repository interfaces and transport handlers use domain types only (`models.*`, `context.Context`). Infrastructure types must never appear in interfaces or domain packages, only in their concrete implementations.
 
-
 ## Example:
 
 api → domain → transport ← platform
 platform and transport never import api or domain packages.
-cmd/* is the only composition root, the one place that sees every layer.
+cmd/\* is the only composition root, the one place that sees every layer.

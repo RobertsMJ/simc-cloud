@@ -1,6 +1,11 @@
 package natsx
 
-import "github.com/RobertsMJ/simc-cloud/backend/config"
+import (
+	"fmt"
+	"strings"
+
+	"github.com/RobertsMJ/simc-cloud/backend/config"
+)
 
 type NatsConfig struct {
 	Url string `env:"QUEUE_URL,required"`
@@ -25,6 +30,7 @@ type PublisherConfig struct {
 	Subject    string `env:"SUBJECT,required"`
 }
 
-func NewPublisherConfig() (*PublisherConfig, error) {
-	return config.Parse[PublisherConfig]("PUBLISHER_")
+func NewPublisherConfig(id string) (*PublisherConfig, error) {
+	prefix := strings.Replace(strings.ToUpper(id), "-", "_", -1)
+	return config.Parse[PublisherConfig](fmt.Sprintf("%s_PUBLISHER_", prefix))
 }

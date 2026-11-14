@@ -2,27 +2,18 @@ package api
 
 import (
 	"context"
+	"errors"
 	"log/slog"
 	"net/http"
 
 	"github.com/RobertsMJ/simc-cloud/backend/models"
 	"github.com/RobertsMJ/simc-cloud/backend/simc"
 	"github.com/danielgtaylor/huma/v2"
+	"github.com/go-playground/validator/v10"
 )
 
-type CreateJobRequestBody struct {
-	Character simc.Character      `json:"character"`
-	Baseline  simc.Loadout        `json:"baseline"`
-	Options   simc.LoadoutOptions `json:"options"`
-	Config    map[string]string   `json:"config"`
-}
-
-type CreateJobResponseBody struct {
-	Id string `json:"id"`
-}
-
 type JobService interface {
-	CreateJob(context.Context, models.Job) (models.Job, error)
+	CreateJob(context.Context, simc.Character, simc.Loadout, simc.LoadoutOptions, simc.Config) (models.Job, error)
 }
 
 type JobHandler struct {
@@ -43,15 +34,30 @@ func (h JobHandler) RegisterHandler(api huma.API) {
 	huma.Register(api, huma.Operation{
 		OperationID: "create-job",
 		Method:      http.MethodPut,
-		Path:        "/job",
+		Path:        "/jobs",
 	}, h.HandleCreateJob)
 }
 
-func (h *JobHandler) HandleCreateJob(ctx context.Context, request *Request[CreateJobRequestBody]) (*Response[CreateJobResponseBody], error) {
+func (h *JobHandler) HandleCreateJob(ctx context.Context, request *Request[models.CreateJobRequestBody]) (*Response[models.CreateJobResponseBody], error) {
+	// A job request should contain a character, baseline gear, and selected gear options
+	// validate the request to confirm we have all expected configuration
+	validate := validator.New()
+	if err := validate.Struct(request.Body); err != nil {
+		var validationErrors validator.ValidationErrors
+		errors.As(err, &validationErrors)
+		return nil, validationErrors
+	}
 
-	return &Response[CreateJobResponseBody]{
-		Body: CreateJobResponseBody{
-			Id: "created-job-id",
+	// pass the character, baseline, and options to the job service to handle the business logic
+	job, err := h.jobService.CreateJob(ctx, request.Body.Character, request.Body.Baseline, request.Body.Options, request.Body.Config)
+	if err != nil {
+		return nil, err
+	}
+
+	return &Response[models.CreateJobResponseBody]{
+		Body: models.CreateJobResponseBody{
+			Id:     job.ID,
+			Status: job.Status,
 		},
 	}, nil
 }

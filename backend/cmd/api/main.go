@@ -44,7 +44,7 @@ func BuildOptions() []fx.Option {
 				fx.ParamTags(``, ``, `group:"api"`),
 			),
 		),
-		natsx.NewPublisherModule[models.SimRequest](),
+		natsx.NewPublisherModule[models.GenerateGearsetRequest]("generate-gearsets"),
 		httpx.New("api"),
 	}
 }

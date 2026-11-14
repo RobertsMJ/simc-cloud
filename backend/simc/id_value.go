@@ -15,6 +15,8 @@ var ErrInvalidIDValueFormat = errors.New("invalid idvalue format")
 // IDValueList represents a list of ID:Value pairs
 // i.e. omnium_talents=136819:1/136822:1
 type IDValueList []IDValue
+
+// IDValue represents an ID:Value pair, such as 136819:1
 type IDValue struct {
 	ID    int
 	Value int
