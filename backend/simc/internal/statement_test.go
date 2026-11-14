@@ -29,6 +29,6 @@ func (s *StatementTestSuite) TestParse() {
 
 	path, err := filepath.Abs("./testdata/test_dh_statements.json")
 	s.NoError(err)
-	expected := test.GoldenValue(s.T(), path, res)
+	expected := test.GoldenValueJSON(s.T(), path, res)
 	s.ElementsMatch(res, expected)
 }

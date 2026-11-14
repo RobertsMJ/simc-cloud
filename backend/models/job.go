@@ -5,10 +5,10 @@ import (
 )
 
 type CreateJobRequestBody struct {
-	Character simc.Character      `json:"character" validate:"required"`
-	Baseline  simc.Loadout        `json:"baseline" validate:"required"`
-	Options   simc.LoadoutOptions `json:"options" validate:"required"`
-	Config    simc.Config         `json:"config"`
+	Character simc.Character       `json:"character" validate:"required"`
+	Baseline  simc.Loadout         `json:"baseline" validate:"required"`
+	Options   *simc.LoadoutOptions `json:"options,omitempty"`
+	Config    simc.Config          `json:"config"`
 }
 
 type CreateJobResponseBody struct {

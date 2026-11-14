@@ -3,6 +3,8 @@ package simc
 import (
 	"errors"
 	"fmt"
+	"maps"
+	"slices"
 	"strings"
 
 	"github.com/RobertsMJ/simc-cloud/backend/simc/internal"
@@ -45,7 +47,9 @@ func (l *Loadout) UnmarshalStatement(s internal.Statement) error {
 
 func (l Loadout) MarshalSimc() (string, error) {
 	res := []string{}
-	for _, item := range l.Items {
+
+	for _, slot := range slices.Sorted(maps.Keys(l.Items)) {
+		item := l.Items[slot]
 		str, err := item.MarshalSimc()
 		if err != nil {
 			return "", err

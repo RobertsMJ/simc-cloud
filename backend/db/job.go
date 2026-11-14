@@ -14,5 +14,5 @@ func NewJobRepository() *JobRepository {
 
 // TODO: contract and implement for results
 func (r *JobRepository) Create(context.Context, models.Job) error {
-	panic("not implemented")
+	return nil
 }

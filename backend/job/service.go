@@ -25,7 +25,7 @@ func NewService(log *slog.Logger, repo Repo, publisher queue.Publisher[models.Ge
 	}
 }
 
-func (s *Service) CreateJob(ctx context.Context, character simc.Character, baseline simc.Loadout, options simc.LoadoutOptions, config simc.Config) (models.Job, error) {
+func (s *Service) CreateJob(ctx context.Context, character simc.Character, baseline simc.Loadout, options *simc.LoadoutOptions, config simc.Config) (models.Job, error) {
 
 	// Create the job instance that we're working with
 	job := models.Job{
@@ -39,8 +39,11 @@ func (s *Service) CreateJob(ctx context.Context, character simc.Character, basel
 		JobID:     job.ID,
 		Character: character,
 		Baseline:  baseline,
-		Options:   options,
 		Config:    config,
+	}
+
+	if options != nil {
+		gen.Options = *options
 	}
 
 	if err := s.repo.Create(ctx, job); err != nil {

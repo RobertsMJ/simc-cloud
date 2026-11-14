@@ -97,6 +97,18 @@ apps:
       streamName: simc-job-stream
       durableName: simc-jobs-results
       filterSubject: simc.results
+  generate-gearsets:
+    component: worker
+    image:
+      repository: generate-gearsets
+    consumer:
+      streamName: simc-job-stream
+      durableName: simc-generate-gearsets-consumer
+      filterSubject: simc.generate-gearsets
+    publisher:
+      run-sim:
+        streamName: simc-job-stream
+        subject: simc.job
   api:
     component: api
     image:

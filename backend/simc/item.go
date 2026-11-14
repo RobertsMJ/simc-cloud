@@ -84,11 +84,11 @@ func (i *Item) UnmarshalStatement(s internal.Statement) error {
 func (i Item) MarshalSimc() (string, error) {
 	res := []string{}
 	if i.Name != "" {
-		res = append(res, fmt.Sprintf("# %s\n", i.Name))
+		res = append(res, fmt.Sprintf("# %s", i.Name))
 	}
 
 	itemParams := []string{
-		fmt.Sprintf("%s=%s", i.Slot, i.Name),
+		fmt.Sprintf(`%s="%s"`, i.Slot, i.Name),
 	}
 
 	fields, err := internal.MarshalFields(i)

@@ -13,7 +13,7 @@ import (
 )
 
 type JobService interface {
-	CreateJob(context.Context, simc.Character, simc.Loadout, simc.LoadoutOptions, simc.Config) (models.Job, error)
+	CreateJob(context.Context, simc.Character, simc.Loadout, *simc.LoadoutOptions, simc.Config) (models.Job, error)
 }
 
 type JobHandler struct {

@@ -19,6 +19,7 @@ paths:
 ## Testing
 
 - Tests use testify/suite: a <Thing>TestSuite struct embedding suite.Suite, a Test<Thing>TestSuite runner, and one method per case.
+- Repetitive test cases should be parameterized and run following the pattern of (suite.Suite) Run(name string, subtest func())
 - Test packages are external (package x_test).
 
 ## Design Constraints
