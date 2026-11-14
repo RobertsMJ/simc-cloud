@@ -2,6 +2,7 @@ package internal
 
 import (
 	"errors"
+	"fmt"
 	"log/slog"
 	"reflect"
 	"strconv"
@@ -12,6 +13,7 @@ var (
 	ErrNotAssignableField  = errors.New("field is not assignable")
 	ErrNotAddressableField = errors.New("field is not addressable")
 	ErrIncompatibleField   = errors.New("field is not compatible with value")
+	ErrNilMarshal          = errors.New("t is nil")
 )
 
 func AssignToField(field reflect.Value, raw string) error {
@@ -22,7 +24,6 @@ func AssignToField(field reflect.Value, raw string) error {
 		return ErrNotAddressableField
 	}
 
-	val := reflect.ValueOf(raw)
 	if field.Kind() == reflect.Pointer ||
 		field.Kind() == reflect.Slice ||
 		field.Kind() == reflect.Struct {
@@ -41,6 +42,7 @@ func AssignToField(field reflect.Value, raw string) error {
 		}
 	}
 
+	val := reflect.ValueOf(raw)
 	if unmarshaler, ok := field.Addr().Interface().(ValueUnmarshaler); ok {
 		return unmarshaler.UnmarshalSimc(raw)
 	} else if val.Type().ConvertibleTo(field.Type()) {
@@ -78,6 +80,43 @@ func AssignToField(field reflect.Value, raw string) error {
 		}
 		return ErrIncompatibleField
 	}
+}
+
+func MarshalFields[T any](t T) ([]string, error) {
+	v := reflect.ValueOf(t)
+	if v.Kind() == reflect.Ptr {
+		if v.IsNil() {
+			return nil, ErrNilMarshal
+		}
+		v = v.Elem()
+	}
+	typ := v.Type()
+
+	res := []string{}
+
+	for i := 0; i < typ.NumField(); i++ {
+		f := typ.Field(i)
+		fv := v.Field(i)
+		if tag := f.Tag.Get("simc"); tag != "" && tag != "-" {
+			simcTag := NewSimcTag(tag)
+			key := simcTag.Key
+
+			var val string
+			if marshaler, ok := fv.Interface().(ValueMarshaler); ok {
+				var err error
+				val, err = marshaler.MarshalSimc()
+				if err != nil {
+					return nil, err
+				}
+			} else {
+				val = fmt.Sprintf("%v", fv.Interface())
+			}
+
+			res = append(res, fmt.Sprintf("%s=%s", key, val))
+
+		}
+	}
+	return res, nil
 }
 
 func IndexSimcFields[T any]() map[string]int {

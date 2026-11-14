@@ -12,11 +12,13 @@ var ErrInvalidTalentStatement = fmt.Errorf("invalid talent statement")
 const (
 	talentHeaderTemplate = "# Saved Loadout: %s"
 	talentValueTemplate  = "talents=%s"
+	talentKey            = "talents"
+	talentCommentPrefix  = "Saved Loadout: "
 )
 
 type Talent struct {
-	Name  string
-	Value string
+	Name  string `json:"name"`
+	Value string `json:"value"`
 }
 
 var (
@@ -24,11 +26,11 @@ var (
 )
 
 func (t *Talent) UnmarshalStatement(s internal.Statement) error {
-	if s.Key != "talents" {
+	if s.Key != talentKey {
 		return ErrInvalidTalentStatement
 	}
 
-	t.Name = strings.TrimPrefix(s.Comment, "Saved Loadout: ")
+	t.Name = strings.TrimPrefix(s.Comment, talentCommentPrefix)
 	t.Value = s.Value
 	return nil
 }

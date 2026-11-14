@@ -18,6 +18,6 @@ func NewService(log *slog.Logger) *Service {
 	}
 }
 
-func (s *Service) Parse(ctx context.Context, raw string) (simc.SimulationDocument, error) {
-	return simc.NewSimulationDocument(strings.NewReader(raw))
+func (s *Service) Parse(ctx context.Context, raw string) (*simc.Profile, error) {
+	return simc.NewProfile(strings.NewReader(raw))
 }

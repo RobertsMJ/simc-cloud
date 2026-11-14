@@ -28,7 +28,8 @@ func (s *ConfigTestSuite) TestMarshal() {
 	for _, tt := range tc {
 		s.Run(tt.Name, func() {
 			c := simc.Config{Precision: tt.Precision}
-			b := c.MarshalSimc()
+			b, err := c.MarshalSimc()
+			s.NoError(err)
 			s.Equal(tt.expected, string(b))
 		})
 	}

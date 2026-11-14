@@ -23,7 +23,7 @@ func (s *SimcTestSuite) TestNewSimulationDocument() {
 	input, err := os.ReadFile("internal/testdata/test_dh.simc")
 	s.NoError(err)
 
-	res, err := NewSimulationDocument(bytes.NewReader(input))
+	res, err := NewProfile(bytes.NewReader(input))
 	s.NoError(err)
 	s.NotNil(res)
 
@@ -32,4 +32,17 @@ func (s *SimcTestSuite) TestNewSimulationDocument() {
 	expected := test.GoldenValue(s.T(), path, res)
 	s.Equal(expected, res)
 
+}
+
+func (s *SimcTestSuite) TestMarshal() {
+	input, err := os.ReadFile("internal/testdata/test_dh.simc")
+	s.NoError(err)
+
+	res, err := NewProfile(bytes.NewReader(input))
+	s.NoError(err)
+	s.NotNil(res)
+
+	actual, err := res.MarshalSimc()
+	s.NoError(err)
+	s.NotEmpty(actual)
 }

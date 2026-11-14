@@ -1,9 +1,22 @@
 package simc
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+
+	"github.com/RobertsMJ/simc-cloud/backend/simc/internal"
+)
 
 type Config struct {
-	Precision SimPrecision `json:"precision"`
+	Precision SimPrecision `json:"precision" simc:"target_error"`
+}
+
+func (c *Config) MarshalSimc() (string, error) {
+	fields, err := internal.MarshalFields(c)
+	if err != nil {
+		return "", err
+	}
+	return strings.Join(fields, "\n"), nil
 }
 
 type SimPrecision int
@@ -14,9 +27,9 @@ const (
 	SimPrecisionHigh
 )
 
-func (c *Config) MarshalSimc() string {
+func (s SimPrecision) MarshalSimc() (string, error) {
 	var targetError float64
-	switch c.Precision {
+	switch s {
 	case SimPrecisionHigh:
 		targetError = 0.1
 	case SimPrecisionMed:
@@ -26,5 +39,5 @@ func (c *Config) MarshalSimc() string {
 	default:
 		targetError = 1.0
 	}
-	return fmt.Sprintf("target_error=%.2f", targetError)
+	return fmt.Sprintf("%.2f", targetError), nil
 }

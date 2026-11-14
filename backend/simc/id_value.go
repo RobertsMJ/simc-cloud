@@ -18,8 +18,8 @@ type IDValueList []IDValue
 
 // IDValue represents an ID:Value pair, such as 136819:1
 type IDValue struct {
-	ID    int
-	Value int
+	ID    int `json:"id"`
+	Value int `json:"value"`
 }
 
 var (
