@@ -31,6 +31,6 @@ type PublisherConfig struct {
 }
 
 func NewPublisherConfig(id string) (*PublisherConfig, error) {
-	prefix := strings.Replace(strings.ToUpper(id), "-", "_", -1)
+	prefix := strings.ReplaceAll(strings.ToUpper(id), "-", "_")
 	return config.Parse[PublisherConfig](fmt.Sprintf("%s_PUBLISHER_", prefix))
 }
