@@ -7,7 +7,7 @@ require (
 	github.com/danielgtaylor/huma/v2 v2.40.0
 	github.com/go-playground/validator/v10 v10.30.6
 	github.com/google/uuid v1.6.0
-	github.com/nats-io/nats.go v1.55.0
+	github.com/nats-io/nats.go v1.56.0
 	github.com/prometheus/client_golang v1.25.0
 	github.com/samber/lo v1.53.0
 	github.com/stretchr/testify v1.12.1
