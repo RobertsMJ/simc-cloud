@@ -718,50 +718,5 @@
     "Comment": "",
     "Disabled": true,
     "Line": 204
-  },
-  {
-    "Key": "desired_targets",
-    "Operator": "=",
-    "Value": "5",
-    "RawSimc": "desired_targets=5",
-    "Comment": "fight configuration",
-    "Disabled": false,
-    "Line": 208
-  },
-  {
-    "Key": "max_time",
-    "Operator": "=",
-    "Value": "300",
-    "RawSimc": "max_time=300",
-    "Comment": "",
-    "Disabled": false,
-    "Line": 209
-  },
-  {
-    "Key": "vary_combat_length",
-    "Operator": "=",
-    "Value": "0.1",
-    "RawSimc": "vary_combat_length=0.1",
-    "Comment": "",
-    "Disabled": false,
-    "Line": 210
-  },
-  {
-    "Key": "report_details",
-    "Operator": "=",
-    "Value": "0",
-    "RawSimc": "report_details=0",
-    "Comment": "",
-    "Disabled": false,
-    "Line": 211
-  },
-  {
-    "Key": "iterations",
-    "Operator": "=",
-    "Value": "100",
-    "RawSimc": "iterations=100",
-    "Comment": "",
-    "Disabled": false,
-    "Line": 212
   }
 ]

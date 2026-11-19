@@ -12,12 +12,13 @@ import (
 
 var ErrInvalidLoadoutStatement = errors.New("invalid loadout statement")
 
+// Loadout represents a character's active gear and talent configuration.
 type Loadout struct {
 	ID    string            `json:"id,omitempty"`
 	Items map[ItemSlot]Item `json:"items"`
 
-	Talent        Talent      `json:"talents"`
-	OmniumTalents IDValueList `json:"omnium_talents,omitempty" simc:"omnium_talents"`
+	Talent        Talent        `json:"talents"`
+	OmniumTalents OmniumTalents `json:"omnium_talents,omitempty" simc:"omnium_talents"`
 }
 
 var (
@@ -77,9 +78,8 @@ func (l Loadout) MarshalSimc() (string, error) {
 }
 
 type LoadoutOptions struct {
-	Talents       []Talent             `json:"talents,omitempty"`
-	Items         map[SlotGroup][]Item `json:"items,omitempty"`
-	OmniumTalents []IDValueList        `json:"omnium_talents,omitempty"`
+	Talents []Talent             `json:"talents,omitempty"`
+	Items   map[SlotGroup][]Item `json:"items,omitempty"`
 }
 
 var (
@@ -93,14 +93,6 @@ func (lo *LoadoutOptions) UnmarshalStatement(s internal.Statement) error {
 			return err
 		}
 		lo.Talents = append(lo.Talents, talent)
-		return nil
-	}
-	if s.Key == "omnium_talents" {
-		var omniumTalents IDValueList
-		if err := omniumTalents.UnmarshalStatement(s); err != nil {
-			return err
-		}
-		lo.OmniumTalents = append(lo.OmniumTalents, omniumTalents)
 		return nil
 	}
 	if itemSlot, ok := ItemSlotFromString(s.Key); ok {

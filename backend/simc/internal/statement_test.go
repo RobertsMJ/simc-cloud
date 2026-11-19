@@ -21,7 +21,7 @@ func TestStatementTestSuite(t *testing.T) {
 
 func (s *StatementTestSuite) TestParse() {
 
-	input, err := os.ReadFile("testdata/test_dh.simc")
+	input, err := os.ReadFile("testdata/test_dh_in.simc")
 	s.NoError(err)
 
 	res, err := internal.ParseStatements(strings.NewReader(string(input)))

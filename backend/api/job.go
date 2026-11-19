@@ -7,13 +7,12 @@ import (
 	"net/http"
 
 	"github.com/RobertsMJ/simc-cloud/backend/models"
-	"github.com/RobertsMJ/simc-cloud/backend/simc"
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/go-playground/validator/v10"
 )
 
 type JobService interface {
-	CreateJob(context.Context, simc.Character, simc.Loadout, *simc.LoadoutOptions, simc.Config) (models.Job, error)
+	CreateJob(context.Context, models.SimcJobConfig) (models.Job, error)
 }
 
 type JobHandler struct {
@@ -49,7 +48,16 @@ func (h *JobHandler) HandleCreateJob(ctx context.Context, request *Request[model
 	}
 
 	// pass the character, baseline, and options to the job service to handle the business logic
-	job, err := h.jobService.CreateJob(ctx, request.Body.Character, request.Body.Baseline, request.Body.Options, request.Body.Config)
+	job, err := h.jobService.CreateJob(ctx, models.SimcJobConfig{
+		Character: request.Body.Character,
+		Baseline:  request.Body.Baseline,
+		Options: models.GearsetOptions{
+			Items:   request.Body.Options.Items,
+			Talents: request.Body.Options.Talents,
+			Omnium:  request.Body.Options.Omnium,
+		},
+		Config: request.Body.Config,
+	})
 	if err != nil {
 		return nil, err
 	}

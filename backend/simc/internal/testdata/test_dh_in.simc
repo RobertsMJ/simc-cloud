@@ -205,8 +205,3 @@ off_hand=,id=237840,enchant_id=7981,bonus_id=12214/13655/12497/12066/12715/8791/
 
 # Checksum: 7af45746
 # fight configuration
-desired_targets=5
-max_time=300
-vary_combat_length=0.1
-report_details=0
-iterations=100
