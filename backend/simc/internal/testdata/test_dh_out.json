@@ -22,7 +22,8 @@
           13577,
           12699,
           12806
-        ]
+        ],
+        "equipped": true
       },
       "chest": {
         "slot": "chest",
@@ -38,7 +39,8 @@
           6652,
           13575,
           12806
-        ]
+        ],
+        "equipped": true
       },
       "feet": {
         "slot": "feet",
@@ -54,7 +56,8 @@
           13577,
           12699,
           12806
-        ]
+        ],
+        "equipped": true
       },
       "finger1": {
         "slot": "finger1",
@@ -73,7 +76,8 @@
         ],
         "gem_id": [
           240983
-        ]
+        ],
+        "equipped": true
       },
       "finger2": {
         "slot": "finger2",
@@ -99,7 +103,8 @@
           36,
           49
         ],
-        "crafting_quality": 5
+        "crafting_quality": 5,
+        "equipped": true
       },
       "hands": {
         "slot": "hands",
@@ -112,7 +117,8 @@
           13337,
           13574,
           12798
-        ]
+        ],
+        "equipped": true
       },
       "head": {
         "slot": "head",
@@ -129,7 +135,8 @@
           13577,
           12699,
           12806
-        ]
+        ],
+        "equipped": true
       },
       "legs": {
         "slot": "legs",
@@ -145,7 +152,8 @@
           13339,
           13575,
           12804
-        ]
+        ],
+        "equipped": true
       },
       "main_hand": {
         "slot": "main_hand",
@@ -160,7 +168,8 @@
           6652,
           12701,
           13654
-        ]
+        ],
+        "equipped": true
       },
       "neck": {
         "slot": "neck",
@@ -175,7 +184,8 @@
         "gem_id": [
           240908
         ],
-        "content_tuning": 6015
+        "content_tuning": 6015,
+        "equipped": true
       },
       "off_hand": {
         "slot": "off_hand",
@@ -199,7 +209,8 @@
           49,
           40
         ],
-        "crafting_quality": 5
+        "crafting_quality": 5,
+        "equipped": true
       },
       "shoulder": {
         "slot": "shoulder",
@@ -215,7 +226,8 @@
           13340,
           13574,
           12806
-        ]
+        ],
+        "equipped": true
       },
       "trinket1": {
         "slot": "trinket1",
@@ -227,7 +239,8 @@
           6652,
           12699,
           13654
-        ]
+        ],
+        "equipped": true
       },
       "trinket2": {
         "slot": "trinket2",
@@ -238,7 +251,8 @@
           6652,
           13334,
           13653
-        ]
+        ],
+        "equipped": true
       },
       "waist": {
         "slot": "waist",
@@ -261,7 +275,8 @@
           49,
           32
         ],
-        "crafting_quality": 5
+        "crafting_quality": 5,
+        "equipped": true
       },
       "wrist": {
         "slot": "wrist",
@@ -284,7 +299,8 @@
           32,
           36
         ],
-        "crafting_quality": 5
+        "crafting_quality": 5,
+        "equipped": true
       }
     },
     "talents": {
@@ -953,26 +969,6 @@
     {
       "key": "upgrade_achievements",
       "value": "19326/19397/19398/19577/19578/40107/40115/40118/40942/40943/40944/40945/41886/41887/41888/41892/42767/42768/42769/42770/61809"
-    },
-    {
-      "key": "desired_targets",
-      "value": "5"
-    },
-    {
-      "key": "max_time",
-      "value": "300"
-    },
-    {
-      "key": "vary_combat_length",
-      "value": "0.1"
-    },
-    {
-      "key": "report_details",
-      "value": "0"
-    },
-    {
-      "key": "iterations",
-      "value": "100"
     }
   ]
 }

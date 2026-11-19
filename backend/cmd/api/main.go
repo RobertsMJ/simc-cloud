@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/RobertsMJ/simc-cloud/backend/api"
 	"github.com/RobertsMJ/simc-cloud/backend/db"
+	"github.com/RobertsMJ/simc-cloud/backend/gearset"
 	"github.com/RobertsMJ/simc-cloud/backend/job"
 	"github.com/RobertsMJ/simc-cloud/backend/models"
 	"github.com/RobertsMJ/simc-cloud/backend/platform"
@@ -25,6 +26,7 @@ func BuildOptions() []fx.Option {
 		natsx.Module,
 		fx.Provide(
 			api.NewConfig,
+			job.NewConfig,
 			fx.Annotate(
 				db.NewJobRepository,
 				fx.As(new(job.Repo)),
@@ -32,6 +34,10 @@ func BuildOptions() []fx.Option {
 			fx.Annotate(
 				profile.NewService,
 				fx.As(new(api.ProfileParser)),
+			),
+			fx.Annotate(
+				gearset.NewService,
+				fx.As(new(job.GearsetCounter)),
 			),
 			fx.Annotate(
 				job.NewService,

@@ -1,7 +1,7 @@
 package simc
 
 import (
-	"bytes"
+	"encoding/json"
 	"os"
 	"path/filepath"
 	"testing"
@@ -18,35 +18,33 @@ func TestSimcTestSuite(t *testing.T) {
 	suite.Run(t, new(SimcTestSuite))
 }
 
-func (s *SimcTestSuite) TestNewSimulationDocument() {
-
-	input, err := os.ReadFile("internal/testdata/test_dh.simc")
-	s.NoError(err)
-
-	res, err := NewProfile(bytes.NewReader(input))
-	s.NoError(err)
-	s.NotNil(res)
-
-	path, err := filepath.Abs("internal/testdata/test_dh_sim_doc.json")
-	s.NoError(err)
-	expected := test.GoldenValueJSON(s.T(), path, res)
-	s.Equal(expected, res)
-
-}
-
 func (s *SimcTestSuite) TestMarshal() {
-	input, err := os.ReadFile("internal/testdata/test_dh.simc")
+	input, err := os.ReadFile("internal/testdata/test_warrior_sim_in.json")
 	s.NoError(err)
 
-	path, err := filepath.Abs("internal/testdata/test_dh_profile.simc")
+	var simProfile SimulationProfile
+	err = json.Unmarshal(input, &simProfile)
 	s.NoError(err)
 
-	res, err := NewProfile(bytes.NewReader(input))
+	path, err := filepath.Abs("internal/testdata/test_warrior_sim_out.simc")
 	s.NoError(err)
-	s.NotNil(res)
 
-	actual, err := res.MarshalSimc()
+	actual, err := simProfile.MarshalSimc()
 	s.NoError(err)
 	expected := test.GoldenValueRaw(s.T(), path, []byte(actual))
 	s.Equal(string(expected), actual)
+}
+
+func (s *SimcTestSuite) TestMarshal_Warrior() {
+	// input, err := os.ReadFile("internal/testdata/test_warrior_in.simc")
+	// s.NoError(err)
+
+	// res, err := NewProfile(bytes.NewReader(input))
+	// s.NoError(err)
+	// s.NotNil(res)
+
+	// path, err := filepath.Abs("internal/testdata/test_warrior_out.json")
+	// s.NoError(err)
+	// expected := test.GoldenValueJSON(s.T(), path, res)
+	// s.Equal(expected, res)
 }

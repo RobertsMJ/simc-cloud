@@ -31,6 +31,31 @@ func (s *ItemTestSuite) TestUnmarshalStatement() {
 		ID:        251109,
 		EnchantID: IDList{8017},
 		BonusID:   IDList{13440, 6652, 12667, 13577, 12699, 12806},
+		Equipped:  true,
+	}
+
+	var actual Item
+	err := actual.UnmarshalStatement(stmt[0])
+	s.NoError(err)
+	s.Equal(expected, actual)
+}
+
+func (s *ItemTestSuite) TestUnmarshalStatement_NotEquipped() {
+	in := `
+	# New Helmet
+	# head=,id=251109,enchant_id=8017,bonus_id=13440/6652/12667/13577/12699/12806,foo=bar
+	`
+	stmt, _ := internal.ParseStatements(strings.NewReader(in))
+	s.Len(stmt, 1)
+
+	expected := Item{
+		Slot:      ItemSlotHead,
+		SlotGroup: SlotGroupHead,
+		Name:      "New Helmet",
+		ID:        251109,
+		EnchantID: IDList{8017},
+		BonusID:   IDList{13440, 6652, 12667, 13577, 12699, 12806},
+		Equipped:  false,
 	}
 
 	var actual Item

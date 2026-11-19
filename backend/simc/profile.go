@@ -1,11 +1,14 @@
 package simc
 
 import (
-	"strings"
+	"io"
+	"log/slog"
 
 	"github.com/RobertsMJ/simc-cloud/backend/simc/internal"
 )
 
+// Profile represents a parsed simc addon string with character, active loadout, options (for items, talents), config, and a catch-all forextra parameters.
+// Need to be able to go from a simc string to this representation
 type Profile struct {
 	Character Character      `json:"character"`
 	Baseline  Loadout        `json:"loadout"`
@@ -14,32 +17,48 @@ type Profile struct {
 	Extra     []Parameter    `json:"extra,omitempty"`
 }
 
-var (
-	_ internal.ValueMarshaler = Profile{}
-)
+func NewProfile(doc io.Reader) (*Profile, error) {
+	p := &Profile{}
 
-func (p Profile) MarshalSimc() (string, error) {
-	character, err := p.Character.MarshalSimc()
+	statements, err := internal.ParseStatements(doc)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	baseline, err := p.Baseline.MarshalSimc()
-	if err != nil {
-		return "", err
+	for _, statement := range statements {
+		switch {
+		case isCharacterKey(statement.Key):
+			if err := p.Character.UnmarshalStatement(statement); err != nil {
+				slog.Error("could not unmarshal character statement", "err", err, "statement", statement)
+				return nil, err
+			}
+		case statement.Key == "talents":
+			if err = p.unmarshalTalent(statement); err != nil {
+				slog.Error("could not handle talent statement", "err", err, "statement", statement)
+				return nil, err
+			}
+		case isItemKey(statement.Key):
+			if err = p.unmarshalItem(statement); err != nil {
+				slog.Error("could not handle item statement", "err", err, "statement", statement)
+				return nil, err
+			}
+		case statement.Key == "omnium_talents":
+			if err = p.unmarshalOmniumTalents(statement); err != nil {
+				slog.Error("could not handle omnium talents", "err", err, "statement", statement)
+				return nil, err
+			}
+		default:
+			if p.Extra == nil {
+				p.Extra = []Parameter{}
+			}
+			p.Extra = append(p.Extra, Parameter{
+				Key:   statement.Key,
+				Value: statement.Value,
+			})
+		}
 	}
 
-	options, err := p.Options.MarshalSimc()
-	if err != nil {
-		return "", err
-	}
-
-	config, err := p.Config.MarshalSimc()
-	if err != nil {
-		return "", err
-	}
-
-	return strings.Join([]string{character, baseline, options, config}, "\n"), nil
+	return p, nil
 }
 
 func (p *Profile) unmarshalTalent(statement internal.Statement) error {
@@ -65,6 +84,8 @@ func (p *Profile) unmarshalItem(statement internal.Statement) error {
 		return err
 	}
 
+	// Disabled items represent items in the bag
+	// They are stored in the options under the corresponding slot group.
 	if statement.Disabled {
 		if p.Options.Items == nil {
 			p.Options.Items = make(map[SlotGroup][]Item)
@@ -74,6 +95,7 @@ func (p *Profile) unmarshalItem(statement internal.Statement) error {
 		}
 		p.Options.Items[item.SlotGroup] = append(p.Options.Items[item.SlotGroup], item)
 	} else {
+		// Otherwise it's an equipped item
 		if p.Baseline.Items == nil {
 			p.Baseline.Items = make(map[ItemSlot]Item)
 		}
@@ -89,9 +111,8 @@ func (p *Profile) unmarshalOmniumTalents(statement internal.Statement) error {
 		return err
 	}
 
-	if statement.Disabled {
-		p.Options.OmniumTalents = append(p.Options.OmniumTalents, om)
-	} else {
+	// Addon is only going to report the active omnium talents
+	if !statement.Disabled {
 		p.Baseline.OmniumTalents = om
 	}
 	return nil

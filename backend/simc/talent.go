@@ -25,6 +25,8 @@ var (
 	_ internal.ValueMarshaler = Talent{}
 )
 
+type OmniumTalents = IDValueList
+
 func (t *Talent) UnmarshalStatement(s internal.Statement) error {
 	if s.Key != talentKey {
 		return ErrInvalidTalentStatement

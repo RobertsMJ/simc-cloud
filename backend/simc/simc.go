@@ -1,52 +1,49 @@
 package simc
 
 import (
-	"io"
-	"log/slog"
+	"errors"
+	"fmt"
+	"strings"
 
 	"github.com/RobertsMJ/simc-cloud/backend/simc/internal"
 )
 
-func NewProfile(doc io.Reader) (*Profile, error) {
-	p := &Profile{}
+// SimulationProfile represents a full single-character simulation profile
+type SimulationProfile struct {
+	Character Character   `json:"character"`
+	Baseline  Loadout     `json:"baseline"`
+	Options   []Loadout   `json:"options"`
+	Config    Config      `json:"config"`
+	Extra     []Parameter `json:"extra,omitempty"`
+}
 
-	statements, err := internal.ParseStatements(doc)
+var _ internal.ValueMarshaler = SimulationProfile{}
+
+func (p SimulationProfile) MarshalSimc() (string, error) {
+	character, err := p.Character.MarshalSimc()
 	if err != nil {
-		return nil, err
+		return "", errors.Join(err, errors.New("simulation profile: failed to marshal character"))
 	}
 
-	for _, statement := range statements {
-		switch {
-		case isCharacterKey(statement.Key):
-			if err := p.Character.UnmarshalStatement(statement); err != nil {
-				slog.Error("could not unmarshal character statement", "err", err, "statement", statement)
-				return nil, err
-			}
-		case statement.Key == "talents":
-			if err = p.unmarshalTalent(statement); err != nil {
-				slog.Error("could not handle talent statement", "err", err, "statement", statement)
-				return nil, err
-			}
-		case isItemKey(statement.Key):
-			if err = p.unmarshalItem(statement); err != nil {
-				slog.Error("could not handle item statement", "err", err, "statement", statement)
-				return nil, err
-			}
-		case statement.Key == "omnium_talents":
-			if err = p.unmarshalOmniumTalents(statement); err != nil {
-				slog.Error("could not handle omnium talents", "err", err, "statement", statement)
-				return nil, err
-			}
-		default:
-			if p.Extra == nil {
-				p.Extra = []Parameter{}
-			}
-			p.Extra = append(p.Extra, Parameter{
-				Key:   statement.Key,
-				Value: statement.Value,
-			})
+	baseline, err := p.Baseline.MarshalSimc()
+	if err != nil {
+		return "", errors.Join(err, errors.New("simulation profile: failed to marshal baseline"))
+	}
+
+	options := make([]string, 0, len(p.Options))
+	for _, opt := range p.Options {
+		optStr, err := opt.MarshalSimc()
+		if err != nil {
+			return "", errors.Join(err, fmt.Errorf("simulation profile: failed to marshal option: %v", opt))
 		}
+		options = append(options, optStr)
+	}
+	optionsStr := strings.Join(options, "\n")
+
+	config, err := p.Config.MarshalSimc()
+	if err != nil {
+		return "", errors.Join(err, errors.New("simulation profile: failed to marshal config"))
 	}
 
-	return p, nil
+	return strings.Join([]string{character, baseline, optionsStr, config}, "\n"), nil
 }

@@ -32,6 +32,7 @@ type Item struct {
 	GemBonusID          IDList    `json:"gem_bonus_id,omitempty" simc:"gem_bonus_id,omitempty"`
 	CraftingQuality     *int      `json:"crafting_quality,omitempty" simc:"crafting_quality,omitempty"`
 	TitanDiscID         *int      `json:"titan_disc_id,omitempty" simc:"titan_disc_id,omitempty"`
+	Equipped            bool      `json:"equipped,omitempty" simc:"-"`
 }
 
 var (
@@ -56,6 +57,7 @@ func (i *Item) UnmarshalStatement(s internal.Statement) error {
 	i.Slot = slot
 	i.SlotGroup = i.Slot.GetSlotGroup()
 	i.Name = s.Comment
+	i.Equipped = !s.Disabled
 
 	vals := lo.Map(lo.Filter(lo.Map(strings.Split(s.Value, ","), func(v string, _ int) string {
 		return strings.TrimSpace(v)
@@ -83,12 +85,12 @@ func (i *Item) UnmarshalStatement(s internal.Statement) error {
 
 func (i Item) MarshalSimc() (string, error) {
 	res := []string{}
-	if i.Name != "" {
-		res = append(res, fmt.Sprintf("# %s", i.Name))
-	}
+	// if i.Name != "" {
+	// 	res = append(res, fmt.Sprintf("# %s", i.Name))
+	// }
 
 	itemParams := []string{
-		fmt.Sprintf(`%s="%s"`, i.Slot, i.Name),
+		fmt.Sprintf(`%s=`, i.Slot),
 	}
 
 	fields, err := internal.MarshalFields(i)
@@ -97,7 +99,12 @@ func (i Item) MarshalSimc() (string, error) {
 	}
 
 	itemParams = append(itemParams, fields...)
-	res = append(res, strings.Join(itemParams, ","))
+	joinedItem := strings.Join(itemParams, ",")
+	if !i.Equipped {
+		joinedItem = fmt.Sprintf("# %s", joinedItem)
+	}
+
+	res = append(res, joinedItem)
 
 	return strings.Join(res, "\n"), nil
 }

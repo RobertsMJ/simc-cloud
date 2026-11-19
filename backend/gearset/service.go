@@ -1,49 +1,30 @@
 package gearset
 
 import (
-	"context"
 	"log/slog"
 
 	"github.com/RobertsMJ/simc-cloud/backend/models"
-	"github.com/RobertsMJ/simc-cloud/backend/simc"
-	"github.com/RobertsMJ/simc-cloud/backend/transport/queue"
 )
 
 type Service struct {
-	log       *slog.Logger
-	publisher queue.Publisher[models.SimRequest]
+	log *slog.Logger
 }
 
-var _ queue.Handler[models.GenerateGearsetRequest] = (*Service)(nil)
-
-func NewService(log *slog.Logger, publisher queue.Publisher[models.SimRequest]) *Service {
+func NewService(log *slog.Logger) *Service {
 	return &Service{
-		log:       log,
-		publisher: publisher,
+		log: log,
 	}
 }
 
-func (s *Service) Handle(ctx context.Context, req models.GenerateGearsetRequest) error {
-	log := s.log.With("job_id", req.JobID)
-	log.Info("handling gearset generation")
+func (s *Service) CountGearsets(baseline models.Gearset, options *models.GearsetOptions) (int, error) {
+	// do math
+	// simply multiple number of options for each slot
+	// trinkets and rings are n choose 2
+	// (item sets) * talents * omniums
+	return 1, nil
+}
 
-	profile := simc.Profile{
-		Character: req.Character,
-		Baseline:  req.Baseline,
-		Config:    req.Config,
-	}
-
-	doc, err := profile.MarshalSimc()
-	if err != nil {
-		return err
-	}
-
-	if err = s.publisher.Publish(ctx, models.SimRequest{
-		JobID: req.JobID,
-		Input: doc,
-	}); err != nil {
-		return err
-	}
-
-	return nil
+func (s *Service) GenerateGearsets(baseline models.Gearset, options *models.GearsetOptions) ([]models.Gearset, error) {
+	// lol get wrecked
+	return []models.Gearset{baseline}, nil
 }
