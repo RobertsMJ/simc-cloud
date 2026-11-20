@@ -47,8 +47,8 @@ func (h *ProfileHandler) RegisterHandler(api huma.API) {
 func (h *ProfileHandler) HandleProfileParse(ctx context.Context, request *ProfileRequest) (*Response[ProfileResponseBody], error) {
 	doc, err := h.svc.Parse(ctx, string(request.RawBody))
 	if err != nil {
-		if errors.Is(err, simc.ParseError{}) {
-			return nil, huma.Error422UnprocessableEntity("failed to parse profile", err)
+		if parseErr, ok := errors.AsType[simc.ParseError](err); ok {
+			return nil, huma.Error422UnprocessableEntity("failed to parse profile", parseErr)
 		}
 		return nil, huma.Error500InternalServerError("document parse", err)
 	}

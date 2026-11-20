@@ -10,46 +10,32 @@ import (
 // Loadout represents a character's active gear and talent configuration.
 type Loadout struct {
 	Items         map[ItemSlot]Item `json:"items"`
-	Talent        Talent            `json:"talents"`
+	Talents       Talent            `json:"talents"`
 	OmniumTalents OmniumTalents     `json:"omnium_talents"`
 }
 
-func (l Loadout) render() string {
+func (l Loadout) getStrings() []string {
 	res := []string{}
-
 	for _, slot := range slices.Sorted(maps.Keys(l.Items)) {
 		res = append(res, l.Items[slot].render(slot))
 	}
+	res = append(res, l.Talents.render(), l.OmniumTalents.render("omnium_talents"))
+	return res
+}
 
-	return strings.Join(res, "\n")
+func (l Loadout) render() string {
+	return strings.Join(l.getStrings(), "\n")
 }
 
 func (l Loadout) renderWithID(id string) string {
-	res := []string{}
-
-	for i, slot := range slices.Sorted(maps.Keys(l.Items)) {
+	str := l.getStrings()
+	for i, s := range str {
 		if i == 0 {
-			res = append(res, fmt.Sprintf(`profileset."%s"=%s`, id, l.Items[slot].render(slot)))
+			str[i] = fmt.Sprintf(`profileset."%s"=%s`, id, s)
 		} else {
-			res = append(res, fmt.Sprintf(`profileset."%s"+=%s`, id, l.Items[slot].render(slot)))
+			str[i] = fmt.Sprintf(`profileset."%s"+=%s`, id, s)
 		}
 	}
 
-	if len(l.Talent.Value) > 0 {
-		if len(res) > 0 {
-			res = append(res, fmt.Sprintf(`profileset."%s"+=%s`, id, l.Talent.render()))
-		} else {
-			res = append(res, fmt.Sprintf(`profileset."%s"=%s`, id, l.Talent.render()))
-		}
-	}
-
-	if len(l.OmniumTalents.Value) > 0 {
-		if len(res) > 0 {
-			res = append(res, fmt.Sprintf(`profileset."%s"+=%s`, id, l.OmniumTalents.render()))
-		} else {
-			res = append(res, fmt.Sprintf(`profileset."%s"=%s`, id, l.OmniumTalents.render()))
-		}
-	}
-
-	return strings.Join(res, "\n")
+	return strings.Join(str, "\n")
 }

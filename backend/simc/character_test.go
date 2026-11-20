@@ -48,7 +48,7 @@ func (suite *CharacterTestSuite) TestNewCharacter() {
 func (suite *CharacterTestSuite) TestRender() {
 	c := Character{
 		Class:  WowClassDH,
-		Name:   `"Kestdh"`,
+		Name:   "Kestdh",
 		Level:  90,
 		Role:   "attack",
 		Spec:   "havoc",

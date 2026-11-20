@@ -37,7 +37,7 @@ type Character struct {
 
 func (c Character) render() string {
 	return strings.Join([]string{
-		fmt.Sprintf("%s=%s", c.Class, c.Name),
+		fmt.Sprintf(`%s="%s"`, c.Class, c.Name),
 		fmt.Sprintf("level=%d", c.Level),
 		fmt.Sprintf("role=%s", c.Role),
 		fmt.Sprintf("spec=%s", c.Spec),
@@ -71,7 +71,7 @@ func newCharacter(statements []statement) (Character, error) {
 	for _, s := range statements {
 		if wowclass, err := newWowClass(s.Key); err == nil {
 			c.Class = wowclass
-			c.Name = s.Value
+			c.Name = strings.ReplaceAll(s.Value, "\"", "")
 			continue
 		}
 

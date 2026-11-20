@@ -21,14 +21,10 @@ type Talent struct {
 	Value string `json:"value"`
 }
 
-func newTalent(s statement) (Talent, error) {
-	if s.Key != talentKey {
-		return Talent{}, ErrInvalidTalentStatement
-	}
-
+func newTalent(name string, value string) (Talent, error) {
 	return Talent{
-		Name:  strings.TrimPrefix(s.Comment, talentCommentPrefix),
-		Value: s.Value,
+		Name:  strings.TrimPrefix(name, talentCommentPrefix),
+		Value: value,
 	}, nil
 }
 
@@ -36,25 +32,8 @@ func (t Talent) render() string {
 	return fmt.Sprintf("talents=%s", t.Value)
 }
 
-type OmniumTalents struct {
-	Value IDValueList `json:"value"`
-}
+type OmniumTalents = IDValueList
 
-func newOmniumTalents(s statement) (OmniumTalents, error) {
-	if s.Key != omniumTalentKey {
-		return OmniumTalents{}, ErrInvalidOmniumTalentStatement
-	}
-
-	v, err := newIDValueList(s.Value)
-	if err != nil {
-		return OmniumTalents{}, err
-	}
-
-	return OmniumTalents{
-		Value: v,
-	}, nil
-}
-
-func (o OmniumTalents) render() string {
-	return fmt.Sprintf("omnium_talents=%s", o.Value.render())
+func newOmniumTalents(value string) (OmniumTalents, error) {
+	return newIDValueList(value)
 }

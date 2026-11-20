@@ -1,6 +1,6 @@
 {
   "character": {
-    "name": "\"Kestw\"",
+    "name": "Kestw",
     "class": "warrior",
     "level": 90,
     "role": "attack",
@@ -264,30 +264,28 @@
       "name": "",
       "value": "CcEASWsDSHNyPDXnbxuIhH3ZdjZmZmFzYmZGAAAghphxYmZzMzMzYmxMDAAAAgxyMDMhxy2AbgBMDTIzgNwMDDDmlZ2GgZGAMDDA"
     },
-    "omnium_talents": {
-      "value": [
-        {
-          "id": 136814,
-          "value": 1
-        },
-        {
-          "id": 136821,
-          "value": 1
-        },
-        {
-          "id": 136817,
-          "value": 1
-        },
-        {
-          "id": 136819,
-          "value": 1
-        },
-        {
-          "id": 136822,
-          "value": 1
-        }
-      ]
-    }
+    "omnium_talents": [
+      {
+        "id": 136814,
+        "value": 1
+      },
+      {
+        "id": 136821,
+        "value": 1
+      },
+      {
+        "id": 136817,
+        "value": 1
+      },
+      {
+        "id": 136819,
+        "value": 1
+      },
+      {
+        "id": 136822,
+        "value": 1
+      }
+    ]
   },
   "bags": [],
   "savedTalents": [],

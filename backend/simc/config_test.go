@@ -17,7 +17,7 @@ func TestConfigTestSuite(t *testing.T) {
 func (s *ConfigTestSuite) TestMarshal() {
 	tc := []struct {
 		Name      string
-		Precision SimPrecision
+		Precision float64
 		expected  string
 	}{
 		{Name: "marshals high precision", Precision: SimPrecisionHigh, expected: "target_error=0.10"},

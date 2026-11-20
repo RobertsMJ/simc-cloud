@@ -1,6 +1,6 @@
 {
   "character": {
-    "name": "\"Kestdh\"",
+    "name": "Kestdh",
     "class": "demonhunter",
     "level": 90,
     "role": "attack",
@@ -275,18 +275,16 @@
       "name": "",
       "value": "CEkAG5bbocFKcv+yIq8fPd6ORZmZmZmZWmxMzMGzkxMDAAAAAAYWMmtZYmBmx2sNzMjxALDsNbmxwsopxMzYGbAAAADAABAzMYAIAAwA"
     },
-    "omnium_talents": {
-      "value": [
-        {
-          "id": 136819,
-          "value": 1
-        },
-        {
-          "id": 136822,
-          "value": 1
-        }
-      ]
-    }
+    "omnium_talents": [
+      {
+        "id": 136819,
+        "value": 1
+      },
+      {
+        "id": 136822,
+        "value": 1
+      }
+    ]
   },
   "bags": [
     {

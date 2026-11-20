@@ -55,10 +55,10 @@ func newIDValueList(value string) (IDValueList, error) {
 	return i, nil
 }
 
-func (i IDValueList) render() string {
+func (i IDValueList) render(key string) string {
 	idv := make([]string, 0, len(i))
 	for _, id := range i {
 		idv = append(idv, id.render())
 	}
-	return strings.Join(idv, "/")
+	return fmt.Sprintf("%s=%s", key, strings.Join(idv, "/"))
 }

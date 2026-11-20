@@ -113,7 +113,7 @@ func (s SimcExec) Run(ctx context.Context, in sim.Input) (sim.Output, error) {
 		return sim.Output{}, fmt.Errorf("report parse: %w", err)
 	}
 
-	slog.Info("sim completed successfully", "threads", s.config.Threads, "cpu_time", res.Sim.Statistics.ElapsedCpuSeconds)
+	slog.Info("sim completed successfully", "threads", s.config.Threads, "cpu_time", res.Sim.Statistics.ElapsedCPUSeconds)
 
 	return sim.Output{
 		Statistics: res.Sim.Statistics,

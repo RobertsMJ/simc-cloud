@@ -43,9 +43,6 @@ func parseStatements(r io.Reader) ([]statement, error) {
 	lineNumber := 0
 	var detachedComment string
 	for scanner.Scan() {
-		if scanner.Err() != nil {
-			return []statement{}, scanner.Err()
-		}
 
 		line := strings.TrimSpace(scanner.Text())
 		lineNumber++
@@ -74,6 +71,10 @@ func parseStatements(r io.Reader) ([]statement, error) {
 		detachedComment = ""
 		res = append(res, stmt)
 	}
+	if scanner.Err() != nil {
+		return []statement{}, scanner.Err()
+	}
+
 	return res, nil
 }
 

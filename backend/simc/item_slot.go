@@ -7,6 +7,8 @@ import (
 
 type ItemSlot string
 
+var _ encoding.TextUnmarshaler = (*ItemSlot)(nil)
+
 const (
 	ItemSlotHead     ItemSlot = "head"
 	ItemSlotNeck     ItemSlot = "neck"
@@ -25,51 +27,6 @@ const (
 	ItemSlotMainHand ItemSlot = "main_hand"
 	ItemSlotOffHand  ItemSlot = "off_hand"
 )
-
-var _ encoding.TextUnmarshaler = (*ItemSlot)(nil)
-
-func (i *ItemSlot) UnmarshalText(text []byte) error {
-	slot, err := newItemSlot(string(text))
-	if err != nil {
-		return err
-	}
-	*i = slot
-	return nil
-}
-
-func newItemSlot(s string) (ItemSlot, error) {
-	switch ItemSlot(s) {
-	case ItemSlotHead,
-		ItemSlotNeck,
-		ItemSlotShoulder,
-		ItemSlotBack,
-		ItemSlotChest,
-		ItemSlotWrist,
-		ItemSlotHands,
-		ItemSlotWaist,
-		ItemSlotLegs,
-		ItemSlotFeet,
-		ItemSlotFinger1,
-		ItemSlotFinger2,
-		ItemSlotTrinket1,
-		ItemSlotTrinket2,
-		ItemSlotMainHand,
-		ItemSlotOffHand:
-		return ItemSlot(s), nil
-	default:
-		return "", fmt.Errorf("%s is not an item slot", s)
-	}
-}
-
-func (i ItemSlot) Group() SlotGroup {
-	switch i {
-	case ItemSlotTrinket1, ItemSlotTrinket2:
-		return SlotGroupTrinket
-	case ItemSlotFinger1, ItemSlotFinger2:
-		return SlotGroupFinger
-	}
-	return SlotGroup(i)
-}
 
 type SlotGroup string
 
@@ -92,60 +49,61 @@ const (
 	SlotGroupOffHand  SlotGroup = SlotGroup(ItemSlotOffHand)
 )
 
+var slotsByGroup = map[SlotGroup][]ItemSlot{
+	SlotGroupHead:     {ItemSlotHead},
+	SlotGroupNeck:     {ItemSlotNeck},
+	SlotGroupShoulder: {ItemSlotShoulder},
+	SlotGroupBack:     {ItemSlotBack},
+	SlotGroupChest:    {ItemSlotChest},
+	SlotGroupWrist:    {ItemSlotWrist},
+	SlotGroupHands:    {ItemSlotHands},
+	SlotGroupWaist:    {ItemSlotWaist},
+	SlotGroupLegs:     {ItemSlotLegs},
+	SlotGroupFeet:     {ItemSlotFeet},
+	SlotGroupFinger:   {ItemSlotFinger1, ItemSlotFinger2},
+	SlotGroupTrinket:  {ItemSlotTrinket1, ItemSlotTrinket2},
+	SlotGroupMainHand: {ItemSlotMainHand},
+	SlotGroupOffHand:  {ItemSlotOffHand},
+}
+
+var groupBySlot = func() map[ItemSlot]SlotGroup {
+	m := make(map[ItemSlot]SlotGroup)
+	for g, slots := range slotsByGroup {
+		for _, s := range slots {
+			m[s] = g
+		}
+	}
+	return m
+}()
+
+func newItemSlot(s string) (ItemSlot, error) {
+	_, ok := groupBySlot[ItemSlot(s)]
+	if !ok {
+		return "", fmt.Errorf("%s is not an item slot", s)
+	}
+	return ItemSlot(s), nil
+}
+
+func (i *ItemSlot) UnmarshalText(text []byte) error {
+	if _, ok := groupBySlot[ItemSlot(text)]; !ok {
+		return fmt.Errorf("%s is not an item slot", text)
+	}
+	*i = ItemSlot(text)
+	return nil
+}
+
+func (i ItemSlot) Group() SlotGroup {
+	return groupBySlot[i]
+}
+
 func (s *SlotGroup) UnmarshalText(text []byte) error {
-	switch SlotGroup(text) {
-	case SlotGroupHead,
-		SlotGroupNeck,
-		SlotGroupShoulder,
-		SlotGroupBack,
-		SlotGroupChest,
-		SlotGroupWrist,
-		SlotGroupHands,
-		SlotGroupWaist,
-		SlotGroupLegs,
-		SlotGroupFeet,
-		SlotGroupFinger,
-		SlotGroupTrinket,
-		SlotGroupMainHand,
-		SlotGroupOffHand:
-		*s = SlotGroup(text)
-		return nil
-	default:
+	if _, ok := slotsByGroup[SlotGroup(text)]; !ok {
 		return fmt.Errorf("%s is not a slot group", text)
 	}
+	*s = SlotGroup(text)
+	return nil
 }
 
 func (s SlotGroup) Slots() []ItemSlot {
-	switch s {
-	case SlotGroupTrinket:
-		return []ItemSlot{ItemSlotTrinket1, ItemSlotTrinket2}
-	case SlotGroupFinger:
-		return []ItemSlot{ItemSlotFinger1, ItemSlotFinger2}
-	case SlotGroupHead:
-		return []ItemSlot{ItemSlotHead}
-	case SlotGroupNeck:
-		return []ItemSlot{ItemSlotNeck}
-	case SlotGroupShoulder:
-		return []ItemSlot{ItemSlotShoulder}
-	case SlotGroupBack:
-		return []ItemSlot{ItemSlotBack}
-	case SlotGroupChest:
-		return []ItemSlot{ItemSlotChest}
-	case SlotGroupWrist:
-		return []ItemSlot{ItemSlotWrist}
-	case SlotGroupHands:
-		return []ItemSlot{ItemSlotHands}
-	case SlotGroupWaist:
-		return []ItemSlot{ItemSlotWaist}
-	case SlotGroupLegs:
-		return []ItemSlot{ItemSlotLegs}
-	case SlotGroupFeet:
-		return []ItemSlot{ItemSlotFeet}
-	case SlotGroupMainHand:
-		return []ItemSlot{ItemSlotMainHand}
-	case SlotGroupOffHand:
-		return []ItemSlot{ItemSlotOffHand}
-	default:
-		return nil
-	}
+	return slotsByGroup[s]
 }

@@ -28,8 +28,8 @@ func (s *IDValueTestSuite) TestUnmarshalSimc_IDValue() {
 
 func (s *IDValueTestSuite) TestMarshalSimc_IDValueList() {
 	idList := IDValueList{{ID: 1, Value: 2}, {ID: 3, Value: 4}}
-	result := idList.render()
-	s.Equal("1:2/3:4", result)
+	result := idList.render("foo")
+	s.Equal("foo=1:2/3:4", result)
 }
 
 func (s *IDValueTestSuite) TestUnmarshalSimc_IDValueList() {

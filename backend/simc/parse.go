@@ -48,17 +48,17 @@ func Parse(r io.Reader) (AddonExport, error) {
 				}
 			}
 		case s.Key == talentKey:
-			talent, err := newTalent(s)
+			talent, err := newTalent(s.Comment, s.Value)
 			if err != nil {
 				return AddonExport{}, ParseError{Line: s.Line, Err: err}
 			}
 			if s.Disabled {
 				savedTalents = append(savedTalents, talent)
 			} else {
-				activeLoadout.Talent = talent
+				activeLoadout.Talents = talent
 			}
 		case s.Key == omniumTalentKey:
-			om, err := newOmniumTalents(s)
+			om, err := newOmniumTalents(s.Value)
 			if err != nil {
 				return AddonExport{}, ParseError{Line: s.Line, Err: err}
 			}
@@ -70,7 +70,7 @@ func Parse(r io.Reader) (AddonExport, error) {
 
 	character, err := newCharacter(characterStatements)
 	if err != nil {
-		return AddonExport{}, err
+		return AddonExport{}, ParseError{Line: 0, Err: err}
 	}
 
 	return AddonExport{
@@ -89,4 +89,8 @@ type ParseError struct {
 
 func (e ParseError) Error() string {
 	return fmt.Sprintf("line %d: %v", e.Line, e.Err)
+}
+
+func (e ParseError) Unwrap() error {
+	return e.Err
 }

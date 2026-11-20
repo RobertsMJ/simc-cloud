@@ -17,17 +17,19 @@ type SimInput struct {
 // Render writes a valid simulation input to the provided writer.
 func Render(w io.Writer, input SimInput) error {
 
-	res := []string{
+	if _, err := io.WriteString(w, strings.Join([]string{
 		input.Character.render(),
 		input.Base.render(),
+	}, "\n")+"\n"); err != nil {
+		return err
 	}
 
 	for _, id := range slices.Sorted(maps.Keys(input.Profilesets)) {
-		res = append(res, input.Profilesets[id].renderWithID(id))
+		if _, err := io.WriteString(w, input.Profilesets[id].renderWithID(id)+"\n"); err != nil {
+			return err
+		}
 	}
 
-	res = append(res, input.Config.render())
-
-	_, err := io.WriteString(w, strings.Join(res, "\n"))
+	_, err := io.WriteString(w, input.Config.render())
 	return err
 }
