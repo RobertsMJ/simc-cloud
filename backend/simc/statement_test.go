@@ -1,4 +1,4 @@
-package internal_test
+package simc
 
 import (
 	"os"
@@ -6,7 +6,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/RobertsMJ/simc-cloud/backend/simc/internal"
 	"github.com/RobertsMJ/simc-cloud/backend/test"
 	"github.com/stretchr/testify/suite"
 )
@@ -24,7 +23,7 @@ func (s *StatementTestSuite) TestParse() {
 	input, err := os.ReadFile("testdata/test_dh_in.simc")
 	s.NoError(err)
 
-	res, err := internal.ParseStatements(strings.NewReader(string(input)))
+	res, err := parseStatements(strings.NewReader(string(input)))
 	s.NoError(err)
 
 	path, err := filepath.Abs("./testdata/test_dh_statements.json")

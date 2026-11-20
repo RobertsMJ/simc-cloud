@@ -21,14 +21,14 @@ func ParseReport(r io.Reader) (Report, error) {
 }
 
 type Statistics struct {
-	ElapsedCpuSeconds    float64    `json:"elapsed_cpu_seconds"`
+	ElapsedCPUSeconds    float64    `json:"elapsed_cpu_seconds"`
 	ElapsedTimeSeconds   float64    `json:"elapsed_time_seconds"`
 	InitTimeSeconds      float64    `json:"init_time_seconds"`
 	MergeTimeSeconds     float64    `json:"merge_time_seconds"`
 	AnalyzeTimeSeconds   float64    `json:"analyze_time_seconds"`
 	TotalEventsProcessed int64      `json:"total_events_processed"`
 	SimulationLength     StatSample `json:"simulation_length"`
-	RaidDps              StatSample `json:"raid_dps"`
+	RaidDPS              StatSample `json:"raid_dps"`
 	TotalDmg             StatSample `json:"total_dmg"`
 }
 

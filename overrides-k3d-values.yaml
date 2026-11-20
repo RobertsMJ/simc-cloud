@@ -4,7 +4,7 @@ appDefaults:
     tag: dev
     pullPolicy: Always
   env:
-    LOG_LEVEL: debug
+    LOG_LEVEL: info
 gateway:
   hostnames:
     - simc.k3d.localhost

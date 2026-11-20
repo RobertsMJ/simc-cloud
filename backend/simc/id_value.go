@@ -5,16 +5,9 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
-
-	"github.com/RobertsMJ/simc-cloud/backend/simc/internal"
-	"github.com/samber/lo"
 )
 
 var ErrInvalidIDValueFormat = errors.New("invalid idvalue format")
-
-// IDValueList represents a list of ID:Value pairs
-// i.e. omnium_talents=136819:1/136822:1
-type IDValueList []IDValue
 
 // IDValue represents an ID:Value pair, such as 136819:1
 type IDValue struct {
@@ -22,73 +15,50 @@ type IDValue struct {
 	Value int `json:"value"`
 }
 
-var (
-	_ internal.ValueMarshaler   = IDValueList(nil)
-	_ internal.ValueUnmarshaler = (*IDValueList)(nil)
-	_ internal.ValueMarshaler   = IDValue{}
-	_ internal.ValueUnmarshaler = (*IDValue)(nil)
-)
-
-func (i *IDValue) UnmarshalStatement(s internal.Statement) error {
-	if s.Key != "omnium_talents" {
-		return ErrInvalidIDValueFormat
-	}
-	return i.UnmarshalSimc(s.Value)
-}
-
-func (i IDValue) MarshalSimc() (string, error) {
-	return fmt.Sprintf("%d:%d", i.ID, i.Value), nil
-}
-
-func (i *IDValue) UnmarshalSimc(value string) error {
-	k, v, found := strings.Cut(value, ":")
+func newIDValue(s string) (IDValue, error) {
+	k, v, found := strings.Cut(s, ":")
 	if !found {
-		return ErrInvalidIDValueFormat
+		return IDValue{}, ErrInvalidIDValueFormat
 	}
 	id, err := strconv.Atoi(k)
 	if err != nil {
-		return fmt.Errorf("invalid ID in IDValue: %s", value)
+		return IDValue{}, fmt.Errorf("invalid ID in IDValue: %s", s)
 	}
 	val, err := strconv.Atoi(v)
 	if err != nil {
-		return fmt.Errorf("invalid Value in IDValue: %s", value)
+		return IDValue{}, fmt.Errorf("invalid Value in IDValue: %s", s)
 	}
 
-	i.ID = id
-	i.Value = val
-	return nil
+	return IDValue{ID: id, Value: val}, nil
 }
 
-func (i *IDValueList) UnmarshalStatement(s internal.Statement) error {
-	if s.Key != "omnium_talents" {
-		return ErrInvalidIDValueFormat
-	}
-	return i.UnmarshalSimc(s.Value)
+func (i IDValue) render() string {
+	return fmt.Sprintf("%d:%d", i.ID, i.Value)
 }
 
-func (i IDValueList) MarshalSimc() (string, error) {
-	res, err := lo.MapErr(i, func(idv IDValue, _ int) (string, error) {
-		return idv.MarshalSimc()
-	})
-	if err != nil {
-		return "", err
-	}
-	return strings.Join(res, "/"), nil
-}
+// IDValueList represents a list of ID:Value pairs
+// i.e. omnium_talents=136819:1/136822:1
+type IDValueList []IDValue
 
-func (i *IDValueList) UnmarshalSimc(value string) error {
+func newIDValueList(value string) (IDValueList, error) {
 	parts := strings.Split(value, "/")
-	res, err := lo.MapErr(parts, func(part string, _ int) (IDValue, error) {
-		var idv IDValue
-		err := idv.UnmarshalSimc(part)
+	i := make([]IDValue, 0, len(parts))
+
+	for _, part := range parts {
+		idv, err := newIDValue(part)
 		if err != nil {
-			return IDValue{}, err
+			return nil, err
 		}
-		return idv, nil
-	})
-	if err != nil {
-		return err
+		i = append(i, idv)
 	}
-	*i = IDValueList(res)
-	return nil
+
+	return i, nil
+}
+
+func (i IDValueList) render(key string) string {
+	idv := make([]string, 0, len(i))
+	for _, id := range i {
+		idv = append(idv, id.render())
+	}
+	return fmt.Sprintf("%s=%s", key, strings.Join(idv, "/"))
 }

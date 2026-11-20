@@ -4,7 +4,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/RobertsMJ/simc-cloud/backend/simc/internal"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -16,9 +15,9 @@ func TestCharacterTestSuite(t *testing.T) {
 	suite.Run(t, new(CharacterTestSuite))
 }
 
-func (suite *CharacterTestSuite) TestUnmarshalStatements() {
+func (suite *CharacterTestSuite) TestNewCharacter() {
 	input := `
-		demonhunter="Kestdh"
+		demonhunter=Kestdh
 		level=90
 		race=night_elf
 		region=us
@@ -27,12 +26,12 @@ func (suite *CharacterTestSuite) TestUnmarshalStatements() {
 		professions=herbalism=88/mining=84
 		spec=havoc
 	`
-	statements, err := internal.ParseStatements(strings.NewReader(input))
+	statements, err := parseStatements(strings.NewReader(input))
 	suite.NoError(err)
 
 	expected := Character{
 		Class:  WowClassDH,
-		Name:   `"Kestdh"`,
+		Name:   "Kestdh",
 		Level:  90,
 		Role:   "attack",
 		Spec:   "havoc",
@@ -41,19 +40,15 @@ func (suite *CharacterTestSuite) TestUnmarshalStatements() {
 		Race:   "night_elf",
 	}
 
-	var actual Character
-	for _, stmt := range statements {
-		err := actual.UnmarshalStatement(stmt)
-		suite.NoError(err)
-	}
-
+	actual, err := newCharacter(statements)
+	suite.NoError(err)
 	suite.Equal(expected, actual)
 }
 
-func (suite *CharacterTestSuite) TestMarshalSimc() {
+func (suite *CharacterTestSuite) TestRender() {
 	c := Character{
 		Class:  WowClassDH,
-		Name:   `"Kestdh"`,
+		Name:   "Kestdh",
 		Level:  90,
 		Role:   "attack",
 		Spec:   "havoc",
@@ -72,7 +67,6 @@ func (suite *CharacterTestSuite) TestMarshalSimc() {
 		"spec=havoc",
 	}
 
-	actual, err := c.MarshalSimc()
-	suite.NoError(err)
+	actual := c.render()
 	suite.ElementsMatch(expected, strings.Split(actual, "\n"))
 }

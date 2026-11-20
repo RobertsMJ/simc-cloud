@@ -1,105 +1,125 @@
 package simc
 
 import (
+	"encoding"
 	"fmt"
-	"log/slog"
-	"reflect"
+	"strconv"
 	"strings"
-	"sync"
+)
 
-	"github.com/RobertsMJ/simc-cloud/backend/simc/internal"
+var (
+	ErrMissingCharacterClass = fmt.Errorf("missing character class")
+	ErrMissingCharacterName  = fmt.Errorf("missing character name")
+	ErrMissingCharacterLevel = fmt.Errorf("missing character level")
+	ErrMissingCharacterSpec  = fmt.Errorf("missing character spec")
+	ErrMissingCharacterRace  = fmt.Errorf("missing character race")
+)
+
+const (
+	charFieldLevel  = "level"
+	charFieldRole   = "role"
+	charFieldSpec   = "spec"
+	charFieldRace   = "race"
+	charFieldRegion = "region"
+	charFieldServer = "server"
 )
 
 type Character struct {
-	Name   string   `json:"name" simc:"-"`
-	Class  WowClass `json:"class" simc:"-"`
-	Level  int      `json:"level" simc:"level"`
-	Role   string   `json:"role" simc:"role"`
-	Spec   string   `json:"spec" simc:"spec"`
-	Race   string   `json:"race" simc:"race"`
-	Region string   `json:"region" simc:"region"`
-	Server string   `json:"server" simc:"server"`
+	Name   string   `json:"name"`
+	Class  WowClass `json:"class"`
+	Level  int      `json:"level"`
+	Role   string   `json:"role"`
+	Spec   string   `json:"spec"`
+	Race   string   `json:"race"`
+	Region string   `json:"region"`
+	Server string   `json:"server"`
+}
+
+func (c Character) render() string {
+	return strings.Join([]string{
+		fmt.Sprintf(`%s="%s"`, c.Class, c.Name),
+		fmt.Sprintf("level=%d", c.Level),
+		fmt.Sprintf("role=%s", c.Role),
+		fmt.Sprintf("spec=%s", c.Spec),
+		fmt.Sprintf("race=%s", c.Race),
+		fmt.Sprintf("region=%s", c.Region),
+		fmt.Sprintf("server=%s", c.Server),
+	}, "\n")
 }
 
 func isCharacterKey(key string) bool {
-	keys := getCharacterKeys()
-	return keys[key]
+	if _, err := newWowClass(key); err == nil {
+		return true
+	}
+	switch key {
+	case charFieldLevel,
+		charFieldRole,
+		charFieldSpec,
+		charFieldRace,
+		charFieldRegion,
+		charFieldServer:
+		return true
+	default:
+		return false
+	}
 }
 
-var getCharacterKeys = sync.OnceValue(func() map[string]bool {
-	keys := map[string]bool{
-		// Class keys
-		string(WowClassDH):      true,
-		string(WowClassDK):      true,
-		string(WowClassDruid):   true,
-		string(WowClassEvoker):  true,
-		string(WowClassHunter):  true,
-		string(WowClassMage):    true,
-		string(WowClassMonk):    true,
-		string(WowClassPaladin): true,
-		string(WowClassPriest):  true,
-		string(WowClassRogue):   true,
-		string(WowClassShaman):  true,
-		string(WowClassWarlock): true,
-		string(WowClassWarrior): true,
-	}
+func newCharacter(statements []statement) (Character, error) {
+	var c Character
+	var err error
 
-	// Infer from struct tags
-	typ := reflect.TypeFor[Character]()
-	for f := range typ.Fields() {
-		if tag := f.Tag.Get("simc"); tag != "" {
-			simcTag := internal.NewSimcTag(tag)
-			keys[simcTag.Key] = true
+	for _, s := range statements {
+		if wowclass, err := newWowClass(s.Key); err == nil {
+			c.Class = wowclass
+			c.Name = strings.ReplaceAll(s.Value, "\"", "")
+			continue
+		}
+
+		switch s.Key {
+		case charFieldLevel:
+			c.Level, err = strconv.Atoi(s.Value)
+		case charFieldRole:
+			c.Role = s.Value
+		case charFieldSpec:
+			c.Spec = s.Value
+		case charFieldRace:
+			c.Race = s.Value
+		case charFieldRegion:
+			c.Region = s.Value
+		case charFieldServer:
+			c.Server = s.Value
+		}
+		if err != nil {
+			return Character{}, err
 		}
 	}
 
-	return keys
-})
-
-var charFieldIdx = sync.OnceValue(internal.IndexSimcFields[Character])
-
-func (c Character) MarshalSimc() (string, error) {
-	nameClass := fmt.Sprintf("%s=%s", c.Class, c.Name)
-
-	marshaledFields, err := internal.MarshalFields(c)
-	if err != nil {
-		return "", err
+	if c.Class == "" {
+		return Character{}, ErrMissingCharacterClass
+	}
+	if c.Name == "" {
+		return Character{}, ErrMissingCharacterName
+	}
+	if c.Level == 0 {
+		return Character{}, ErrMissingCharacterLevel
+	}
+	if c.Spec == "" {
+		return Character{}, ErrMissingCharacterSpec
+	}
+	if c.Race == "" {
+		return Character{}, ErrMissingCharacterRace
 	}
 
-	return strings.Join(append([]string{nameClass}, marshaledFields...), "\n"), nil
-}
-
-func (c *Character) UnmarshalStatement(s internal.Statement) error {
-	if c == nil {
-		return fmt.Errorf("character unmarshal: %w", internal.ErrUnmarshalIntoNilPtr)
-	}
-
-	if !isCharacterKey(s.Key) {
-		slog.Debug("attempted to assign unmapped statement to a character", "key", s.Key, "value", s.Value)
-		return nil
-	}
-
-	if isWowClass(s.Key) {
-		c.Class = WowClass(s.Key)
-		c.Name = s.Value
-		return nil
-	}
-
-	fields := charFieldIdx()
-	idx, ok := fields[s.Key]
-	if !ok {
-		return fmt.Errorf("character unmarshal(%v): %w", s.Key, internal.ErrInvalidKeyForType)
-	}
-	field := reflect.ValueOf(c).Elem().Field(idx)
-
-	if err := internal.AssignToField(field, s.Value); err != nil {
-		return fmt.Errorf("character unmarshal into field(%v): %w", s.Key, err)
-	}
-
-	return nil
+	return c, nil
 }
 
 type WowClass string
+
+var _ encoding.TextMarshaler = (*WowClass)(nil)
+
+func (c WowClass) MarshalText() ([]byte, error) {
+	return []byte(c), nil
+}
 
 const (
 	WowClassDK      WowClass = "deathknight"
@@ -117,7 +137,7 @@ const (
 	WowClassWarrior WowClass = "warrior"
 )
 
-func isWowClass(s string) bool {
+func newWowClass(s string) (WowClass, error) {
 	switch c := WowClass(s); c {
 	case WowClassDK,
 		WowClassDH,
@@ -132,7 +152,7 @@ func isWowClass(s string) bool {
 		WowClassShaman,
 		WowClassWarlock,
 		WowClassWarrior:
-		return true
+		return c, nil
 	}
-	return false
+	return "", fmt.Errorf("invalid wow class: %s", s)
 }

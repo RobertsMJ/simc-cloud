@@ -38,7 +38,7 @@ func (suite *ApiHandlerTestSuite) TestPostProfile_Stub() {
 	inProfile, err := os.ReadFile("testdata/kestw.simc")
 	suite.NoError(err)
 
-	doc, err := simc.NewProfile(bytes.NewReader(inProfile))
+	doc, err := simc.Parse(bytes.NewReader(inProfile))
 	suite.NoError(err)
 	expected := api.ProfileResponseBody{
 		Profile: doc,

@@ -4,6 +4,7 @@ import (
 	"log/slog"
 
 	"github.com/RobertsMJ/simc-cloud/backend/models"
+	"github.com/RobertsMJ/simc-cloud/backend/simc"
 )
 
 type Service struct {
@@ -16,7 +17,7 @@ func NewService(log *slog.Logger) *Service {
 	}
 }
 
-func (s *Service) CountGearsets(baseline models.Gearset, options *models.GearsetOptions) (int, error) {
+func (s *Service) CountGearsets(baseline simc.Loadout, options models.Candidates) (int, error) {
 	// do math
 	// simply multiple number of options for each slot
 	// trinkets and rings are n choose 2
@@ -24,7 +25,8 @@ func (s *Service) CountGearsets(baseline models.Gearset, options *models.Gearset
 	return 1, nil
 }
 
-func (s *Service) GenerateGearsets(baseline models.Gearset, options *models.GearsetOptions) ([]models.Gearset, error) {
+// GenerateGearsets does not include the baseline loadout in the returned gearsets
+func (s *Service) GenerateGearsets(baseline simc.Loadout, options models.Candidates) ([]simc.Loadout, error) {
 	// lol get wrecked
-	return []models.Gearset{baseline}, nil
+	return []simc.Loadout{}, nil
 }

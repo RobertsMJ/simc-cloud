@@ -18,7 +18,7 @@ func BuildOptions() []fx.Option {
 				fx.As(new(gearset.GearsetGenerator)),
 			),
 		),
-		natsx.NewConsumerModule[models.GenerateGearsetRequest](gearset.NewHandler),
+		natsx.NewConsumerModule[models.GenerateGearsetsRequest](gearset.NewHandler),
 		natsx.NewPublisherModule[models.SimRequest]("run-sim"),
 	}
 }

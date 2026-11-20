@@ -3,7 +3,9 @@ package gearset
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log/slog"
+	"strings"
 
 	"github.com/RobertsMJ/simc-cloud/backend/models"
 	"github.com/RobertsMJ/simc-cloud/backend/simc"
@@ -11,7 +13,7 @@ import (
 )
 
 type GearsetGenerator interface {
-	GenerateGearsets(baseline models.Gearset, options *models.GearsetOptions) ([]models.Gearset, error)
+	GenerateGearsets(baseline simc.Loadout, options models.Candidates) ([]simc.Loadout, error)
 }
 
 type Handler struct {
@@ -20,7 +22,7 @@ type Handler struct {
 	generator GearsetGenerator
 }
 
-var _ queue.Handler[models.GenerateGearsetRequest] = (*Handler)(nil)
+var _ queue.Handler[models.GenerateGearsetsRequest] = (*Handler)(nil)
 
 func NewHandler(log *slog.Logger, publisher queue.Publisher[models.SimRequest], generator GearsetGenerator) *Handler {
 	return &Handler{
@@ -30,39 +32,35 @@ func NewHandler(log *slog.Logger, publisher queue.Publisher[models.SimRequest], 
 	}
 }
 
-func (h *Handler) Handle(ctx context.Context, req models.GenerateGearsetRequest) error {
+func (h *Handler) Handle(ctx context.Context, req models.GenerateGearsetsRequest) error {
 	log := h.log.With("job_id", req.JobID)
 	log.Info("handling gearset generation")
 
-	gearsets, err := h.generator.GenerateGearsets(req.Baseline, &req.Options)
+	gearsets, err := h.generator.GenerateGearsets(req.Spec.Base, req.Spec.Options)
 	if err != nil {
 		return err
 	}
 	log.Info("generated gearsets", "count", len(gearsets))
-
-	simcLoadouts := make([]simc.Loadout, 0, len(gearsets))
-	for _, gs := range gearsets {
-		simcLoadouts = append(simcLoadouts, gs.ToSimcLoadout())
+	profileSets := make(map[string]simc.Loadout)
+	for i, gs := range gearsets {
+		profileSets[fmt.Sprintf("set_%d", i)] = gs
 	}
 
-	profile := simc.SimulationProfile{
-		Character: req.Character,
-		Baseline:  req.Baseline.ToSimcLoadout(),
-		Options:   simcLoadouts,
-		Config:    req.Config,
+	siminput := simc.SimInput{
+		Character:   req.Spec.Character,
+		Base:        req.Spec.Base,
+		Profilesets: profileSets,
+		Config:      req.Spec.Config,
 	}
 
-	doc, err := profile.MarshalSimc()
+	var b strings.Builder
+	err = simc.Render(&b, siminput)
 	if err != nil {
 		return errors.Join(err, errors.New("failed to marshal simulation profile"))
 	}
 
-	if err = h.publisher.Publish(ctx, models.SimRequest{
+	return h.publisher.Publish(ctx, models.SimRequest{
 		JobID: req.JobID,
-		Input: doc,
-	}); err != nil {
-		return err
-	}
-
-	return nil
+		Input: b.String(),
+	})
 }

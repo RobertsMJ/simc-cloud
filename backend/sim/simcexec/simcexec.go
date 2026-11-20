@@ -94,8 +94,7 @@ func (s SimcExec) Run(ctx context.Context, in sim.Input) (sim.Output, error) {
 			return sim.Output{}, fmt.Errorf("simc cancelled: %w", ctxErr)
 		}
 
-		var exitErr *exec.ExitError
-		if errors.As(err, &exitErr) {
+		if exitErr, ok := errors.AsType[*exec.ExitError](err); ok {
 			return sim.Output{}, &ExecError{ExitCode: exitErr.ExitCode(), Stderr: stderr.String(), Err: err}
 		}
 		return sim.Output{}, fmt.Errorf("wait for simc: %w", err)
@@ -114,7 +113,7 @@ func (s SimcExec) Run(ctx context.Context, in sim.Input) (sim.Output, error) {
 		return sim.Output{}, fmt.Errorf("report parse: %w", err)
 	}
 
-	slog.Info("sim completed successfully", "threads", s.config.Threads, "cpu_time", res.Sim.Statistics.ElapsedCpuSeconds)
+	slog.Info("sim completed successfully", "threads", s.config.Threads, "cpu_time", res.Sim.Statistics.ElapsedCPUSeconds)
 
 	return sim.Output{
 		Statistics: res.Sim.Statistics,

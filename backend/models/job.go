@@ -4,16 +4,10 @@ import (
 	"github.com/RobertsMJ/simc-cloud/backend/simc"
 )
 
-type CreateJobRequestBody struct {
-	Character simc.Character `json:"character" validate:"required"`
-	Baseline  Gearset        `json:"baseline" validate:"required"`
-	Options   GearsetOptions `json:"options"`
-	Config    simc.Config    `json:"config"`
-}
-
-type CreateJobResponseBody struct {
-	Id     string `json:"id"`
-	Status Status `json:"status"`
+type Job struct {
+	ID        string `json:"id"`
+	Status    Status `json:"status"`
+	CreatedAt string `json:"created_at"`
 }
 
 type Status string
@@ -25,8 +19,14 @@ const (
 	StatusError      Status = "error"
 )
 
-type Job struct {
-	ID        string `json:"id"`
-	Status    Status `json:"status"`
-	CreatedAt string `json:"created_at"`
+type JobSpec struct {
+	Character simc.Character `json:"character"`
+	Base      simc.Loadout   `json:"base"`
+	Options   Candidates     `json:"options"`
+	Config    simc.Config    `json:"config"`
+}
+type Candidates struct {
+	Items   []simc.Item          `json:"items"`
+	Talents []simc.Talent        `json:"talents"`
+	Omnium  []simc.OmniumTalents `json:"omnium"`
 }

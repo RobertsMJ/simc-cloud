@@ -1,114 +1,41 @@
 package simc
 
 import (
-	"errors"
 	"fmt"
 	"maps"
 	"slices"
 	"strings"
-
-	"github.com/RobertsMJ/simc-cloud/backend/simc/internal"
 )
-
-var ErrInvalidLoadoutStatement = errors.New("invalid loadout statement")
 
 // Loadout represents a character's active gear and talent configuration.
 type Loadout struct {
-	ID    string            `json:"id,omitempty"`
-	Items map[ItemSlot]Item `json:"items"`
-
-	Talent        Talent        `json:"talents"`
-	OmniumTalents OmniumTalents `json:"omnium_talents,omitempty" simc:"omnium_talents"`
+	Items         map[ItemSlot]Item `json:"items"`
+	Talents       Talent            `json:"talents"`
+	OmniumTalents OmniumTalents     `json:"omnium_talents"`
 }
 
-var (
-	_ internal.ValueMarshaler = Loadout{}
-)
-
-func (l *Loadout) UnmarshalStatement(s internal.Statement) error {
-	if s.Key == "talents" {
-		return l.Talent.UnmarshalStatement(s)
-	}
-	if s.Key == "omnium_talents" {
-		return l.OmniumTalents.UnmarshalStatement(s)
-	}
-	if itemSlot, ok := ItemSlotFromString(s.Key); ok {
-		var item Item
-		if err := item.UnmarshalStatement(s); err != nil {
-			return err
-		}
-		if l.Items == nil {
-			l.Items = make(map[ItemSlot]Item)
-		}
-		l.Items[itemSlot] = item
-		return nil
-	}
-	return ErrInvalidLoadoutStatement
-}
-
-func (l Loadout) MarshalSimc() (string, error) {
+func (l Loadout) getStrings() []string {
 	res := []string{}
-
 	for _, slot := range slices.Sorted(maps.Keys(l.Items)) {
-		item := l.Items[slot]
-		str, err := item.MarshalSimc()
-		if err != nil {
-			return "", err
-		}
-		res = append(res, str)
+		res = append(res, l.Items[slot].render(slot))
 	}
-
-	fields, err := internal.MarshalFields(l)
-	if err != nil {
-		return "", err
-	}
-	res = append(res, fields...)
-	if l.ID != "" {
-		prefix := l.ID
-		for i, str := range res {
-			if i == 0 {
-				res[i] = fmt.Sprintf(`profileset."%s"=%s`, prefix, str)
-			} else {
-				res[i] = fmt.Sprintf(`profileset."%s"+=%s`, prefix, str)
-			}
-		}
-	}
-
-	return strings.Join(res, "\n"), nil
+	res = append(res, l.Talents.render(), l.OmniumTalents.render("omnium_talents"))
+	return res
 }
 
-type LoadoutOptions struct {
-	Talents []Talent             `json:"talents,omitempty"`
-	Items   map[SlotGroup][]Item `json:"items,omitempty"`
+func (l Loadout) render() string {
+	return strings.Join(l.getStrings(), "\n")
 }
 
-var (
-	_ internal.ValueMarshaler = LoadoutOptions{}
-)
-
-func (lo *LoadoutOptions) UnmarshalStatement(s internal.Statement) error {
-	if s.Key == "talents" {
-		var talent Talent
-		if err := talent.UnmarshalStatement(s); err != nil {
-			return err
+func (l Loadout) renderWithID(id string) string {
+	str := l.getStrings()
+	for i, s := range str {
+		if i == 0 {
+			str[i] = fmt.Sprintf(`profileset."%s"=%s`, id, s)
+		} else {
+			str[i] = fmt.Sprintf(`profileset."%s"+=%s`, id, s)
 		}
-		lo.Talents = append(lo.Talents, talent)
-		return nil
 	}
-	if itemSlot, ok := ItemSlotFromString(s.Key); ok {
-		var item Item
-		if err := item.UnmarshalStatement(s); err != nil {
-			return err
-		}
-		item.Slot = itemSlot
-		slotGroup := itemSlot.GetSlotGroup()
-		lo.Items[slotGroup] = append(lo.Items[slotGroup], item)
-		return nil
-	}
-	return ErrInvalidLoadoutStatement
-}
 
-// TODO
-func (lo LoadoutOptions) MarshalSimc() (string, error) {
-	return "", nil
+	return strings.Join(str, "\n")
 }

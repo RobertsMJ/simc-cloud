@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"errors"
 	"log/slog"
 	"net/http"
 
@@ -14,11 +15,11 @@ type ProfileRequest struct {
 }
 
 type ProfileResponseBody struct {
-	Profile *simc.Profile `json:"profile" doc:"Parsed simulation profile"`
+	Profile simc.AddonExport `json:"profile" doc:"Parsed simc addon export"`
 }
 
 type ProfileParser interface {
-	Parse(ctx context.Context, raw string) (*simc.Profile, error)
+	Parse(ctx context.Context, raw string) (simc.AddonExport, error)
 }
 
 type ProfileHandler struct {
@@ -46,7 +47,10 @@ func (h *ProfileHandler) RegisterHandler(api huma.API) {
 func (h *ProfileHandler) HandleProfileParse(ctx context.Context, request *ProfileRequest) (*Response[ProfileResponseBody], error) {
 	doc, err := h.svc.Parse(ctx, string(request.RawBody))
 	if err != nil {
-		return nil, huma.Error400BadRequest("document parse", err)
+		if parseErr, ok := errors.AsType[simc.ParseError](err); ok {
+			return nil, huma.Error422UnprocessableEntity("failed to parse profile", parseErr)
+		}
+		return nil, huma.Error500InternalServerError("document parse", err)
 	}
 
 	return &Response[ProfileResponseBody]{
