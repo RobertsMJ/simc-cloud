@@ -20,13 +20,13 @@ const (
 )
 
 type JobSpec struct {
-	Character simc.Character
-	Base      simc.Loadout
-	Options   Candidates
-	Config    simc.Config
+	Character simc.Character `json:"character"`
+	Base      simc.Loadout   `json:"base"`
+	Options   Candidates     `json:"options"`
+	Config    simc.Config    `json:"config"`
 }
 type Candidates struct {
-	Items   []simc.Item
-	Talents []simc.Talent
-	Omnium  []simc.OmniumTalents
+	Items   []simc.Item          `json:"items"`
+	Talents []simc.Talent        `json:"talents"`
+	Omnium  []simc.OmniumTalents `json:"omnium"`
 }
