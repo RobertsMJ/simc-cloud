@@ -1,17 +1,9 @@
 package simc
 
 import (
-	"errors"
 	"fmt"
 	"strconv"
 	"strings"
-
-	"github.com/RobertsMJ/simc-cloud/backend/simc/internal"
-)
-
-var (
-	ErrInvalidItemSlot = errors.New("invalid item slot")
-	ErrInvalidValue    = errors.New("invalid value for type")
 )
 
 const (
@@ -45,27 +37,27 @@ type Item struct {
 	TitanDiscID         int    `json:"titan_disc_id,omitempty"`
 }
 
-func newItem(s internal.Statement) (Item, error) {
+func newItem(s statement) (Item, error) {
 	var i Item
 	var err error
-	if slot, err := NewItemSlot(s.Key); err != nil {
+	var slot ItemSlot
+	if slot, err = newItemSlot(s.Key); err != nil {
 		return Item{}, err
-	} else {
-		i.Slot = slot.Group()
 	}
+	i.Slot = slot.Group()
 	i.Name = s.Comment
 
-	for _, kv := range strings.Split(s.Value, ",") {
+	for kv := range strings.SplitSeq(s.Value, ",") {
 		k, v, _ := strings.Cut(kv, "=")
 		switch k {
 		case fieldID:
 			i.ID, err = strconv.Atoi(v)
 		case fieldEnchantID:
-			i.EnchantID, err = NewIDList(v)
+			i.EnchantID, err = newIDList(v)
 		case fieldBonusID:
-			i.BonusID, err = NewIDList(v)
+			i.BonusID, err = newIDList(v)
 		case fieldGemID:
-			i.GemID, err = NewIDList(v)
+			i.GemID, err = newIDList(v)
 		case fieldContentTuning:
 			i.ContentTuning, err = strconv.Atoi(v)
 		case fieldDropLevel:
@@ -73,9 +65,9 @@ func newItem(s internal.Statement) (Item, error) {
 		case fieldRedirectedBaseStats:
 			i.RedirectedBaseStats, err = strconv.Atoi(v)
 		case fieldCraftedStats:
-			i.CraftedStats, err = NewIDList(v)
+			i.CraftedStats, err = newIDList(v)
 		case fieldGemBonusID:
-			i.GemBonusID, err = NewIDList(v)
+			i.GemBonusID, err = newIDList(v)
 		case fieldCraftingQuality:
 			i.CraftingQuality, err = strconv.Atoi(v)
 		case fieldTitanDiscID:
@@ -89,20 +81,27 @@ func newItem(s internal.Statement) (Item, error) {
 	return i, nil
 }
 
-func (i Item) MarshalSimc() (string, error) {
+func isItemKey(key string) bool {
+	if _, err := newItemSlot(key); err == nil {
+		return true
+	}
+	return false
+}
+
+func (i Item) render(slot ItemSlot) string {
 	res := []string{
-		fmt.Sprintf(`%s=`, i.Slot),
+		fmt.Sprintf(`%s=`, slot),
 		fmt.Sprintf(`id=%d`, i.ID),
 	}
 
 	if len(i.EnchantID) > 0 {
-		res = append(res, fmt.Sprintf(`%s=%s`, fieldEnchantID, i.EnchantID.MarshalSimc()))
+		res = append(res, fmt.Sprintf(`%s=%s`, fieldEnchantID, i.EnchantID.render()))
 	}
 	if len(i.BonusID) > 0 {
-		res = append(res, fmt.Sprintf(`%s=%s`, fieldBonusID, i.BonusID.MarshalSimc()))
+		res = append(res, fmt.Sprintf(`%s=%s`, fieldBonusID, i.BonusID.render()))
 	}
 	if len(i.GemID) > 0 {
-		res = append(res, fmt.Sprintf(`%s=%s`, fieldGemID, i.GemID.MarshalSimc()))
+		res = append(res, fmt.Sprintf(`%s=%s`, fieldGemID, i.GemID.render()))
 	}
 	if i.ContentTuning != 0 {
 		res = append(res, fmt.Sprintf(`%s=%d`, fieldContentTuning, i.ContentTuning))
@@ -114,10 +113,10 @@ func (i Item) MarshalSimc() (string, error) {
 		res = append(res, fmt.Sprintf(`%s=%d`, fieldRedirectedBaseStats, i.RedirectedBaseStats))
 	}
 	if len(i.CraftedStats) > 0 {
-		res = append(res, fmt.Sprintf(`%s=%s`, fieldCraftedStats, i.CraftedStats.MarshalSimc()))
+		res = append(res, fmt.Sprintf(`%s=%s`, fieldCraftedStats, i.CraftedStats.render()))
 	}
 	if len(i.GemBonusID) > 0 {
-		res = append(res, fmt.Sprintf(`%s=%s`, fieldGemBonusID, i.GemBonusID.MarshalSimc()))
+		res = append(res, fmt.Sprintf(`%s=%s`, fieldGemBonusID, i.GemBonusID.render()))
 	}
 	if i.CraftingQuality != 0 {
 		res = append(res, fmt.Sprintf(`%s=%d`, fieldCraftingQuality, i.CraftingQuality))
@@ -126,5 +125,5 @@ func (i Item) MarshalSimc() (string, error) {
 		res = append(res, fmt.Sprintf(`%s=%d`, fieldTitanDiscID, i.TitanDiscID))
 	}
 
-	return strings.Join(res, ","), nil
+	return strings.Join(res, ",")
 }

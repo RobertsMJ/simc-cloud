@@ -17,13 +17,13 @@ func TestIDListTestSuite(t *testing.T) {
 func (s *IDListTestSuite) TestMarshalSimc() {
 	// Test implementation
 	idList := IDList{1, 2, 3}
-	result := idList.MarshalSimc()
+	result := idList.render()
 	s.Equal("1/2/3", result)
 }
 
 func (s *IDListTestSuite) TestNewIDList() {
 	// Test implementation
-	idList, err := NewIDList("1/2/3")
+	idList, err := newIDList("1/2/3")
 	s.NoError(err)
 	s.Equal(IDList{1, 2, 3}, idList)
 }
@@ -31,13 +31,13 @@ func (s *IDListTestSuite) TestNewIDList() {
 func (s *IDListTestSuite) TestMarshalSimc_Empty() {
 	// Test implementation
 	idList := IDList{}
-	result := idList.MarshalSimc()
+	result := idList.render()
 	s.Equal("", result)
 }
 
 func (s *IDListTestSuite) TestUnmarshalSimc_Empty() {
 	// Test implementation
-	idList, err := NewIDList("")
+	idList, err := newIDList("")
 	s.NoError(err)
 	s.Equal(IDList{}, idList)
 }

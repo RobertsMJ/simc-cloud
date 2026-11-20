@@ -9,16 +9,12 @@ type Config struct {
 	Precision SimPrecision `json:"precision"`
 }
 
-func (c *Config) MarshalSimc() (string, error) {
-	fields := []string{}
-
-	if precisionStr, err := c.Precision.MarshalSimc(); err != nil {
-		return "", err
-	} else {
-		fields = append(fields, fmt.Sprintf("target_error=%s", precisionStr))
+func (c *Config) render() string {
+	fields := []string{
+		fmt.Sprintf("target_error=%s", c.Precision.render()),
 	}
 
-	return strings.Join(fields, "\n"), nil
+	return strings.Join(fields, "\n")
 }
 
 type SimPrecision int
@@ -29,7 +25,7 @@ const (
 	SimPrecisionHigh
 )
 
-func (s SimPrecision) MarshalSimc() (string, error) {
+func (s SimPrecision) render() string {
 	var targetError float64
 	switch s {
 	case SimPrecisionHigh:
@@ -41,5 +37,5 @@ func (s SimPrecision) MarshalSimc() (string, error) {
 	default:
 		targetError = 1.0
 	}
-	return fmt.Sprintf("%.2f", targetError), nil
+	return fmt.Sprintf("%.2f", targetError)
 }

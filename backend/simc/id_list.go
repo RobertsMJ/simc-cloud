@@ -3,35 +3,33 @@ package simc
 import (
 	"strconv"
 	"strings"
-
-	"github.com/samber/lo"
 )
 
 // IDList represents a list of IDs joined by '/'
 type IDList []int
 
-func (i IDList) MarshalSimc() string {
-	return strings.Join(lo.Map(i, func(id int, _ int) string {
-		return strconv.Itoa(id)
-	}), "/")
+func (i IDList) render() string {
+	ids := make([]string, 0, len(i))
+	for _, id := range i {
+		ids = append(ids, strconv.Itoa(id))
+	}
+	return strings.Join(ids, "/")
 }
 
-func NewIDList(value string) (IDList, error) {
+func newIDList(value string) (IDList, error) {
 	i := make([]int, 0)
 
 	if value == "" {
 		return i, nil
 	}
 
-	if res, err := lo.MapErr(
-		strings.Split(value, "/"),
-		func(s string, _ int) (int, error) {
-			return strconv.Atoi(s)
-		},
-	); err != nil {
-		return nil, err
-	} else {
-		i = append(i, res...)
+	for id := range strings.SplitSeq(value, "/") {
+		parsedID, err := strconv.Atoi(id)
+		if err != nil {
+			return nil, err
+		}
+		i = append(i, parsedID)
 	}
+
 	return i, nil
 }

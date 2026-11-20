@@ -1,7 +1,6 @@
 package simc
 
 import (
-	"fmt"
 	"io"
 	"maps"
 	"slices"
@@ -15,47 +14,20 @@ type SimInput struct {
 	Config      Config             `json:"config"`
 }
 
+// Render writes a valid simulation input to the provided writer.
 func Render(w io.Writer, input SimInput) error {
 
-	res := []string{}
-	character, err := input.Character.MarshalSimc()
-	if err != nil {
-		return err
+	res := []string{
+		input.Character.render(),
+		input.Base.render(),
 	}
-	res = append(res, character)
-
-	base, err := input.Base.MarshalSimc()
-	if err != nil {
-		return err
-	}
-	res = append(res, base)
 
 	for _, id := range slices.Sorted(maps.Keys(input.Profilesets)) {
-		profile := input.Profilesets[id]
-
-		profileStr, err := profile.MarshalSimc()
-		if err != nil {
-			return err
-		}
-
-		profilesetLines := strings.Split(profileStr, "\n")
-		for i, line := range profilesetLines {
-			if i == 0 {
-				profilesetLines[i] = fmt.Sprintf(`profileset."%s"=%s`, id, line)
-			} else {
-				profilesetLines[i] = fmt.Sprintf(`profileset."%s"+=%s`, id, line)
-			}
-		}
-
-		res = append(res, strings.Join(profilesetLines, "\n"))
+		res = append(res, input.Profilesets[id].renderWithID(id))
 	}
 
-	config, err := input.Config.MarshalSimc()
-	if err != nil {
-		return err
-	}
-	res = append(res, config)
+	res = append(res, input.Config.render())
 
-	_, err = io.WriteString(w, strings.Join(res, "\n"))
+	_, err := io.WriteString(w, strings.Join(res, "\n"))
 	return err
 }

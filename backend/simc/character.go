@@ -1,11 +1,10 @@
 package simc
 
 import (
+	"encoding"
 	"fmt"
 	"strconv"
 	"strings"
-
-	"github.com/RobertsMJ/simc-cloud/backend/simc/internal"
 )
 
 var (
@@ -36,7 +35,7 @@ type Character struct {
 	Server string   `json:"server"`
 }
 
-func (c Character) MarshalSimc() (string, error) {
+func (c Character) render() string {
 	return strings.Join([]string{
 		fmt.Sprintf("%s=%s", c.Class, c.Name),
 		fmt.Sprintf("level=%d", c.Level),
@@ -45,15 +44,32 @@ func (c Character) MarshalSimc() (string, error) {
 		fmt.Sprintf("race=%s", c.Race),
 		fmt.Sprintf("region=%s", c.Region),
 		fmt.Sprintf("server=%s", c.Server),
-	}, "\n"), nil
+	}, "\n")
 }
 
-func NewCharacter(statements []internal.Statement) (Character, error) {
+func isCharacterKey(key string) bool {
+	if _, err := newWowClass(key); err == nil {
+		return true
+	}
+	switch key {
+	case charFieldLevel,
+		charFieldRole,
+		charFieldSpec,
+		charFieldRace,
+		charFieldRegion,
+		charFieldServer:
+		return true
+	default:
+		return false
+	}
+}
+
+func newCharacter(statements []statement) (Character, error) {
 	var c Character
 	var err error
 
 	for _, s := range statements {
-		if wowclass, err := NewWowClass(s.Key); err == nil {
+		if wowclass, err := newWowClass(s.Key); err == nil {
 			c.Class = wowclass
 			c.Name = s.Value
 			continue
@@ -99,6 +115,12 @@ func NewCharacter(statements []internal.Statement) (Character, error) {
 
 type WowClass string
 
+var _ encoding.TextMarshaler = (*WowClass)(nil)
+
+func (c WowClass) MarshalText() ([]byte, error) {
+	return []byte(c), nil
+}
+
 const (
 	WowClassDK      WowClass = "deathknight"
 	WowClassDH      WowClass = "demonhunter"
@@ -115,7 +137,7 @@ const (
 	WowClassWarrior WowClass = "warrior"
 )
 
-func NewWowClass(s string) (WowClass, error) {
+func newWowClass(s string) (WowClass, error) {
 	switch c := WowClass(s); c {
 	case WowClassDK,
 		WowClassDH,

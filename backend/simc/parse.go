@@ -1,87 +1,74 @@
 package simc
 
 import (
+	"fmt"
 	"io"
-
-	"github.com/RobertsMJ/simc-cloud/backend/simc/internal"
 )
 
 type AddonExport struct {
-	Character    Character `json:"character"`
-	Equipped     Loadout   `json:"equipped"`
-	Bags         []Item    `json:"bags"`
-	SavedTalents []Talent  `json:"savedTalents"`
+	Character    Character         `json:"character"`
+	Equipped     Loadout           `json:"equipped"`
+	Bags         []Item            `json:"bags"`
+	SavedTalents []Talent          `json:"savedTalents"`
+	Metadata     map[string]string `json:"metadata"`
 }
 
-func ParseAddonExport(r io.Reader) (AddonExport, error) {
-	statements, err := internal.ParseStatements(r)
+// Parse parses the provided reader into an AddonExport structure.
+func Parse(r io.Reader) (AddonExport, error) {
+	statements, err := parseStatements(r)
 	if err != nil {
 		return AddonExport{}, err
 	}
 
-	characterStatements := []internal.Statement{}
+	characterStatements := []statement{}
 	bagItems := []Item{}
 	activeLoadout := Loadout{
 		Items: map[ItemSlot]Item{},
 	}
 	savedTalents := []Talent{}
+	metadata := map[string]string{}
 	for _, s := range statements {
-		if isCharacterStatement(s) {
+		switch {
+		case isCharacterKey(s.Key):
 			characterStatements = append(characterStatements, s)
-			continue
-		}
-
-		if isItemStatement(s) {
+		case isItemKey(s.Key):
 			item, err := newItem(s)
 			if err != nil {
-				return AddonExport{}, err
+				return AddonExport{}, ParseError{Line: s.Line, Err: err}
 			}
 
 			if s.Disabled {
 				bagItems = append(bagItems, item)
 			} else {
-				switch item.Slot {
-				case SlotGroupFinger:
-					if activeLoadout.Items[ItemSlotFinger1].ID == 0 {
-						activeLoadout.Items[ItemSlotFinger1] = item
-					} else {
-						activeLoadout.Items[ItemSlotFinger2] = item
+				for _, slot := range item.Slot.Slots() {
+					if activeLoadout.Items[slot].ID == 0 {
+						activeLoadout.Items[slot] = item
+						break
 					}
-				case SlotGroupTrinket:
-					if activeLoadout.Items[ItemSlotTrinket1].ID == 0 {
-						activeLoadout.Items[ItemSlotTrinket1] = item
-					} else {
-						activeLoadout.Items[ItemSlotTrinket2] = item
-					}
-				default:
-					activeLoadout.Items[ItemSlot(item.Slot)] = item
 				}
 			}
-			continue
-		}
-
-		if s.Key == talentKey {
+		case s.Key == talentKey:
 			talent, err := newTalent(s)
 			if err != nil {
-				return AddonExport{}, err
+				return AddonExport{}, ParseError{Line: s.Line, Err: err}
 			}
 			if s.Disabled {
 				savedTalents = append(savedTalents, talent)
 			} else {
 				activeLoadout.Talent = talent
 			}
-			continue
-		}
-
-		if s.Key == omniumTalentKey {
+		case s.Key == omniumTalentKey:
 			om, err := newOmniumTalents(s)
 			if err != nil {
-				return AddonExport{}, err
+				return AddonExport{}, ParseError{Line: s.Line, Err: err}
 			}
 			activeLoadout.OmniumTalents = om
+		default:
+			metadata[s.Key] = s.Value
 		}
 	}
-	character, err := NewCharacter(characterStatements)
+
+	character, err := newCharacter(characterStatements)
 	if err != nil {
 		return AddonExport{}, err
 	}
@@ -91,28 +78,15 @@ func ParseAddonExport(r io.Reader) (AddonExport, error) {
 		Equipped:     activeLoadout,
 		Bags:         bagItems,
 		SavedTalents: savedTalents,
+		Metadata:     metadata,
 	}, nil
 }
 
-func isCharacterStatement(s internal.Statement) bool {
-	if _, err := NewWowClass(s.Key); err == nil {
-		return true
-	}
-	switch s.Key {
-	case charFieldLevel,
-		charFieldRole,
-		charFieldSpec,
-		charFieldRace,
-		charFieldRegion,
-		charFieldServer:
-		return true
-	}
-	return false
+type ParseError struct {
+	Line int
+	Err  error
 }
 
-func isItemStatement(s internal.Statement) bool {
-	if _, err := NewItemSlot(s.Key); err == nil {
-		return true
-	}
-	return false
+func (e ParseError) Error() string {
+	return fmt.Sprintf("line %d: %v", e.Line, e.Err)
 }

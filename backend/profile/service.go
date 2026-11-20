@@ -19,5 +19,5 @@ func NewService(log *slog.Logger) *Service {
 }
 
 func (s Service) Parse(ctx context.Context, raw string) (simc.AddonExport, error) {
-	return simc.ParseAddonExport(strings.NewReader(raw))
+	return simc.Parse(strings.NewReader(raw))
 }

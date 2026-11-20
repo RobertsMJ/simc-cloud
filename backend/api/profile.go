@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"errors"
 	"log/slog"
 	"net/http"
 
@@ -46,7 +47,10 @@ func (h *ProfileHandler) RegisterHandler(api huma.API) {
 func (h *ProfileHandler) HandleProfileParse(ctx context.Context, request *ProfileRequest) (*Response[ProfileResponseBody], error) {
 	doc, err := h.svc.Parse(ctx, string(request.RawBody))
 	if err != nil {
-		return nil, huma.Error400BadRequest("document parse", err)
+		if errors.Is(err, simc.ParseError{}) {
+			return nil, huma.Error422UnprocessableEntity("failed to parse profile", err)
+		}
+		return nil, huma.Error500InternalServerError("document parse", err)
 	}
 
 	return &Response[ProfileResponseBody]{

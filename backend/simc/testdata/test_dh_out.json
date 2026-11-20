@@ -275,16 +275,18 @@
       "name": "",
       "value": "CEkAG5bbocFKcv+yIq8fPd6ORZmZmZmZWmxMzMGzkxMDAAAAAAYWMmtZYmBmx2sNzMjxALDsNbmxwsopxMzYGbAAAADAABAzMYAIAAwA"
     },
-    "omnium_talents": [
-      {
-        "id": 136819,
-        "value": 1
-      },
-      {
-        "id": 136822,
-        "value": 1
-      }
-    ]
+    "omnium_talents": {
+      "value": [
+        {
+          "id": 136819,
+          "value": 1
+        },
+        {
+          "id": 136822,
+          "value": 1
+        }
+      ]
+    }
   },
   "bags": [
     {
@@ -841,5 +843,13 @@
       "name": "M+ AR",
       "value": "CEkAG5bbocFKcv+yIq8fPd6ORZmZmZmZ2mxMzMGzwYmBAAAAAAMLGz2MMzMbjZw2MzwYYsMz2MYYstxAzMzYGLAAAAAAAgZGgBAAAgB"
     }
-  ]
+  ],
+  "metadata": {
+    "catalyst_currencies": "3269:8/3378:4/2813:8/3116:8",
+    "loot_spec": "havoc",
+    "professions": "herbalism=88/mining=84",
+    "slot_high_watermarks": "0:289:289/1:276:285/2:289:289/3:289:289/4:285:285/5:282:282/6:289:289/7:285:285/8:276:276/9:285:285/10:289:289/11:289:289/12:0:298/13:42:233/14:298:298/15:295:295/16:263:263",
+    "upgrade_achievements": "19326/19397/19398/19577/19578/40107/40115/40118/40942/40943/40944/40945/41886/41887/41888/41892/42767/42768/42769/42770/61809",
+    "upgrade_currencies": "c:1792:904/c:2122:7/c:3343:15/c:3347:7/c:3383:15/c:3345:10/c:3341:15/i:232875:4"
+  }
 }

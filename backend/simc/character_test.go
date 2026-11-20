@@ -4,7 +4,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/RobertsMJ/simc-cloud/backend/simc/internal"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -27,7 +26,7 @@ func (suite *CharacterTestSuite) TestNewCharacter() {
 		professions=herbalism=88/mining=84
 		spec=havoc
 	`
-	statements, err := internal.ParseStatements(strings.NewReader(input))
+	statements, err := parseStatements(strings.NewReader(input))
 	suite.NoError(err)
 
 	expected := Character{
@@ -41,12 +40,12 @@ func (suite *CharacterTestSuite) TestNewCharacter() {
 		Race:   "night_elf",
 	}
 
-	actual, err := NewCharacter(statements)
+	actual, err := newCharacter(statements)
 	suite.NoError(err)
 	suite.Equal(expected, actual)
 }
 
-func (suite *CharacterTestSuite) TestMarshalSimc() {
+func (suite *CharacterTestSuite) TestRender() {
 	c := Character{
 		Class:  WowClassDH,
 		Name:   `"Kestdh"`,
@@ -68,7 +67,6 @@ func (suite *CharacterTestSuite) TestMarshalSimc() {
 		"spec=havoc",
 	}
 
-	actual, err := c.MarshalSimc()
-	suite.NoError(err)
+	actual := c.render()
 	suite.ElementsMatch(expected, strings.Split(actual, "\n"))
 }

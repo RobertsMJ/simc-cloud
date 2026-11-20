@@ -1,4 +1,4 @@
-package internal
+package simc
 
 import (
 	"bufio"
@@ -27,33 +27,24 @@ import (
 // 	# Devouring Reaver's Intake (276)
 //	# head=,id=250033,enchant_id=8017,bonus_id=6652/12667/13440/13338/13575/12798
 
-type Operator string
-
-type Statement struct {
+type statement struct {
 	Key      string
-	Operator Operator
 	Value    string
-	RawSimc  string
 	Comment  string
 	Disabled bool
 	Line     int
 }
 
-const (
-	operatorAssign Operator = "="
-	operatorAppend Operator = "+="
-)
-
-// ParseStatements extracts statements from a simc document
-func ParseStatements(r io.Reader) ([]Statement, error) {
-	res := []Statement{}
+// parseStatements extracts statements from a simc document
+func parseStatements(r io.Reader) ([]statement, error) {
+	res := []statement{}
 
 	scanner := bufio.NewScanner(r)
 	lineNumber := 0
 	var detachedComment string
 	for scanner.Scan() {
 		if scanner.Err() != nil {
-			return []Statement{}, scanner.Err()
+			return []statement{}, scanner.Err()
 		}
 
 		line := strings.TrimSpace(scanner.Text())
@@ -86,9 +77,8 @@ func ParseStatements(r io.Reader) ([]Statement, error) {
 	return res, nil
 }
 
-func newStatement(line string, lineNum int) (res Statement) {
+func newStatement(line string, lineNum int) (res statement) {
 	res.Line = lineNum
-	res.RawSimc = line
 
 	if strings.HasPrefix(line, "#") {
 		res.Disabled = true
@@ -96,22 +86,13 @@ func newStatement(line string, lineNum int) (res Statement) {
 	}
 	line = strings.TrimSpace(line)
 
-	if strings.Contains(line, string(operatorAppend)) {
-		res.Operator = operatorAppend
-	} else if strings.Contains(line, string(operatorAssign)) {
-		res.Operator = operatorAssign
+	key, value, found := strings.Cut(line, "=")
+	if !found {
+		res.Value = line
+	} else {
+		res.Key = strings.TrimSpace(key)
+		res.Value = strings.TrimSpace(value)
 	}
 
-	if res.Operator != "" {
-		key, value, found := strings.Cut(line, string(res.Operator))
-		if !found {
-			res.Value = line
-		} else {
-			res.Key = strings.TrimSpace(key)
-			res.Value = strings.TrimSpace(value)
-		}
-	} else {
-		res.Value = line
-	}
 	return res
 }

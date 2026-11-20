@@ -20,14 +20,14 @@ func TestParseTestSuite(t *testing.T) {
 
 func (s *ParseTestSuite) TestNewProfile_DH() {
 
-	input, err := os.ReadFile("internal/testdata/test_dh_in.simc")
+	input, err := os.ReadFile("testdata/test_dh_in.simc")
 	s.NoError(err)
 
-	res, err := ParseAddonExport(bytes.NewReader(input))
+	res, err := Parse(bytes.NewReader(input))
 	s.NoError(err)
 	s.NotNil(res)
 
-	path, err := filepath.Abs("internal/testdata/test_dh_out.json")
+	path, err := filepath.Abs("testdata/test_dh_out.json")
 	s.NoError(err)
 	expected := test.GoldenValueJSON(s.T(), path, res)
 	s.Equal(expected, res)
@@ -36,14 +36,14 @@ func (s *ParseTestSuite) TestNewProfile_DH() {
 
 func (s *ParseTestSuite) TestNewProfile_Warrior() {
 
-	input, err := os.ReadFile("internal/testdata/test_warrior_in.simc")
+	input, err := os.ReadFile("testdata/test_warrior_in.simc")
 	s.NoError(err)
 
-	res, err := ParseAddonExport(bytes.NewReader(input))
+	res, err := Parse(bytes.NewReader(input))
 	s.NoError(err)
 	s.NotNil(res)
 
-	path, err := filepath.Abs("internal/testdata/test_warrior_out.json")
+	path, err := filepath.Abs("testdata/test_warrior_out.json")
 	s.NoError(err)
 	expected := test.GoldenValueJSON(s.T(), path, res)
 	s.Equal(expected, res)

@@ -3,8 +3,6 @@ package simc
 import (
 	"fmt"
 	"strings"
-
-	"github.com/RobertsMJ/simc-cloud/backend/simc/internal"
 )
 
 var (
@@ -13,12 +11,9 @@ var (
 )
 
 const (
-	talentHeaderTemplate = "# Saved Loadout: %s"
-	talentValueTemplate  = "talents=%s"
-	talentKey            = "talents"
-	talentCommentPrefix  = "Saved Loadout: "
-	omniumTalentKey      = "omnium_talents"
-	omniumTalentTemplate = "omnium_talents=%s"
+	talentKey           = "talents"
+	talentCommentPrefix = "Saved Loadout: "
+	omniumTalentKey     = "omnium_talents"
 )
 
 type Talent struct {
@@ -26,7 +21,7 @@ type Talent struct {
 	Value string `json:"value"`
 }
 
-func newTalent(s internal.Statement) (Talent, error) {
+func newTalent(s statement) (Talent, error) {
 	if s.Key != talentKey {
 		return Talent{}, ErrInvalidTalentStatement
 	}
@@ -37,16 +32,29 @@ func newTalent(s internal.Statement) (Talent, error) {
 	}, nil
 }
 
-func (t Talent) MarshalSimc() (string, error) {
-	return fmt.Sprintf(talentValueTemplate, t.Value), nil
+func (t Talent) render() string {
+	return fmt.Sprintf("talents=%s", t.Value)
 }
 
-type OmniumTalents = IDValueList
+type OmniumTalents struct {
+	Value IDValueList `json:"value"`
+}
 
-func newOmniumTalents(s internal.Statement) (OmniumTalents, error) {
+func newOmniumTalents(s statement) (OmniumTalents, error) {
 	if s.Key != omniumTalentKey {
-		return nil, ErrInvalidOmniumTalentStatement
+		return OmniumTalents{}, ErrInvalidOmniumTalentStatement
 	}
 
-	return NewIDValueList(s.Value)
+	v, err := newIDValueList(s.Value)
+	if err != nil {
+		return OmniumTalents{}, err
+	}
+
+	return OmniumTalents{
+		Value: v,
+	}, nil
+}
+
+func (o OmniumTalents) render() string {
+	return fmt.Sprintf("omnium_talents=%s", o.Value.render())
 }

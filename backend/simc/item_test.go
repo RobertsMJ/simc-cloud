@@ -4,7 +4,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/RobertsMJ/simc-cloud/backend/simc/internal"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -21,7 +20,7 @@ func (s *ItemTestSuite) TestNewItem() {
 	# New Helmet
 	head=,id=251109,enchant_id=8017,bonus_id=13440/6652/12667/13577/12699/12806,foo=bar
 	`
-	stmt, _ := internal.ParseStatements(strings.NewReader(in))
+	stmt, _ := parseStatements(strings.NewReader(in))
 	s.Len(stmt, 1)
 
 	expected := Item{
@@ -38,7 +37,7 @@ func (s *ItemTestSuite) TestNewItem() {
 	s.Equal(expected, actual)
 }
 
-func (s *ItemTestSuite) TestMarshalSimc() {
+func (s *ItemTestSuite) TestRender() {
 	in := Item{
 		Slot:      SlotGroupHead,
 		Name:      "New Helmet",
@@ -46,8 +45,7 @@ func (s *ItemTestSuite) TestMarshalSimc() {
 		EnchantID: IDList{8017},
 		BonusID:   IDList{13440, 6652, 12667, 13577, 12699, 12806},
 	}
-	expected := `head=,251109,enchant_id=8017,bonus_id=13440/6652/12667/13577/12699/12806`
-	actualStr, err := in.MarshalSimc()
-	s.NoError(err)
+	expected := `head=,id=251109,enchant_id=8017,bonus_id=13440/6652/12667/13577/12699/12806`
+	actualStr := in.render(ItemSlotHead)
 	s.Equal(expected, actualStr)
 }
