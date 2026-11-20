@@ -12,7 +12,7 @@ import (
 )
 
 type JobService interface {
-	CreateJob(context.Context, models.SimcJobConfig) (models.Job, error)
+	CreateJob(context.Context, models.JobSpec) (models.Job, error)
 }
 
 type JobHandler struct {
@@ -37,7 +37,13 @@ func (h JobHandler) RegisterHandler(api huma.API) {
 	}, h.HandleCreateJob)
 }
 
-func (h *JobHandler) HandleCreateJob(ctx context.Context, request *Request[models.CreateJobRequestBody]) (*Response[models.CreateJobResponseBody], error) {
+type CreateJobRequest = Request[models.JobSpec]
+type CreateJobResponseBody struct {
+	Id string `json:"id"`
+}
+type CreateJobResponse = Response[CreateJobResponseBody]
+
+func (h *JobHandler) HandleCreateJob(ctx context.Context, request *CreateJobRequest) (*CreateJobResponse, error) {
 	// A job request should contain a character, baseline gear, and selected gear options
 	// validate the request to confirm we have all expected configuration
 	validate := validator.New()
@@ -48,24 +54,14 @@ func (h *JobHandler) HandleCreateJob(ctx context.Context, request *Request[model
 	}
 
 	// pass the character, baseline, and options to the job service to handle the business logic
-	job, err := h.jobService.CreateJob(ctx, models.SimcJobConfig{
-		Character: request.Body.Character,
-		Baseline:  request.Body.Baseline,
-		Options: models.GearsetOptions{
-			Items:   request.Body.Options.Items,
-			Talents: request.Body.Options.Talents,
-			Omnium:  request.Body.Options.Omnium,
-		},
-		Config: request.Body.Config,
-	})
+	job, err := h.jobService.CreateJob(ctx, request.Body)
 	if err != nil {
 		return nil, err
 	}
 
-	return &Response[models.CreateJobResponseBody]{
-		Body: models.CreateJobResponseBody{
-			Id:     job.ID,
-			Status: job.Status,
+	return &CreateJobResponse{
+		Body: CreateJobResponseBody{
+			Id: job.ID,
 		},
 	}, nil
 }

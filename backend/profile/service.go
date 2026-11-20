@@ -18,6 +18,6 @@ func NewService(log *slog.Logger) *Service {
 	}
 }
 
-func (s *Service) Parse(ctx context.Context, raw string) (*simc.Profile, error) {
-	return simc.NewProfile(strings.NewReader(raw))
+func (s Service) Parse(ctx context.Context, raw string) (simc.AddonExport, error) {
+	return simc.ParseAddonExport(strings.NewReader(raw))
 }

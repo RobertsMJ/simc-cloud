@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/RobertsMJ/simc-cloud/backend/test"
@@ -18,19 +19,21 @@ func TestSimcTestSuite(t *testing.T) {
 	suite.Run(t, new(SimcTestSuite))
 }
 
-func (s *SimcTestSuite) TestMarshal() {
+func (s *SimcTestSuite) TestRender_Warrior() {
 	input, err := os.ReadFile("internal/testdata/test_warrior_sim_in.json")
 	s.NoError(err)
 
-	var simProfile SimulationProfile
+	var simProfile SimInput
 	err = json.Unmarshal(input, &simProfile)
 	s.NoError(err)
 
 	path, err := filepath.Abs("internal/testdata/test_warrior_sim_out.simc")
 	s.NoError(err)
 
-	actual, err := simProfile.MarshalSimc()
+	var b strings.Builder
+	err = Render(&b, simProfile)
 	s.NoError(err)
+	actual := b.String()
 	expected := test.GoldenValueRaw(s.T(), path, []byte(actual))
 	s.Equal(string(expected), actual)
 }

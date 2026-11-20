@@ -9,11 +9,10 @@
     "region": "us",
     "server": "illidan"
   },
-  "loadout": {
+  "equipped": {
     "items": {
       "back": {
         "slot": "back",
-        "slot_group": "back",
         "name": "Bloodthorn Burnous (311)",
         "id": 251190,
         "bonus_id": [
@@ -23,12 +22,10 @@
           13662,
           12699
         ],
-        "content_tuning": 1279,
-        "equipped": true
+        "content_tuning": 1279
       },
       "chest": {
         "slot": "chest",
-        "slot_group": "chest",
         "name": "Cuirass of the Jade Warlord (315)",
         "id": 271459,
         "enchant_id": [
@@ -40,12 +37,10 @@
           13698,
           12844
         ],
-        "redirected_base_stats": 272255,
-        "equipped": true
+        "redirected_base_stats": 272255
       },
       "feet": {
         "slot": "feet",
-        "slot_group": "feet",
         "name": "Scaleguard's Stalwart Greatboots (311)",
         "id": 193728,
         "enchant_id": [
@@ -58,12 +53,10 @@
           13662,
           12699
         ],
-        "content_tuning": 1279,
-        "equipped": true
+        "content_tuning": 1279
       },
       "finger1": {
-        "slot": "finger1",
-        "slot_group": "finger",
+        "slot": "finger",
         "name": "Sickening Signet of Atroxus (311)",
         "id": 252258,
         "enchant_id": [
@@ -79,12 +72,10 @@
         "gem_id": [
           240906
         ],
-        "content_tuning": 1279,
-        "equipped": true
+        "content_tuning": 1279
       },
       "finger2": {
-        "slot": "finger2",
-        "slot_group": "finger",
+        "slot": "finger",
         "name": "Colubrine Band (295)",
         "id": 272147,
         "enchant_id": [
@@ -98,12 +89,10 @@
         "gem_id": [
           240906
         ],
-        "content_tuning": 6015,
-        "equipped": true
+        "content_tuning": 6015
       },
       "hands": {
         "slot": "hands",
-        "slot_group": "hands",
         "name": "Jeweled Gauntlets of the Jade Warlord (308)",
         "id": 271457,
         "bonus_id": [
@@ -114,12 +103,10 @@
           13697,
           1561
         ],
-        "redirected_base_stats": 251214,
-        "equipped": true
+        "redirected_base_stats": 251214
       },
       "head": {
         "slot": "head",
-        "slot_group": "head",
         "name": "Tempered Horns of the Jade Warlord (321)",
         "id": 271456,
         "enchant_id": [
@@ -133,12 +120,10 @@
           13698,
           12846
         ],
-        "redirected_base_stats": 251229,
-        "equipped": true
+        "redirected_base_stats": 251229
       },
       "legs": {
         "slot": "legs",
-        "slot_group": "legs",
         "name": "Legplates of Charged Duality (311)",
         "id": 159435,
         "enchant_id": [
@@ -151,12 +136,10 @@
           13662,
           12699
         ],
-        "content_tuning": 1279,
-        "equipped": true
+        "content_tuning": 1279
       },
       "main_hand": {
         "slot": "main_hand",
-        "slot_group": "main_hand",
         "name": "Blood Knight's Impetus (331)",
         "id": 237847,
         "enchant_id": [
@@ -178,12 +161,10 @@
           49,
           36
         ],
-        "crafting_quality": 5,
-        "equipped": true
+        "crafting_quality": 5
       },
       "neck": {
         "slot": "neck",
-        "slot_group": "neck",
         "name": "Serpentine Talisman (305)",
         "id": 272229,
         "bonus_id": [
@@ -194,12 +175,10 @@
         "gem_id": [
           240983
         ],
-        "content_tuning": 6015,
-        "equipped": true
+        "content_tuning": 6015
       },
       "shoulder": {
         "slot": "shoulder",
-        "slot_group": "shoulder",
         "name": "Raging Pauldrons of the Jade Warlord (295)",
         "id": 271454,
         "enchant_id": [
@@ -212,12 +191,10 @@
           13697,
           1548
         ],
-        "redirected_base_stats": 272260,
-        "equipped": true
+        "redirected_base_stats": 272260
       },
       "trinket1": {
-        "slot": "trinket1",
-        "slot_group": "trinket",
+        "slot": "trinket",
         "name": "Coiled Fangstone (321)",
         "id": 273795,
         "bonus_id": [
@@ -226,24 +203,20 @@
           12699,
           12846
         ],
-        "content_tuning": 1279,
-        "equipped": true
+        "content_tuning": 1279
       },
       "trinket2": {
-        "slot": "trinket2",
-        "slot_group": "trinket",
+        "slot": "trinket",
         "name": "Fiber of Living Agony (321)",
         "id": 265657,
         "bonus_id": [
           6652,
           12846
         ],
-        "content_tuning": 6015,
-        "equipped": true
+        "content_tuning": 6015
       },
       "waist": {
         "slot": "waist",
-        "slot_group": "waist",
         "name": "Spellbreaker's Girdle (331)",
         "id": 237830,
         "bonus_id": [
@@ -263,12 +236,10 @@
           40,
           49
         ],
-        "crafting_quality": 5,
-        "equipped": true
+        "crafting_quality": 5
       },
       "wrist": {
         "slot": "wrist",
-        "slot_group": "wrist",
         "name": "Spellbreaker's Bracers (305)",
         "id": 237834,
         "bonus_id": [
@@ -286,8 +257,7 @@
           32,
           49
         ],
-        "crafting_quality": 5,
-        "equipped": true
+        "crafting_quality": 5
       }
     },
     "talents": {
@@ -317,8 +287,6 @@
       }
     ]
   },
-  "options": {},
-  "config": {
-    "precision": 0
-  }
+  "bags": [],
+  "savedTalents": []
 }

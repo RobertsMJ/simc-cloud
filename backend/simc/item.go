@@ -3,13 +3,10 @@ package simc
 import (
 	"errors"
 	"fmt"
-	"log/slog"
-	"reflect"
+	"strconv"
 	"strings"
-	"sync"
 
 	"github.com/RobertsMJ/simc-cloud/backend/simc/internal"
-	"github.com/samber/lo"
 )
 
 var (
@@ -17,173 +14,117 @@ var (
 	ErrInvalidValue    = errors.New("invalid value for type")
 )
 
-type Item struct {
-	Slot                ItemSlot  `json:"slot" simc:"-"`
-	SlotGroup           SlotGroup `json:"slot_group,omitempty" simc:"-"`
-	Name                string    `json:"name,omitempty" simc:"-"`
-	ID                  int       `json:"id" simc:"id"`
-	EnchantID           IDList    `json:"enchant_id,omitempty" simc:"enchant_id,omitempty"`
-	BonusID             IDList    `json:"bonus_id,omitempty" simc:"bonus_id,omitempty"`
-	GemID               IDList    `json:"gem_id,omitempty" simc:"gem_id,omitempty"`
-	ContentTuning       *int      `json:"content_tuning,omitempty" simc:"content_tuning,omitempty"`
-	DropLevel           *int      `json:"drop_level,omitempty" simc:"drop_level,omitempty"`
-	RedirectedBaseStats *int      `json:"redirected_base_stats,omitempty" simc:"redirected_base_stats,omitempty"`
-	CraftedStats        IDList    `json:"crafted_stats,omitempty" simc:"crafted_stats,omitempty"`
-	GemBonusID          IDList    `json:"gem_bonus_id,omitempty" simc:"gem_bonus_id,omitempty"`
-	CraftingQuality     *int      `json:"crafting_quality,omitempty" simc:"crafting_quality,omitempty"`
-	TitanDiscID         *int      `json:"titan_disc_id,omitempty" simc:"titan_disc_id,omitempty"`
-	Equipped            bool      `json:"equipped,omitempty" simc:"-"`
-}
-
-var (
-	_ internal.ValueMarshaler = Item{}
+const (
+	fieldID                  = "id"
+	fieldEnchantID           = "enchant_id"
+	fieldBonusID             = "bonus_id"
+	fieldGemID               = "gem_id"
+	fieldContentTuning       = "content_tuning"
+	fieldDropLevel           = "drop_level"
+	fieldRedirectedBaseStats = "redirected_base_stats"
+	fieldCraftedStats        = "crafted_stats"
+	fieldGemBonusID          = "gem_bonus_id"
+	fieldCraftingQuality     = "crafting_quality"
+	fieldTitanDiscID         = "titan_disc_id"
 )
 
-var itemFieldIdx = sync.OnceValue(internal.IndexSimcFields[Item])
+type Item struct {
+	Slot SlotGroup `json:"slot"`
+	Name string    `json:"name,omitempty"`
+	ID   int       `json:"id"`
 
-func (i Item) GetSlotGroup() SlotGroup {
-	return i.Slot.GetSlotGroup()
+	EnchantID           IDList `json:"enchant_id,omitempty"`
+	BonusID             IDList `json:"bonus_id,omitempty"`
+	GemID               IDList `json:"gem_id,omitempty"`
+	ContentTuning       int    `json:"content_tuning,omitempty"`
+	DropLevel           int    `json:"drop_level,omitempty"`
+	RedirectedBaseStats int    `json:"redirected_base_stats,omitempty"`
+	CraftedStats        IDList `json:"crafted_stats,omitempty"`
+	GemBonusID          IDList `json:"gem_bonus_id,omitempty"`
+	CraftingQuality     int    `json:"crafting_quality,omitempty"`
+	TitanDiscID         int    `json:"titan_disc_id,omitempty"`
 }
 
-func (i *Item) UnmarshalStatement(s internal.Statement) error {
-	if i == nil {
-		return fmt.Errorf("character unmarshal: %w", internal.ErrUnmarshalIntoNilPtr)
+func newItem(s internal.Statement) (Item, error) {
+	var i Item
+	var err error
+	if slot, err := NewItemSlot(s.Key); err != nil {
+		return Item{}, err
+	} else {
+		i.Slot = slot.Group()
 	}
-
-	slot, ok := ItemSlotFromString(s.Key)
-	if !ok {
-		return ErrInvalidItemSlot
-	}
-	i.Slot = slot
-	i.SlotGroup = i.Slot.GetSlotGroup()
 	i.Name = s.Comment
-	i.Equipped = !s.Disabled
 
-	vals := lo.Map(lo.Filter(lo.Map(strings.Split(s.Value, ","), func(v string, _ int) string {
-		return strings.TrimSpace(v)
-	}), func(v string, _ int) bool {
-		return v != ""
-	}), func(v string, _ int) Parameter {
-		return NewParameter(v)
-	})
-
-	fields := itemFieldIdx()
-	for _, v := range vals {
-		idx, ok := fields[v.Key]
-		if !ok {
-			slog.Debug("attempted to assign unmapped field to an item", "key", v.Key, "value", v.Value)
-			continue
+	for _, kv := range strings.Split(s.Value, ",") {
+		k, v, _ := strings.Cut(kv, "=")
+		switch k {
+		case fieldID:
+			i.ID, err = strconv.Atoi(v)
+		case fieldEnchantID:
+			i.EnchantID, err = NewIDList(v)
+		case fieldBonusID:
+			i.BonusID, err = NewIDList(v)
+		case fieldGemID:
+			i.GemID, err = NewIDList(v)
+		case fieldContentTuning:
+			i.ContentTuning, err = strconv.Atoi(v)
+		case fieldDropLevel:
+			i.DropLevel, err = strconv.Atoi(v)
+		case fieldRedirectedBaseStats:
+			i.RedirectedBaseStats, err = strconv.Atoi(v)
+		case fieldCraftedStats:
+			i.CraftedStats, err = NewIDList(v)
+		case fieldGemBonusID:
+			i.GemBonusID, err = NewIDList(v)
+		case fieldCraftingQuality:
+			i.CraftingQuality, err = strconv.Atoi(v)
+		case fieldTitanDiscID:
+			i.TitanDiscID, err = strconv.Atoi(v)
 		}
-
-		field := reflect.ValueOf(i).Elem().Field(idx)
-		if err := internal.AssignToField(field, v.Value); err != nil {
-			return fmt.Errorf("item unmarshal into field(%v): %w", s.Key, err)
+		if err != nil {
+			return Item{}, fmt.Errorf("item %s: %w", k, err)
 		}
 	}
-	return nil
+
+	return i, nil
 }
 
 func (i Item) MarshalSimc() (string, error) {
-	res := []string{}
-	// if i.Name != "" {
-	// 	res = append(res, fmt.Sprintf("# %s", i.Name))
-	// }
-
-	itemParams := []string{
+	res := []string{
 		fmt.Sprintf(`%s=`, i.Slot),
+		fmt.Sprintf(`id=%d`, i.ID),
 	}
 
-	fields, err := internal.MarshalFields(i)
-	if err != nil {
-		return "", err
+	if len(i.EnchantID) > 0 {
+		res = append(res, fmt.Sprintf(`%s=%s`, fieldEnchantID, i.EnchantID.MarshalSimc()))
+	}
+	if len(i.BonusID) > 0 {
+		res = append(res, fmt.Sprintf(`%s=%s`, fieldBonusID, i.BonusID.MarshalSimc()))
+	}
+	if len(i.GemID) > 0 {
+		res = append(res, fmt.Sprintf(`%s=%s`, fieldGemID, i.GemID.MarshalSimc()))
+	}
+	if i.ContentTuning != 0 {
+		res = append(res, fmt.Sprintf(`%s=%d`, fieldContentTuning, i.ContentTuning))
+	}
+	if i.DropLevel != 0 {
+		res = append(res, fmt.Sprintf(`%s=%d`, fieldDropLevel, i.DropLevel))
+	}
+	if i.RedirectedBaseStats != 0 {
+		res = append(res, fmt.Sprintf(`%s=%d`, fieldRedirectedBaseStats, i.RedirectedBaseStats))
+	}
+	if len(i.CraftedStats) > 0 {
+		res = append(res, fmt.Sprintf(`%s=%s`, fieldCraftedStats, i.CraftedStats.MarshalSimc()))
+	}
+	if len(i.GemBonusID) > 0 {
+		res = append(res, fmt.Sprintf(`%s=%s`, fieldGemBonusID, i.GemBonusID.MarshalSimc()))
+	}
+	if i.CraftingQuality != 0 {
+		res = append(res, fmt.Sprintf(`%s=%d`, fieldCraftingQuality, i.CraftingQuality))
+	}
+	if i.TitanDiscID != 0 {
+		res = append(res, fmt.Sprintf(`%s=%d`, fieldTitanDiscID, i.TitanDiscID))
 	}
 
-	itemParams = append(itemParams, fields...)
-	joinedItem := strings.Join(itemParams, ",")
-	if !i.Equipped {
-		joinedItem = fmt.Sprintf("# %s", joinedItem)
-	}
-
-	res = append(res, joinedItem)
-
-	return strings.Join(res, "\n"), nil
-}
-
-type ItemSlot string
-
-const (
-	ItemSlotHead     ItemSlot = "head"
-	ItemSlotNeck     ItemSlot = "neck"
-	ItemSlotShoulder ItemSlot = "shoulder"
-	ItemSlotBack     ItemSlot = "back"
-	ItemSlotChest    ItemSlot = "chest"
-	ItemSlotWrist    ItemSlot = "wrist"
-	ItemSlotHands    ItemSlot = "hands"
-	ItemSlotWaist    ItemSlot = "waist"
-	ItemSlotLegs     ItemSlot = "legs"
-	ItemSlotFeet     ItemSlot = "feet"
-	ItemSlotFinger1  ItemSlot = "finger1"
-	ItemSlotFinger2  ItemSlot = "finger2"
-	ItemSlotTrinket1 ItemSlot = "trinket1"
-	ItemSlotTrinket2 ItemSlot = "trinket2"
-	ItemSlotMainHand ItemSlot = "main_hand"
-	ItemSlotOffHand  ItemSlot = "off_hand"
-)
-
-func ItemSlotFromString(s string) (ItemSlot, bool) {
-	switch ItemSlot(s) {
-	case ItemSlotHead,
-		ItemSlotNeck,
-		ItemSlotShoulder,
-		ItemSlotBack,
-		ItemSlotChest,
-		ItemSlotWrist,
-		ItemSlotHands,
-		ItemSlotWaist,
-		ItemSlotLegs,
-		ItemSlotFeet,
-		ItemSlotFinger1,
-		ItemSlotFinger2,
-		ItemSlotTrinket1,
-		ItemSlotTrinket2,
-		ItemSlotMainHand,
-		ItemSlotOffHand:
-		return ItemSlot(s), true
-	default:
-		return "", false
-	}
-}
-
-func isItemKey(key string) bool {
-	_, ok := ItemSlotFromString(key)
-	return ok
-}
-
-type SlotGroup string
-
-const (
-	SlotGroupHead     SlotGroup = SlotGroup(ItemSlotHead)
-	SlotGroupNeck     SlotGroup = SlotGroup(ItemSlotNeck)
-	SlotGroupShoulder SlotGroup = SlotGroup(ItemSlotShoulder)
-	SlotGroupBack     SlotGroup = SlotGroup(ItemSlotBack)
-	SlotGroupChest    SlotGroup = SlotGroup(ItemSlotChest)
-	SlotGroupWrist    SlotGroup = SlotGroup(ItemSlotWrist)
-	SlotGroupHands    SlotGroup = SlotGroup(ItemSlotHands)
-	SlotGroupWaist    SlotGroup = SlotGroup(ItemSlotWaist)
-	SlotGroupLegs     SlotGroup = SlotGroup(ItemSlotLegs)
-	SlotGroupFeet     SlotGroup = SlotGroup(ItemSlotFeet)
-	SlotGroupFinger   SlotGroup = "finger"
-	SlotGroupTrinket  SlotGroup = "trinket"
-	SlotGroupMainHand SlotGroup = SlotGroup(ItemSlotMainHand)
-	SlotGroupOffHand  SlotGroup = SlotGroup(ItemSlotOffHand)
-)
-
-func (is ItemSlot) GetSlotGroup() SlotGroup {
-	switch is {
-	case ItemSlotTrinket1, ItemSlotTrinket2:
-		return SlotGroupTrinket
-	case ItemSlotFinger1, ItemSlotFinger2:
-		return SlotGroupFinger
-	}
-	return SlotGroup(is)
+	return strings.Join(res, ","), nil
 }

@@ -15,7 +15,6 @@ func TestIDValueTestSuite(t *testing.T) {
 }
 
 func (s *IDValueTestSuite) TestMarshalSimc_IDValue() {
-	// Test implementation
 	idValue := IDValue{ID: 1, Value: 2}
 	result, err := idValue.MarshalSimc()
 	s.NoError(err)
@@ -23,15 +22,12 @@ func (s *IDValueTestSuite) TestMarshalSimc_IDValue() {
 }
 
 func (s *IDValueTestSuite) TestUnmarshalSimc_IDValue() {
-	// Test implementation
-	idValue := IDValue{}
-	err := idValue.UnmarshalSimc("1:2")
+	idValue, err := NewIDValue("1:2")
 	s.NoError(err)
 	s.Equal(IDValue{ID: 1, Value: 2}, idValue)
 }
 
 func (s *IDValueTestSuite) TestMarshalSimc_IDValueList() {
-	// Test implementation
 	idList := IDValueList{{ID: 1, Value: 2}, {ID: 3, Value: 4}}
 	result, err := idList.MarshalSimc()
 	s.NoError(err)
@@ -39,9 +35,7 @@ func (s *IDValueTestSuite) TestMarshalSimc_IDValueList() {
 }
 
 func (s *IDValueTestSuite) TestUnmarshalSimc_IDValueList() {
-	// Test implementation
-	idList := IDValueList{}
-	err := idList.UnmarshalSimc("1:2/3:4")
+	idList, err := NewIDValueList("1:2/3:4")
 	s.NoError(err)
 	s.Equal(IDValueList{{ID: 1, Value: 2}, {ID: 3, Value: 4}}, idList)
 }

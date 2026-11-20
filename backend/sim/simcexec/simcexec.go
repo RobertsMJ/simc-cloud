@@ -94,8 +94,7 @@ func (s SimcExec) Run(ctx context.Context, in sim.Input) (sim.Output, error) {
 			return sim.Output{}, fmt.Errorf("simc cancelled: %w", ctxErr)
 		}
 
-		var exitErr *exec.ExitError
-		if errors.As(err, &exitErr) {
+		if exitErr, ok := errors.AsType[*exec.ExitError](err); ok {
 			return sim.Output{}, &ExecError{ExitCode: exitErr.ExitCode(), Stderr: stderr.String(), Err: err}
 		}
 		return sim.Output{}, fmt.Errorf("wait for simc: %w", err)

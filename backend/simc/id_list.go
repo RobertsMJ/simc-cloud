@@ -1,46 +1,37 @@
 package simc
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 
-	"github.com/RobertsMJ/simc-cloud/backend/simc/internal"
 	"github.com/samber/lo"
 )
 
 // IDList represents a list of IDs joined by '/'
 type IDList []int
 
-var (
-	_ internal.ValueMarshaler   = IDList(nil)
-	_ internal.ValueUnmarshaler = (*IDList)(nil)
-)
-
-func (i IDList) MarshalSimc() (string, error) {
+func (i IDList) MarshalSimc() string {
 	return strings.Join(lo.Map(i, func(id int, _ int) string {
 		return strconv.Itoa(id)
-	}), "/"), nil
+	}), "/")
 }
 
-func (i *IDList) UnmarshalSimc(value string) error {
-	if i == nil {
-		return fmt.Errorf("idlist unmarshal: %w", internal.ErrUnmarshalIntoNilPtr)
-	}
+func NewIDList(value string) (IDList, error) {
+	i := make([]int, 0)
 
 	if value == "" {
-		return nil
+		return i, nil
 	}
 
-	res, err := lo.MapErr(
+	if res, err := lo.MapErr(
 		strings.Split(value, "/"),
 		func(s string, _ int) (int, error) {
 			return strconv.Atoi(s)
 		},
-	)
-	if err != nil {
-		return err
+	); err != nil {
+		return nil, err
+	} else {
+		i = append(i, res...)
 	}
-	*i = append(*i, res...)
-	return nil
+	return i, nil
 }

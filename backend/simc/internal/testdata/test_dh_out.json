@@ -9,11 +9,10 @@
     "region": "us",
     "server": "illidan"
   },
-  "loadout": {
+  "equipped": {
     "items": {
       "back": {
         "slot": "back",
-        "slot_group": "back",
         "name": "Rigid Scale Greatcloak (289)",
         "id": 258575,
         "bonus_id": [
@@ -22,12 +21,10 @@
           13577,
           12699,
           12806
-        ],
-        "equipped": true
+        ]
       },
       "chest": {
         "slot": "chest",
-        "slot_group": "chest",
         "name": "Devouring Reaver's Engine (289)",
         "id": 250036,
         "enchant_id": [
@@ -39,12 +36,10 @@
           6652,
           13575,
           12806
-        ],
-        "equipped": true
+        ]
       },
       "feet": {
         "slot": "feet",
-        "slot_group": "feet",
         "name": "Boots of Burning Focus (289)",
         "id": 258577,
         "enchant_id": [
@@ -56,12 +51,10 @@
           13577,
           12699,
           12806
-        ],
-        "equipped": true
+        ]
       },
       "finger1": {
-        "slot": "finger1",
-        "slot_group": "finger",
+        "slot": "finger",
         "name": "Platinum Star Band (289)",
         "id": 193708,
         "enchant_id": [
@@ -76,12 +69,10 @@
         ],
         "gem_id": [
           240983
-        ],
-        "equipped": true
+        ]
       },
       "finger2": {
-        "slot": "finger2",
-        "slot_group": "finger",
+        "slot": "finger",
         "name": "Masterwork Sin'dorei Band (285)",
         "id": 240949,
         "enchant_id": [
@@ -103,12 +94,10 @@
           36,
           49
         ],
-        "crafting_quality": 5,
-        "equipped": true
+        "crafting_quality": 5
       },
       "hands": {
         "slot": "hands",
-        "slot_group": "hands",
         "name": "Devouring Reaver's Essence Grips (276)",
         "id": 250034,
         "bonus_id": [
@@ -117,12 +106,10 @@
           13337,
           13574,
           12798
-        ],
-        "equipped": true
+        ]
       },
       "head": {
         "slot": "head",
-        "slot_group": "head",
         "name": "Spellsnap Shadowmask (289)",
         "id": 251109,
         "enchant_id": [
@@ -135,12 +122,10 @@
           13577,
           12699,
           12806
-        ],
-        "equipped": true
+        ]
       },
       "legs": {
         "slot": "legs",
-        "slot_group": "legs",
         "name": "Devouring Reaver's Pistons (282)",
         "id": 250032,
         "enchant_id": [
@@ -152,12 +137,10 @@
           13339,
           13575,
           12804
-        ],
-        "equipped": true
+        ]
       },
       "main_hand": {
         "slot": "main_hand",
-        "slot_group": "main_hand",
         "name": "Mystakria's Harvester (298)",
         "id": 193717,
         "enchant_id": [
@@ -168,12 +151,10 @@
           6652,
           12701,
           13654
-        ],
-        "equipped": true
+        ]
       },
       "neck": {
         "slot": "neck",
-        "slot_group": "neck",
         "name": "Nocturnal Thorncharm (276)",
         "id": 249626,
         "bonus_id": [
@@ -184,12 +165,10 @@
         "gem_id": [
           240908
         ],
-        "content_tuning": 6015,
-        "equipped": true
+        "content_tuning": 6015
       },
       "off_hand": {
         "slot": "off_hand",
-        "slot_group": "off_hand",
         "name": "Spellbreaker's Warglaive (295)",
         "id": 237840,
         "enchant_id": [
@@ -209,12 +188,10 @@
           49,
           40
         ],
-        "crafting_quality": 5,
-        "equipped": true
+        "crafting_quality": 5
       },
       "shoulder": {
         "slot": "shoulder",
-        "slot_group": "shoulder",
         "name": "Devouring Reaver's Exhaustplates (289)",
         "id": 250031,
         "enchant_id": [
@@ -226,12 +203,10 @@
           13340,
           13574,
           12806
-        ],
-        "equipped": true
+        ]
       },
       "trinket1": {
-        "slot": "trinket1",
-        "slot_group": "trinket",
+        "slot": "trinket",
         "name": "Algeth'ar Puzzle Box (298)",
         "id": 193701,
         "bonus_id": [
@@ -239,24 +214,20 @@
           6652,
           12699,
           13654
-        ],
-        "equipped": true
+        ]
       },
       "trinket2": {
-        "slot": "trinket2",
-        "slot_group": "trinket",
+        "slot": "trinket",
         "name": "Gaze of the Alnseer (285)",
         "id": 249343,
         "bonus_id": [
           6652,
           13334,
           13653
-        ],
-        "equipped": true
+        ]
       },
       "waist": {
         "slot": "waist",
-        "slot_group": "waist",
         "name": "Silvermoon Agent's Utility Belt (285)",
         "id": 244573,
         "bonus_id": [
@@ -275,12 +246,10 @@
           49,
           32
         ],
-        "crafting_quality": 5,
-        "equipped": true
+        "crafting_quality": 5
       },
       "wrist": {
         "slot": "wrist",
-        "slot_group": "wrist",
         "name": "Silvermoon Agent's Deflectors (285)",
         "id": 244576,
         "bonus_id": [
@@ -299,8 +268,7 @@
           32,
           36
         ],
-        "crafting_quality": 5,
-        "equipped": true
+        "crafting_quality": 5
       }
     },
     "talents": {
@@ -318,657 +286,560 @@
       }
     ]
   },
-  "options": {
-    "talents": [
-      {
-        "name": "M+",
-        "value": "CEkAG5bbocFKcv+yIq8fPd6ORZmZmZmZWmxMzMGzwYmBAAAAAAMLGz2MMzAzYb2mZmxYglB2mNzYYWYMmZGzYDAAAYAAAAMzgBAAAgB"
-      },
-      {
-        "name": "Nully",
-        "value": "CEkAG5bbocFKcv+yIq8fPd6ORZmZGzMz2MmZmxYGGzMAAAAAAgZxMjxgBmx2sNzMzyYMsMw2sZGDzCjxMzMzYDAAAAAAAgZGMAAAAM"
-      },
-      {
-        "name": "vael",
-        "value": "CEkAG5bbocFKcv+yIq8fPd6ORZmZmZmZ2MmZmZGzwYmBAAAAAAMbzYMDzM4Bmx2sNzMjxALDsNbmxwsxYMzMG2AAAAAAAAYmBDAAAAD"
-      },
-      {
-        "name": "Raid",
-        "value": "CEkAG5bbocFKcv+yIq8fPd6ORZGMzMzmxMzMmZGGzMAAAAAAgZ5BGz2MMzMbzMjtZbegZYMMWGYbWMjhZjxYmZMsBAAAAAAAwMDGAAAAG"
-      },
-      {
-        "name": "degen",
-        "value": "CEkAG5bbocFKcv+yIq8fPd6ORZmZGzMz2MmZmxMzwYmBAAAAAAMbGz2MMzgZGbz28AzMGjhlB2mFzYY2YMmZGDbAAAAAAAAMzgBAAAgB"
-      },
-      {
-        "name": "Raid Cleave",
-        "value": "CEkAG5bbocFKcv+yIq8fPd6ORZmZmZmZ2MmZmxMzwYmBAAAAAAMLPwY2mhZmZbMjtZbMDjhxyAbzmZMMbMGzMjhNAAAAAAAAmZwAAAAwA"
-      },
-      {
-        "name": "M+ AR",
-        "value": "CEkAG5bbocFKcv+yIq8fPd6ORZmZmZmZ2mxMzMGzwYmBAAAAAAMLGz2MMzMbjZw2MzwYYsMz2MYYstxAzMzYGLAAAAAAAgZGgBAAAgB"
-      }
-    ],
-    "items": {
-      "back": [
-        {
-          "slot": "back",
-          "slot_group": "back",
-          "name": "Potion-Stained Cloak (266)",
-          "id": 193712,
-          "bonus_id": [
-            12795,
-            13440,
-            6652,
-            13577,
-            12699
-          ],
-          "content_tuning": 1279
-        },
-        {
-          "slot": "back",
-          "slot_group": "back",
-          "name": "Rigid Scale Greatcloak (276)",
-          "id": 258575,
-          "bonus_id": [
-            13440,
-            6652,
-            13577,
-            12699,
-            12798
-          ],
-          "content_tuning": 1279
-        },
-        {
-          "slot": "back",
-          "slot_group": "back",
-          "name": "Shroud of the Soulhunter (272)",
-          "id": 251161,
-          "bonus_id": [
-            12801,
-            13440,
-            6652,
-            13577,
-            12699
-          ]
-        },
-        {
-          "slot": "back",
-          "slot_group": "back",
-          "name": "Devouring Reaver's Drape (276)",
-          "id": 250028,
-          "bonus_id": [
-            6652,
-            13440,
-            12802
-          ]
-        },
-        {
-          "slot": "back",
-          "slot_group": "back",
-          "name": "Potion-Stained Cloak (266)",
-          "id": 193712,
-          "bonus_id": [
-            12795,
-            13440,
-            6652,
-            13577,
-            12699
-          ],
-          "content_tuning": 1279
-        }
+  "bags": [
+    {
+      "slot": "head",
+      "name": "Spellsnap Shadowmask (266)",
+      "id": 251109,
+      "bonus_id": [
+        12795,
+        13440,
+        6652,
+        12667,
+        13577,
+        12699
       ],
-      "chest": [
-        {
-          "slot": "chest",
-          "slot_group": "chest",
-          "name": "Devouring Reaver's Engine (276)",
-          "id": 250036,
-          "enchant_id": [
-            7987
-          ],
-          "bonus_id": [
-            6652,
-            13440,
-            13336,
-            13575,
-            12798
-          ]
-        },
-        {
-          "slot": "chest",
-          "slot_group": "chest",
-          "name": "Osseoclad Marrowvest (250)",
-          "id": 249637,
-          "bonus_id": [
-            12786,
-            6652,
-            13577
-          ],
-          "content_tuning": 6015
-        },
-        {
-          "slot": "chest",
-          "slot_group": "chest",
-          "name": "Bloodfeather Chestguard (266)",
-          "id": 258586,
-          "bonus_id": [
-            12795,
-            13440,
-            6652,
-            13577,
-            12699
-          ],
-          "content_tuning": 1279
-        }
+      "content_tuning": 1279
+    },
+    {
+      "slot": "head",
+      "name": "Fetid Vilecrown (266)",
+      "id": 251177,
+      "bonus_id": [
+        12795,
+        13440,
+        6652,
+        12667,
+        13577,
+        12699
       ],
-      "feet": [
-        {
-          "slot": "feet",
-          "slot_group": "feet",
-          "name": "Devouring Reaver's Soul Flatteners (276)",
-          "id": 250035,
-          "bonus_id": [
-            6652,
-            12798
-          ]
-        },
-        {
-          "slot": "feet",
-          "slot_group": "feet",
-          "name": "Nullstrider's Boots (276)",
-          "id": 260372,
-          "enchant_id": [
-            7963
-          ],
-          "bonus_id": [
-            6652,
-            13577,
-            13334,
-            10844,
-            12798
-          ],
-          "content_tuning": 3606,
-          "crafted_stats": [
-            32,
-            49
-          ]
-        }
+      "content_tuning": 1279
+    },
+    {
+      "slot": "head",
+      "name": "Devouring Reaver's Intake (276)",
+      "id": 250033,
+      "enchant_id": [
+        8017
       ],
-      "finger": [
-        {
-          "slot": "finger1",
-          "slot_group": "finger",
-          "name": "Platinum Star Band (276)",
-          "id": 193708,
-          "enchant_id": [
-            7967
-          ],
-          "bonus_id": [
-            13440,
-            6652,
-            13668,
-            12699,
-            12798
-          ],
-          "gem_id": [
-            240983
-          ]
-        }
+      "bonus_id": [
+        6652,
+        12667,
+        13440,
+        13338,
+        13575,
+        12798
+      ]
+    },
+    {
+      "slot": "head",
+      "name": "Osseoclad Saberteeth (250)",
+      "id": 249640,
+      "bonus_id": [
+        12786,
+        6652,
+        12667,
+        13577
       ],
-      "hands": [
-        {
-          "slot": "hands",
-          "slot_group": "hands",
-          "name": "Vaelgor's Fearsome Grasp (266)",
-          "id": 249321,
-          "bonus_id": [
-            6652,
-            13577,
-            13334,
-            12795
-          ]
-        },
-        {
-          "slot": "hands",
-          "slot_group": "hands",
-          "name": "Verdant Tracker's Claws (240)",
-          "id": 256979,
-          "bonus_id": [
-            12779,
-            6652,
-            13577
-          ],
-          "content_tuning": 4240
-        },
-        {
-          "slot": "hands",
-          "slot_group": "hands",
-          "name": "Devouring Reaver's Essence Grips (276)",
-          "id": 250034,
-          "bonus_id": [
-            6652,
-            12798,
-            13337,
-            13574,
-            3161
-          ]
-        },
-        {
-          "slot": "hands",
-          "slot_group": "hands",
-          "name": "Preyseeker's Sleek Gauntlets (246)",
-          "id": 259927,
-          "bonus_id": [
-            12785,
-            6652,
-            13577
-          ],
-          "content_tuning": 5236
-        }
+      "content_tuning": 6015
+    },
+    {
+      "slot": "shoulder",
+      "name": "Devouring Reaver's Exhaustplates (276)",
+      "id": 250031,
+      "enchant_id": [
+        8001
       ],
-      "head": [
-        {
-          "slot": "head",
-          "slot_group": "head",
-          "name": "Spellsnap Shadowmask (266)",
-          "id": 251109,
-          "bonus_id": [
-            12795,
-            13440,
-            6652,
-            12667,
-            13577,
-            12699
-          ],
-          "content_tuning": 1279
-        },
-        {
-          "slot": "head",
-          "slot_group": "head",
-          "name": "Fetid Vilecrown (266)",
-          "id": 251177,
-          "bonus_id": [
-            12795,
-            13440,
-            6652,
-            12667,
-            13577,
-            12699
-          ],
-          "content_tuning": 1279
-        },
-        {
-          "slot": "head",
-          "slot_group": "head",
-          "name": "Devouring Reaver's Intake (276)",
-          "id": 250033,
-          "enchant_id": [
-            8017
-          ],
-          "bonus_id": [
-            6652,
-            12667,
-            13440,
-            13338,
-            13575,
-            12798
-          ]
-        },
-        {
-          "slot": "head",
-          "slot_group": "head",
-          "name": "Osseoclad Saberteeth (250)",
-          "id": 249640,
-          "bonus_id": [
-            12786,
-            6652,
-            12667,
-            13577
-          ],
-          "content_tuning": 6015
-        }
+      "bonus_id": [
+        6652,
+        12798,
+        13440,
+        13340,
+        13574,
+        3161
+      ]
+    },
+    {
+      "slot": "shoulder",
+      "name": "Bloodfeather Mantle (266)",
+      "id": 258581,
+      "bonus_id": [
+        12795,
+        13440,
+        6652,
+        13577,
+        12699
       ],
-      "legs": [
-        {
-          "slot": "legs",
-          "slot_group": "legs",
-          "name": "Devouring Reaver's Pistons (276)",
-          "id": 250032,
-          "enchant_id": [
-            8159
-          ],
-          "bonus_id": [
-            13339,
-            6652,
-            13575,
-            12798
-          ]
-        }
+      "content_tuning": 1279
+    },
+    {
+      "slot": "shoulder",
+      "name": "Devouring Reaver's Exhaustplates (289)",
+      "id": 250031,
+      "enchant_id": [
+        8001
       ],
-      "off_hand": [
-        {
-          "slot": "off_hand",
-          "slot_group": "off_hand",
-          "name": "Grimoire of the Eternal Light (263)",
-          "id": 249276,
-          "bonus_id": [
-            6652,
-            13334,
-            12794
-          ]
-        }
+      "bonus_id": [
+        13340,
+        13440,
+        6652,
+        13574,
+        12806
+      ]
+    },
+    {
+      "slot": "shoulder",
+      "name": "Bloodfeather Mantle (266)",
+      "id": 258581,
+      "bonus_id": [
+        12795,
+        13440,
+        6652,
+        13577,
+        12699
       ],
-      "shoulder": [
-        {
-          "slot": "shoulder",
-          "slot_group": "shoulder",
-          "name": "Devouring Reaver's Exhaustplates (276)",
-          "id": 250031,
-          "enchant_id": [
-            8001
-          ],
-          "bonus_id": [
-            6652,
-            12798,
-            13440,
-            13340,
-            13574,
-            3161
-          ]
-        },
-        {
-          "slot": "shoulder",
-          "slot_group": "shoulder",
-          "name": "Bloodfeather Mantle (266)",
-          "id": 258581,
-          "bonus_id": [
-            12795,
-            13440,
-            6652,
-            13577,
-            12699
-          ],
-          "content_tuning": 1279
-        },
-        {
-          "slot": "shoulder",
-          "slot_group": "shoulder",
-          "name": "Devouring Reaver's Exhaustplates (289)",
-          "id": 250031,
-          "enchant_id": [
-            8001
-          ],
-          "bonus_id": [
-            13340,
-            13440,
-            6652,
-            13574,
-            12806
-          ]
-        },
-        {
-          "slot": "shoulder",
-          "slot_group": "shoulder",
-          "name": "Bloodfeather Mantle (266)",
-          "id": 258581,
-          "bonus_id": [
-            12795,
-            13440,
-            6652,
-            13577,
-            12699
-          ],
-          "content_tuning": 1279
-        },
-        {
-          "slot": "shoulder",
-          "slot_group": "shoulder",
-          "name": "Bloodfeather Mantle (266)",
-          "id": 258581,
-          "bonus_id": [
-            12795,
-            13440,
-            43,
-            13577,
-            12699
-          ],
-          "content_tuning": 1279
-        },
-        {
-          "slot": "shoulder",
-          "slot_group": "shoulder",
-          "name": "Blooming Barklight Spaulders (266)",
-          "id": 249333,
-          "bonus_id": [
-            6652,
-            13577,
-            13334,
-            12795
-          ],
-          "content_tuning": 4240
-        }
+      "content_tuning": 1279
+    },
+    {
+      "slot": "shoulder",
+      "name": "Bloodfeather Mantle (266)",
+      "id": 258581,
+      "bonus_id": [
+        12795,
+        13440,
+        43,
+        13577,
+        12699
       ],
-      "trinket": [
-        {
-          "slot": "trinket1",
-          "slot_group": "trinket",
-          "name": "Tangle of Vibrant Vines (259)",
-          "id": 252957,
-          "bonus_id": [
-            12793,
-            6652
-          ],
-          "content_tuning": 6015
-        },
-        {
-          "slot": "trinket1",
-          "slot_group": "trinket",
-          "name": "Sealed Chaos Urn (259)",
-          "id": 251787,
-          "bonus_id": [
-            12793,
-            6652
-          ],
-          "content_tuning": 6015
-        },
-        {
-          "slot": "trinket1",
-          "slot_group": "trinket",
-          "name": "Drum of Renewed Bonds (246)",
-          "id": 248583,
-          "bonus_id": [
-            13183,
-            12785,
-            42,
-            6652
-          ],
-          "content_tuning": 5236
-        },
-        {
-          "slot": "trinket1",
-          "slot_group": "trinket",
-          "name": "Glorious Crusader's Keepsake (259)",
-          "id": 251792,
-          "bonus_id": [
-            12793,
-            6652
-          ],
-          "content_tuning": 6015
-        },
-        {
-          "slot": "trinket1",
-          "slot_group": "trinket",
-          "name": "Crucible of Erratic Energies (263)",
-          "id": 264507,
-          "bonus_id": [
-            12790
-          ],
-          "content_tuning": 4240
-        },
-        {
-          "slot": "trinket1",
-          "slot_group": "trinket",
-          "name": "Solarflare Prism (289)",
-          "id": 252420,
-          "bonus_id": [
-            13440,
-            40,
-            12699,
-            12806
-          ]
-        },
-        {
-          "slot": "trinket1",
-          "slot_group": "trinket",
-          "name": "Solarflare Prism (266)",
-          "id": 252420,
-          "bonus_id": [
-            12795,
-            13440,
-            6652,
-            12699
-          ],
-          "content_tuning": 1279
-        },
-        {
-          "slot": "trinket1",
-          "slot_group": "trinket",
-          "name": "Lost Idol of the Hash'ey (263)",
-          "id": 251783,
-          "bonus_id": [
-            6652,
-            12794
-          ],
-          "content_tuning": 6011
-        },
-        {
-          "slot": "trinket1",
-          "slot_group": "trinket",
-          "name": "Matrix Restabilizer (276)",
-          "id": 171646,
-          "bonus_id": [
-            8902,
-            7756,
-            12699,
-            40,
-            12798
-          ],
-          "content_tuning": 806
-        },
-        {
-          "slot": "trinket1",
-          "slot_group": "trinket",
-          "name": "Sylvan Wakrapuku (250)",
-          "id": 251784,
-          "bonus_id": [
-            12786,
-            41,
-            6652
-          ],
-          "content_tuning": 6015
-        },
-        {
-          "slot": "trinket1",
-          "slot_group": "trinket",
-          "name": "Algeth'ar Puzzle Box (276)",
-          "id": 193701,
-          "bonus_id": [
-            13440,
-            6652,
-            12699,
-            12798
-          ],
-          "content_tuning": 1279
-        }
+      "content_tuning": 1279
+    },
+    {
+      "slot": "shoulder",
+      "name": "Blooming Barklight Spaulders (266)",
+      "id": 249333,
+      "bonus_id": [
+        6652,
+        13577,
+        13334,
+        12795
       ],
-      "waist": [
-        {
-          "slot": "waist",
-          "slot_group": "waist",
-          "name": "Devouring Reaver's Emblem (276)",
-          "id": 250030,
-          "bonus_id": [
-            13334,
-            6652,
-            12667,
-            12798
-          ]
-        }
+      "content_tuning": 4240
+    },
+    {
+      "slot": "back",
+      "name": "Potion-Stained Cloak (266)",
+      "id": 193712,
+      "bonus_id": [
+        12795,
+        13440,
+        6652,
+        13577,
+        12699
       ],
-      "wrist": [
-        {
-          "slot": "wrist",
-          "slot_group": "wrist",
-          "name": "Devouring Reaver's Support Straps (272)",
-          "id": 250029,
-          "bonus_id": [
-            6652,
-            12667,
-            12801,
-            13440,
-            3157
-          ]
-        },
-        {
-          "slot": "wrist",
-          "slot_group": "wrist",
-          "name": "Custodial Cuffs (263)",
-          "id": 251103,
-          "bonus_id": [
-            13440,
-            6652,
-            12667,
-            13577,
-            12699,
-            12794
-          ],
-          "content_tuning": 1279
-        },
-        {
-          "slot": "wrist",
-          "slot_group": "wrist",
-          "name": "Chewed Leather Wristguards (272)",
-          "id": 50264,
-          "bonus_id": [
-            12801,
-            13440,
-            6652,
-            12667,
-            13577,
-            12699
-          ]
-        }
+      "content_tuning": 1279
+    },
+    {
+      "slot": "back",
+      "name": "Rigid Scale Greatcloak (276)",
+      "id": 258575,
+      "bonus_id": [
+        13440,
+        6652,
+        13577,
+        12699,
+        12798
+      ],
+      "content_tuning": 1279
+    },
+    {
+      "slot": "back",
+      "name": "Shroud of the Soulhunter (272)",
+      "id": 251161,
+      "bonus_id": [
+        12801,
+        13440,
+        6652,
+        13577,
+        12699
+      ]
+    },
+    {
+      "slot": "back",
+      "name": "Devouring Reaver's Drape (276)",
+      "id": 250028,
+      "bonus_id": [
+        6652,
+        13440,
+        12802
+      ]
+    },
+    {
+      "slot": "back",
+      "name": "Potion-Stained Cloak (266)",
+      "id": 193712,
+      "bonus_id": [
+        12795,
+        13440,
+        6652,
+        13577,
+        12699
+      ],
+      "content_tuning": 1279
+    },
+    {
+      "slot": "chest",
+      "name": "Devouring Reaver's Engine (276)",
+      "id": 250036,
+      "enchant_id": [
+        7987
+      ],
+      "bonus_id": [
+        6652,
+        13440,
+        13336,
+        13575,
+        12798
+      ]
+    },
+    {
+      "slot": "chest",
+      "name": "Osseoclad Marrowvest (250)",
+      "id": 249637,
+      "bonus_id": [
+        12786,
+        6652,
+        13577
+      ],
+      "content_tuning": 6015
+    },
+    {
+      "slot": "chest",
+      "name": "Bloodfeather Chestguard (266)",
+      "id": 258586,
+      "bonus_id": [
+        12795,
+        13440,
+        6652,
+        13577,
+        12699
+      ],
+      "content_tuning": 1279
+    },
+    {
+      "slot": "wrist",
+      "name": "Devouring Reaver's Support Straps (272)",
+      "id": 250029,
+      "bonus_id": [
+        6652,
+        12667,
+        12801,
+        13440,
+        3157
+      ]
+    },
+    {
+      "slot": "wrist",
+      "name": "Custodial Cuffs (263)",
+      "id": 251103,
+      "bonus_id": [
+        13440,
+        6652,
+        12667,
+        13577,
+        12699,
+        12794
+      ],
+      "content_tuning": 1279
+    },
+    {
+      "slot": "wrist",
+      "name": "Chewed Leather Wristguards (272)",
+      "id": 50264,
+      "bonus_id": [
+        12801,
+        13440,
+        6652,
+        12667,
+        13577,
+        12699
+      ]
+    },
+    {
+      "slot": "hands",
+      "name": "Vaelgor's Fearsome Grasp (266)",
+      "id": 249321,
+      "bonus_id": [
+        6652,
+        13577,
+        13334,
+        12795
+      ]
+    },
+    {
+      "slot": "hands",
+      "name": "Verdant Tracker's Claws (240)",
+      "id": 256979,
+      "bonus_id": [
+        12779,
+        6652,
+        13577
+      ],
+      "content_tuning": 4240
+    },
+    {
+      "slot": "hands",
+      "name": "Devouring Reaver's Essence Grips (276)",
+      "id": 250034,
+      "bonus_id": [
+        6652,
+        12798,
+        13337,
+        13574,
+        3161
+      ]
+    },
+    {
+      "slot": "hands",
+      "name": "Preyseeker's Sleek Gauntlets (246)",
+      "id": 259927,
+      "bonus_id": [
+        12785,
+        6652,
+        13577
+      ],
+      "content_tuning": 5236
+    },
+    {
+      "slot": "waist",
+      "name": "Devouring Reaver's Emblem (276)",
+      "id": 250030,
+      "bonus_id": [
+        13334,
+        6652,
+        12667,
+        12798
+      ]
+    },
+    {
+      "slot": "legs",
+      "name": "Devouring Reaver's Pistons (276)",
+      "id": 250032,
+      "enchant_id": [
+        8159
+      ],
+      "bonus_id": [
+        13339,
+        6652,
+        13575,
+        12798
+      ]
+    },
+    {
+      "slot": "feet",
+      "name": "Devouring Reaver's Soul Flatteners (276)",
+      "id": 250035,
+      "bonus_id": [
+        6652,
+        12798
+      ]
+    },
+    {
+      "slot": "feet",
+      "name": "Nullstrider's Boots (276)",
+      "id": 260372,
+      "enchant_id": [
+        7963
+      ],
+      "bonus_id": [
+        6652,
+        13577,
+        13334,
+        10844,
+        12798
+      ],
+      "content_tuning": 3606,
+      "crafted_stats": [
+        32,
+        49
+      ]
+    },
+    {
+      "slot": "finger",
+      "name": "Platinum Star Band (276)",
+      "id": 193708,
+      "enchant_id": [
+        7967
+      ],
+      "bonus_id": [
+        13440,
+        6652,
+        13668,
+        12699,
+        12798
+      ],
+      "gem_id": [
+        240983
+      ]
+    },
+    {
+      "slot": "trinket",
+      "name": "Tangle of Vibrant Vines (259)",
+      "id": 252957,
+      "bonus_id": [
+        12793,
+        6652
+      ],
+      "content_tuning": 6015
+    },
+    {
+      "slot": "trinket",
+      "name": "Sealed Chaos Urn (259)",
+      "id": 251787,
+      "bonus_id": [
+        12793,
+        6652
+      ],
+      "content_tuning": 6015
+    },
+    {
+      "slot": "trinket",
+      "name": "Drum of Renewed Bonds (246)",
+      "id": 248583,
+      "bonus_id": [
+        13183,
+        12785,
+        42,
+        6652
+      ],
+      "content_tuning": 5236
+    },
+    {
+      "slot": "trinket",
+      "name": "Glorious Crusader's Keepsake (259)",
+      "id": 251792,
+      "bonus_id": [
+        12793,
+        6652
+      ],
+      "content_tuning": 6015
+    },
+    {
+      "slot": "trinket",
+      "name": "Crucible of Erratic Energies (263)",
+      "id": 264507,
+      "bonus_id": [
+        12790
+      ],
+      "content_tuning": 4240
+    },
+    {
+      "slot": "trinket",
+      "name": "Solarflare Prism (289)",
+      "id": 252420,
+      "bonus_id": [
+        13440,
+        40,
+        12699,
+        12806
+      ]
+    },
+    {
+      "slot": "trinket",
+      "name": "Solarflare Prism (266)",
+      "id": 252420,
+      "bonus_id": [
+        12795,
+        13440,
+        6652,
+        12699
+      ],
+      "content_tuning": 1279
+    },
+    {
+      "slot": "trinket",
+      "name": "Lost Idol of the Hash'ey (263)",
+      "id": 251783,
+      "bonus_id": [
+        6652,
+        12794
+      ],
+      "content_tuning": 6011
+    },
+    {
+      "slot": "trinket",
+      "name": "Matrix Restabilizer (276)",
+      "id": 171646,
+      "bonus_id": [
+        8902,
+        7756,
+        12699,
+        40,
+        12798
+      ],
+      "content_tuning": 806
+    },
+    {
+      "slot": "trinket",
+      "name": "Sylvan Wakrapuku (250)",
+      "id": 251784,
+      "bonus_id": [
+        12786,
+        41,
+        6652
+      ],
+      "content_tuning": 6015
+    },
+    {
+      "slot": "trinket",
+      "name": "Algeth'ar Puzzle Box (276)",
+      "id": 193701,
+      "bonus_id": [
+        13440,
+        6652,
+        12699,
+        12798
+      ],
+      "content_tuning": 1279
+    },
+    {
+      "slot": "off_hand",
+      "name": "Grimoire of the Eternal Light (263)",
+      "id": 249276,
+      "bonus_id": [
+        6652,
+        13334,
+        12794
       ]
     }
-  },
-  "config": {
-    "precision": 0
-  },
-  "extra": [
+  ],
+  "savedTalents": [
     {
-      "key": "professions",
-      "value": "herbalism=88/mining=84"
+      "name": "M+",
+      "value": "CEkAG5bbocFKcv+yIq8fPd6ORZmZmZmZWmxMzMGzwYmBAAAAAAMLGz2MMzAzYb2mZmxYglB2mNzYYWYMmZGzYDAAAYAAAAMzgBAAAgB"
     },
     {
-      "key": "loot_spec",
-      "value": "havoc"
+      "name": "Nully",
+      "value": "CEkAG5bbocFKcv+yIq8fPd6ORZmZGzMz2MmZmxYGGzMAAAAAAgZxMjxgBmx2sNzMzyYMsMw2sZGDzCjxMzMzYDAAAAAAAgZGMAAAAM"
     },
     {
-      "key": "catalyst_currencies",
-      "value": "3269:8/3378:4/2813:8/3116:8"
+      "name": "vael",
+      "value": "CEkAG5bbocFKcv+yIq8fPd6ORZmZmZmZ2MmZmZGzwYmBAAAAAAMbzYMDzM4Bmx2sNzMjxALDsNbmxwsxYMzMG2AAAAAAAAYmBDAAAAD"
     },
     {
-      "key": "upgrade_currencies",
-      "value": "c:1792:904/c:2122:7/c:3343:15/c:3347:7/c:3383:15/c:3345:10/c:3341:15/i:232875:4"
+      "name": "Raid",
+      "value": "CEkAG5bbocFKcv+yIq8fPd6ORZGMzMzmxMzMmZGGzMAAAAAAgZ5BGz2MMzMbzMjtZbegZYMMWGYbWMjhZjxYmZMsBAAAAAAAwMDGAAAAG"
     },
     {
-      "key": "slot_high_watermarks",
-      "value": "0:289:289/1:276:285/2:289:289/3:289:289/4:285:285/5:282:282/6:289:289/7:285:285/8:276:276/9:285:285/10:289:289/11:289:289/12:0:298/13:42:233/14:298:298/15:295:295/16:263:263"
+      "name": "degen",
+      "value": "CEkAG5bbocFKcv+yIq8fPd6ORZmZGzMz2MmZmxMzwYmBAAAAAAMbGz2MMzgZGbz28AzMGjhlB2mFzYY2YMmZGDbAAAAAAAAMzgBAAAgB"
     },
     {
-      "key": "upgrade_achievements",
-      "value": "19326/19397/19398/19577/19578/40107/40115/40118/40942/40943/40944/40945/41886/41887/41888/41892/42767/42768/42769/42770/61809"
+      "name": "Raid Cleave",
+      "value": "CEkAG5bbocFKcv+yIq8fPd6ORZmZmZmZ2MmZmxMzwYmBAAAAAAMLPwY2mhZmZbMjtZbMDjhxyAbzmZMMbMGzMjhNAAAAAAAAmZwAAAAwA"
+    },
+    {
+      "name": "M+ AR",
+      "value": "CEkAG5bbocFKcv+yIq8fPd6ORZmZmZmZ2mxMzMGzwYmBAAAAAAMLGz2MMzMbjZw2MzwYYsMz2MYYstxAzMzYGLAAAAAAAgZGgBAAAgB"
     }
   ]
 }

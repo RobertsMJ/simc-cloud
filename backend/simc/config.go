@@ -3,19 +3,21 @@ package simc
 import (
 	"fmt"
 	"strings"
-
-	"github.com/RobertsMJ/simc-cloud/backend/simc/internal"
 )
 
 type Config struct {
-	Precision SimPrecision `json:"precision" simc:"target_error"`
+	Precision SimPrecision `json:"precision"`
 }
 
 func (c *Config) MarshalSimc() (string, error) {
-	fields, err := internal.MarshalFields(c)
-	if err != nil {
+	fields := []string{}
+
+	if precisionStr, err := c.Precision.MarshalSimc(); err != nil {
 		return "", err
+	} else {
+		fields = append(fields, fmt.Sprintf("target_error=%s", precisionStr))
 	}
+
 	return strings.Join(fields, "\n"), nil
 }
 

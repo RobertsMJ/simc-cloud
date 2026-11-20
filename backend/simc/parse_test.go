@@ -10,20 +10,20 @@ import (
 	"github.com/stretchr/testify/suite"
 )
 
-type ProfileTestSuite struct {
+type ParseTestSuite struct {
 	suite.Suite
 }
 
-func TestProfileTestSuite(t *testing.T) {
-	suite.Run(t, new(ProfileTestSuite))
+func TestParseTestSuite(t *testing.T) {
+	suite.Run(t, new(ParseTestSuite))
 }
 
-func (s *ProfileTestSuite) TestNewProfile_DH() {
+func (s *ParseTestSuite) TestNewProfile_DH() {
 
 	input, err := os.ReadFile("internal/testdata/test_dh_in.simc")
 	s.NoError(err)
 
-	res, err := NewProfile(bytes.NewReader(input))
+	res, err := ParseAddonExport(bytes.NewReader(input))
 	s.NoError(err)
 	s.NotNil(res)
 
@@ -34,12 +34,12 @@ func (s *ProfileTestSuite) TestNewProfile_DH() {
 
 }
 
-func (s *ProfileTestSuite) TestNewProfile_Warrior() {
+func (s *ParseTestSuite) TestNewProfile_Warrior() {
 
 	input, err := os.ReadFile("internal/testdata/test_warrior_in.simc")
 	s.NoError(err)
 
-	res, err := NewProfile(bytes.NewReader(input))
+	res, err := ParseAddonExport(bytes.NewReader(input))
 	s.NoError(err)
 	s.NotNil(res)
 

@@ -9,7 +9,7 @@
     "region": "us",
     "server": "illidan"
   },
-  "baseline": {
+  "base": {
     "items": {
       "back": {
         "slot": "back",
@@ -195,8 +195,8 @@
       }
     ]
   },
-  "options": [
-    {
+  "profilesets": {
+    "option1": {
       "id": "option1",
       "items": {
         "back": {
@@ -381,7 +381,7 @@
         }
       ]
     }
-  ],
+  },
   "config": {
     "precision": 1
   }

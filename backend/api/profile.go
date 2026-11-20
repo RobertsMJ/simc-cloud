@@ -14,11 +14,11 @@ type ProfileRequest struct {
 }
 
 type ProfileResponseBody struct {
-	Profile *simc.Profile `json:"profile" doc:"Parsed simulation profile"`
+	Profile simc.AddonExport `json:"profile" doc:"Parsed simc addon export"`
 }
 
 type ProfileParser interface {
-	Parse(ctx context.Context, raw string) (*simc.Profile, error)
+	Parse(ctx context.Context, raw string) (simc.AddonExport, error)
 }
 
 type ProfileHandler struct {

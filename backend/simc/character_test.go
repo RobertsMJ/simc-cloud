@@ -16,9 +16,9 @@ func TestCharacterTestSuite(t *testing.T) {
 	suite.Run(t, new(CharacterTestSuite))
 }
 
-func (suite *CharacterTestSuite) TestUnmarshalStatements() {
+func (suite *CharacterTestSuite) TestNewCharacter() {
 	input := `
-		demonhunter="Kestdh"
+		demonhunter=Kestdh
 		level=90
 		race=night_elf
 		region=us
@@ -32,7 +32,7 @@ func (suite *CharacterTestSuite) TestUnmarshalStatements() {
 
 	expected := Character{
 		Class:  WowClassDH,
-		Name:   `"Kestdh"`,
+		Name:   "Kestdh",
 		Level:  90,
 		Role:   "attack",
 		Spec:   "havoc",
@@ -41,12 +41,8 @@ func (suite *CharacterTestSuite) TestUnmarshalStatements() {
 		Race:   "night_elf",
 	}
 
-	var actual Character
-	for _, stmt := range statements {
-		err := actual.UnmarshalStatement(stmt)
-		suite.NoError(err)
-	}
-
+	actual, err := NewCharacter(statements)
+	suite.NoError(err)
 	suite.Equal(expected, actual)
 }
 

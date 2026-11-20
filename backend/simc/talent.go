@@ -7,13 +7,18 @@ import (
 	"github.com/RobertsMJ/simc-cloud/backend/simc/internal"
 )
 
-var ErrInvalidTalentStatement = fmt.Errorf("invalid talent statement")
+var (
+	ErrInvalidTalentStatement       = fmt.Errorf("invalid talent statement")
+	ErrInvalidOmniumTalentStatement = fmt.Errorf("invalid omnium talent statement")
+)
 
 const (
 	talentHeaderTemplate = "# Saved Loadout: %s"
 	talentValueTemplate  = "talents=%s"
 	talentKey            = "talents"
 	talentCommentPrefix  = "Saved Loadout: "
+	omniumTalentKey      = "omnium_talents"
+	omniumTalentTemplate = "omnium_talents=%s"
 )
 
 type Talent struct {
@@ -21,25 +26,27 @@ type Talent struct {
 	Value string `json:"value"`
 }
 
-var (
-	_ internal.ValueMarshaler = Talent{}
-)
-
-type OmniumTalents = IDValueList
-
-func (t *Talent) UnmarshalStatement(s internal.Statement) error {
+func newTalent(s internal.Statement) (Talent, error) {
 	if s.Key != talentKey {
-		return ErrInvalidTalentStatement
+		return Talent{}, ErrInvalidTalentStatement
 	}
 
-	t.Name = strings.TrimPrefix(s.Comment, talentCommentPrefix)
-	t.Value = s.Value
-	return nil
+	return Talent{
+		Name:  strings.TrimPrefix(s.Comment, talentCommentPrefix),
+		Value: s.Value,
+	}, nil
 }
 
 func (t Talent) MarshalSimc() (string, error) {
-	return strings.Join([]string{
-		fmt.Sprintf(talentHeaderTemplate, t.Name),
-		fmt.Sprintf(talentValueTemplate, t.Value),
-	}, "\n"), nil
+	return fmt.Sprintf(talentValueTemplate, t.Value), nil
+}
+
+type OmniumTalents = IDValueList
+
+func newOmniumTalents(s internal.Statement) (OmniumTalents, error) {
+	if s.Key != omniumTalentKey {
+		return nil, ErrInvalidOmniumTalentStatement
+	}
+
+	return NewIDValueList(s.Value)
 }

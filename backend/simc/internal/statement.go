@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-// TODO:MJR A simc document is simply a slice of statements
+// A simc document is simply a slice of statements
 // Where each statement is represented as a key-value pair with optional attributes and comments
 // The key is the value before the first =
 // The value is the value after the first =
@@ -16,7 +16,7 @@ import (
 // A leading comment line followed by a statement line attaches that comment to the statement
 // The simulationcraft addon output formats as:
 // 	# Saved Loadout: M+
-// 	# talents=CEkAG5bbocFKcv+yIq8fPd6ORZmZmZmZWmxMzMGzwYmBAAAAAAMLGz2MMzAzYb2mZmxYglB2mNzYYWYMmZGzYDAAAYAAAAMzgBAAAgB
+// 	talents=CEkAG5bbocFKcv+yIq8fPd6ORZmZmZmZWmxMzMGzwYmBAAAAAAMLGz2MMzAzYb2mZmxYglB2mNzYYWYMmZGzYDAAAYAAAAMzgBAAAgB
 // and
 // 	# Spellsnap Shadowmask (289)
 //	head=,id=251109,enchant_id=8017,bonus_id=13440/6652/12667/13577/12699/12806
@@ -27,11 +27,11 @@ import (
 // 	# Devouring Reaver's Intake (276)
 //	# head=,id=250033,enchant_id=8017,bonus_id=6652/12667/13440/13338/13575/12798
 
-type operator string
+type Operator string
 
 type Statement struct {
 	Key      string
-	Operator operator
+	Operator Operator
 	Value    string
 	RawSimc  string
 	Comment  string
@@ -40,8 +40,8 @@ type Statement struct {
 }
 
 const (
-	operatorAssign operator = "="
-	operatorAppend operator = "+="
+	operatorAssign Operator = "="
+	operatorAppend Operator = "+="
 )
 
 // ParseStatements extracts statements from a simc document

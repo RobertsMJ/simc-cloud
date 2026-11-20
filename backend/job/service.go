@@ -7,23 +7,30 @@ import (
 	"time"
 
 	"github.com/RobertsMJ/simc-cloud/backend/models"
+	"github.com/RobertsMJ/simc-cloud/backend/simc"
 	"github.com/RobertsMJ/simc-cloud/backend/transport/queue"
 	"github.com/google/uuid"
 )
 
 type GearsetCounter interface {
-	CountGearsets(baseline models.Gearset, options *models.GearsetOptions) (int, error)
+	CountGearsets(baseline simc.Loadout, options models.Candidates) (int, error)
 }
 
 type Service struct {
 	log            *slog.Logger
 	config         *Config
 	repo           Repo
-	publisher      queue.Publisher[models.GenerateGearsetRequest]
+	publisher      queue.Publisher[models.GenerateGearsetsRequest]
 	gearsetService GearsetCounter
 }
 
-func NewService(log *slog.Logger, config *Config, repo Repo, publisher queue.Publisher[models.GenerateGearsetRequest], gearsetService GearsetCounter) *Service {
+func NewService(
+	log *slog.Logger,
+	config *Config,
+	repo Repo,
+	publisher queue.Publisher[models.GenerateGearsetsRequest],
+	gearsetService GearsetCounter,
+) *Service {
 	return &Service{
 		log:            log,
 		config:         config,
@@ -33,13 +40,9 @@ func NewService(log *slog.Logger, config *Config, repo Repo, publisher queue.Pub
 	}
 }
 
-func (s *Service) CreateJob(ctx context.Context, jobCfg models.SimcJobConfig) (models.Job, error) {
+func (s *Service) CreateJob(ctx context.Context, spec models.JobSpec) (models.Job, error) {
 	// Check that the number of possible gearsets is within acceptable limits
-	if count, err := s.gearsetService.CountGearsets(jobCfg.Baseline, &models.GearsetOptions{
-		Items:   jobCfg.Options.Items,
-		Talents: jobCfg.Options.Talents,
-		Omnium:  jobCfg.Options.Omnium,
-	}); err != nil {
+	if count, err := s.gearsetService.CountGearsets(spec.Base, spec.Options); err != nil {
 		return models.Job{}, err
 	} else if count > s.config.MaxGearsets {
 		return models.Job{}, fmt.Errorf("too many possible gearsets: %d", count)
@@ -53,11 +56,9 @@ func (s *Service) CreateJob(ctx context.Context, jobCfg models.SimcJobConfig) (m
 	}
 
 	// Create the generate gearset request that will be published to the queue
-	gen := models.GenerateGearsetRequest{
-		JobID:     job.ID,
-		Character: jobCfg.Character,
-		Baseline:  jobCfg.Baseline,
-		Config:    jobCfg.Config,
+	gen := models.GenerateGearsetsRequest{
+		JobID: job.ID,
+		Spec:  spec,
 	}
 
 	if err := s.repo.Create(ctx, job); err != nil {
@@ -65,6 +66,7 @@ func (s *Service) CreateJob(ctx context.Context, jobCfg models.SimcJobConfig) (m
 	}
 
 	if err := s.publisher.Publish(ctx, gen); err != nil {
+		// TODO: mark the job as failed in the repository
 		return models.Job{}, err
 	}
 	return job, nil
