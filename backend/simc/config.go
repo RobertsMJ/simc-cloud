@@ -19,6 +19,6 @@ func (c *Config) render() string {
 
 const (
 	SimPrecisionLow  float64 = 1.0
-	SimPrecisionMed          = 0.5
-	SimPrecisionHigh         = 0.1
+	SimPrecisionMed  float64 = 0.5
+	SimPrecisionHigh float64 = 0.1
 )
