@@ -8,11 +8,6 @@ Cloud-native application that runs [SimulationCraft](https://github.com/simulati
 - Produce the minimum amount of code necessary to solve the problem.
 - Code should be grounded in real API contracts.
 
-## Documentation Guidelines
-
-- Code should be self-describing. Comments should not be used unless absolutely necessary. If something requires a comment, it is likely over-complicated.
-- Don't document current implementation progress and don't restate what's directly discoverable by reading the code or directory structure
-
 ## Target architecture
 
 **This section describes the desired end state, not the current code.** Before assuming any piece exists, reference the existing implementation.
