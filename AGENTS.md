@@ -1,30 +1,39 @@
 # AGENTS
 
-Cloud-native application that runs [SimulationCraft](https://github.com/simulationcraft/simc) simulations: first, comparing a World of Warcraft character's gear and talent combinations; long term, group simulations along a dungeon route (route building à la Mythic Dungeon Tools). It's a learning project for system design and distributed systems, so aim suggestions at the target architecture.
+Cloud-native application that runs [SimulationCraft](https://github.com/simulationcraft/simc) simulations to compare a World of Warcraft character's gear and talent combinations.
+
+It's a learning project for system design and distributed systems. The service topology is the learning goal: don't propose merging services or replacing messaging with direct calls. Within that architecture, prefer the simplest design and the least code.
 
 ## Instructions
 
-- Prioritize simplicity; avoid over-complication at all costs. Whenever you suggest an approach, it should eliminate un-needed complexity.
-- Produce the minimum amount of code necessary to solve the problem.
-- Code should be grounded in real API contracts.
+- Ground code in real API contracts: verify Go signatures with `go doc`, and SimC options against the simc version pinned in `backend/Dockerfile`, before using them.
 
-## Target architecture
+## Pipeline
 
-**This section describes the desired end state, not the current code.** Before assuming any piece exists, reference the existing implementation.
+1. `api`: HTTP entry point. Parses addon exports, validates job specs against the gearset cap, creates the job, and hands it to `blacksmith`.
+2. `blacksmith`: expands per-slot gear options into gearsets and renders them as profilesets in one SimC document per job.
+3. `target-dummy`: runs simc on a job's document and publishes the result. Scaled by KEDA on consumer lag.
+4. `farseer`: consumes results and records them against the job.
 
-Go services on Kubernetes (local: k3d) in an Istio ambient-mode mesh, using NATS JetStream for async work and ScyllaDB for persistence. Each service uses [fx](https://github.com/uber-go/fx) and composes the appropriate `backend/platform` for platform implementation details. The `backend/transport` package provides a layer of abstraction above the platform implementation details.
+## Invariants
 
-Pipeline:
+- One simc run per job: gearsets are profilesets in a single document, so simc shares setup across them and KEDA scales across jobs, not within one.
+- Every JetStream consumer sees at-least-once delivery, so handlers must tolerate duplicates. `farseer` is the dedupe point, idempotent on `job_id`.
+- Persistence stays out of `target-dummy`, so a DB write failure can't lose a finished simulation.
+- Streams and consumers are declared in `chart/values.yaml`; services bind to them and never create them. The id passed to `natsx.NewPublisherModule` must match its `publisher:` key in the chart.
+- Cluster infrastructure (NATS, KEDA, Flux, gateway, monitoring) is installed from the `homelab` repo, expected at `../homelab`. This repo only ships the app chart.
 
-1. Frontend: user picks gear options and constraints, POSTs to create-job.
-2. `api`: monolith api - jobs, profile parsing, SSE event streaming.
-3. `blacksmith`: expands per-slot gear options into combinations that satisfy constraints (e.g. minimum 2- or 4-piece set bonus, at most 2 crafted embellishments, an upgrade-currency budget), builds a combined SimC document and publishes it to the simulation jobs stream.
-4. `target-dummy`: Stream consumer that takes simulation profiles, runs simc, and publishes results to a results stream. Autoscaled via keda based on consumer lag.
-5. `farseer`: Idempotent on (job_id, gearset_id). Consumes results and writes result records plus job completion counters to the database. It's a separate service from `target-dummy` so a DB write failure can't lose a finished simulation. Unprocessable messages go to a dead-letter stream.
-6. Frontend: navigates to `/{job-id}` page, listens to SSE for job status and progress updates, and displays final results when processing completes.
+## Roadmap
 
-Planned deployment tooling: Helm chart for the app, GitOps + FluxCD (see `homelab` repository), CI with Github Actions using GHCR, local development with port-forwarded k8s resources.
+Planned; parts may exist, so check the code.
+
+- `blacksmith` filters combinations by constraints: minimum 2- or 4-piece set bonus, at most 2 crafted embellishments, an upgrade-currency budget.
+- Fan-out: chunking a job's gearsets across multiple simc runs.
+- ScyllaDB for persistence of results and job status.
+- SSE event stream for live job progress.
+- Dead-letter stream for messages `farseer` or `target-dummy` can't process.
+- Frontend: picks gear options and constraints, then follows progress and results on a `/{job-id}` page.
 
 ## Commands
 
-- Repo tooling is implemented in Task. Use `task -l` to obtain a list of existing tasks.
+- Repo tooling is implemented in Task. Use `task -l` to list tasks.

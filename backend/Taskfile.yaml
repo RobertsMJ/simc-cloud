@@ -17,6 +17,10 @@ tasks:
     desc: Run the backend integration tests
     cmds:
       - go test -tags=integration ./...
+  test:update:
+    desc: Update the backend test snapshots
+    cmds:
+      - go test  ./simc -update
   build:
     desc: Build service image
     cmds:
