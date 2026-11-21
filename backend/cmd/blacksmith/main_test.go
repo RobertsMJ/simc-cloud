@@ -3,7 +3,7 @@ package main_test
 import (
 	"testing"
 
-	main "github.com/RobertsMJ/simc-cloud/backend/cmd/generate-gearsets"
+	main "github.com/RobertsMJ/simc-cloud/backend/cmd/blacksmith"
 	"github.com/RobertsMJ/simc-cloud/backend/platform"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/fx"

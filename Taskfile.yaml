@@ -20,8 +20,8 @@ tasks:
     cmds:
       - brew install kubectl k3d helm istioctl golangci-lint kubeconform nats-io/nats-tools/nats
 
-  run-simc:
-    desc: "Run simc directly via Docker, writes JSON to profiles/results/result.json. Usage: task run-simc -- profiles/sample.simc"
+  target-dummyc:
+    desc: "Run simc directly via Docker, writes JSON to profiles/results/result.json. Usage: task target-dummyc -- profiles/sample.simc"
     cmds:
       - |
         mkdir -p profiles/results

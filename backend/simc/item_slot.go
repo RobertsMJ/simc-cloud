@@ -49,7 +49,7 @@ const (
 	SlotGroupOffHand  SlotGroup = SlotGroup(ItemSlotOffHand)
 )
 
-var slotsByGroup = map[SlotGroup][]ItemSlot{
+var SlotsByGroup = map[SlotGroup][]ItemSlot{
 	SlotGroupHead:     {ItemSlotHead},
 	SlotGroupNeck:     {ItemSlotNeck},
 	SlotGroupShoulder: {ItemSlotShoulder},
@@ -68,7 +68,7 @@ var slotsByGroup = map[SlotGroup][]ItemSlot{
 
 var groupBySlot = func() map[ItemSlot]SlotGroup {
 	m := make(map[ItemSlot]SlotGroup)
-	for g, slots := range slotsByGroup {
+	for g, slots := range SlotsByGroup {
 		for _, s := range slots {
 			m[s] = g
 		}
@@ -97,7 +97,7 @@ func (i ItemSlot) Group() SlotGroup {
 }
 
 func (s *SlotGroup) UnmarshalText(text []byte) error {
-	if _, ok := slotsByGroup[SlotGroup(text)]; !ok {
+	if _, ok := SlotsByGroup[SlotGroup(text)]; !ok {
 		return fmt.Errorf("%s is not a slot group", text)
 	}
 	*s = SlotGroup(text)
@@ -105,5 +105,5 @@ func (s *SlotGroup) UnmarshalText(text []byte) error {
 }
 
 func (s SlotGroup) Slots() []ItemSlot {
-	return slotsByGroup[s]
+	return SlotsByGroup[s]
 }

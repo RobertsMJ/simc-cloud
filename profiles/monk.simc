@@ -1,0 +1,145 @@
+# Kestm - Windwalker - 2026-11-21 15:33 - US/Illidan
+# SimC Addon 12.1.0-03
+# WoW 12.1.5.70961, TOC 120105
+# Requires SimulationCraft 1000-01 or newer
+
+monk="Kestm"
+level=90
+race=night_elf
+region=us
+server=illidan
+role=attack
+professions=herbalism=80/mining=85
+spec=windwalker
+# loot_spec=windwalker
+
+talents=C0QAQnG51S19isUJoJoTeJ/IKPzYAMGbzMz2MAAAAAAAAAAAALDzEmxywAmxwMzMDz2wMMLzEAwiZ2mZGzMzMQAsBgmlZpZmZWAwAzMAwCDYAD
+
+# Saved Loadout: raid
+# talents=C0QAQnG51S19isUJoJoTeJ/IKPzYw2MmhlZGbzAAAAAAAAAAAAsMMMjZYYAzYYmZmhZbYGmlZAAsYmtZGmZmZAAsBAzysYmZmFAMwMDAsMAGwHA
+# Saved Loadout: m+
+# talents=C0QAQnG51S19isUJoJoTeJ/IKPzYAMGbzMz2MAAAAAAAAAAAALDzAzYZYAzYYmZmhZbYGmlZAAsYmtZmxMzMDAgNAYWmFzMzsAgBmZAgFGwAG
+
+omnium_talents=136814:1/136815:1/136817:1/136819:1/136822:1
+
+# Temple Delver's Mystic Helm (321)
+head=,id=271438,enchant_id=8017,bonus_id=6652/13696/13662/13334/10844/12846,content_tuning=7363,crafted_stats=40/49
+# Graft of the Domanaar (311)
+neck=,id=251234,gem_id=240900,bonus_id=12843/13440/6652/13668/12699,content_tuning=1279
+# Tassels of the Monkey King (321)
+shoulder=,id=271517,enchant_id=8001,bonus_id=6652/13694/13697/12846,redirected_base_stats=272244
+# Miststalker's Shroud (305)
+back=,id=272226,bonus_id=12841/6652/13662,content_tuning=6011
+# Battle Gi of the Monkey King (321)
+chest=,id=271522,enchant_id=7987,bonus_id=13690/6652/13698/12846
+# Miststalker's Wristbands (305)
+wrist=,id=272246,gem_id=240900,bonus_id=12841/41/13695/13662,content_tuning=6015
+# Monkey King's Fighting Fists (295)
+hands=,id=271520,bonus_id=6652/12834/13691/13697/1548,redirected_base_stats=272241
+# Belt of the Nightmare (305)
+waist=,id=171628,bonus_id=8902/12841/7756/13696/13662/12699,content_tuning=806
+# Pantaloons of the Monkey King (295)
+legs=,id=271518,enchant_id=8159,bonus_id=6652/13693/13698/12834,redirected_base_stats=275519
+# Silvermoon Agent's Sneakers (305)
+feet=,id=244569,enchant_id=7963,bonus_id=12214/13667/12497/13751/14001/8960/12384/8793,content_tuning=3615,crafted_stats=32/36,crafting_quality=5
+# Colubrine Band (321)
+finger1=,id=272147,enchant_id=7967,gem_id=240983,bonus_id=6652/13668/12846,content_tuning=6015
+# Sickening Signet of Atroxus (318)
+finger2=,id=252258,enchant_id=7967,gem_id=240900,bonus_id=12849/13440/6652/13668/12699
+# Effigy of Ula'tek's Faithful (308)
+trinket1=,id=274493,bonus_id=6652/12838,content_tuning=4898
+# Resonant Bellowstone (321)
+trinket2=,id=250228,bonus_id=13440/40/12699/12846,content_tuning=1279
+# Aln'hara Pikestaff (331)
+main_hand=,id=245771,enchant_id=8039,bonus_id=12214/13667/12497/13751/14004/13771/8960/8793/13836,content_tuning=3615,crafted_stats=36/40,crafting_quality=5
+
+### Gear from Bags
+#
+# Fearsome Visage of Ra-den's Chosen (289)
+# head=,id=250015,enchant_id=7961,gem_id=240890,bonus_id=40/13534/13440/13338/13575/12806
+#
+# Masterwork Sin'dorei Amulet (285)
+# neck=,id=240950,gem_id=240890,bonus_id=12214/13667/12497/12066/8790/13622,content_tuning=3615,crafted_stats=40/32,crafting_quality=5
+#
+# Serpentine Talisman (295)
+# neck=,id=272229,gem_id=240900,bonus_id=12834/6652/13668,content_tuning=6015
+#
+# Steelbark Cloak (279)
+# back=,id=259360,bonus_id=12825/41/13662,content_tuning=4240
+#
+# War Trial Vestments (298)
+# chest=,id=251159,bonus_id=12835/13440/6652/13662/12699,content_tuning=1279
+#
+# Venom-Cursed Lynx's Harness (292)
+# chest=,id=277787,bonus_id=12833/6652/13662
+#
+# Battle Gi of the Monkey King (311)
+# chest=,id=271522,bonus_id=12843/13334/13690/6652/13698,content_tuning=1040
+#
+# Preyhunter's Sleek Jerkin (292)
+# chest=,id=275516,bonus_id=12833/6652/13662,content_tuning=5236
+#
+# Miststalker's Wristbands (295)
+# wrist=,id=272246,bonus_id=12834/6652/13695/13662,content_tuning=6015
+#
+# Silvermoon Agent's Deflectors (305)
+# wrist=,id=244576,bonus_id=12214/13667/12497/13751/14001/8960/12384/8793/13696,content_tuning=3615,crafted_stats=40/36,crafting_quality=5
+#
+# Fury-fletched Armlets (295)
+# wrist=,id=251135,bonus_id=12834/13440/6652/13696/13662/12699,content_tuning=1279
+#
+# Miststalker's Cinch (295)
+# waist=,id=272245,bonus_id=12834/6652/13696/13662,content_tuning=6015
+#
+# Miststalker's Striders (305)
+# feet=,id=272240,bonus_id=12841/6652/13662,content_tuning=6015
+#
+# Preyhunter's Signet (292)
+# finger1=,id=275527,bonus_id=12833/6652/13668,content_tuning=5236
+#
+# Loa Worshiper's Band (285)
+# finger1=,id=251513,enchant_id=7967,gem_id=240890,bonus_id=12214/8960/13667/12497/12066/13622,content_tuning=3615,crafting_quality=5
+#
+# Preyhunter's Signet (292)
+# finger1=,id=275527,bonus_id=12833/40/13668,content_tuning=5236
+#
+# Forest Hunter's Hoop (295)
+# finger1=,id=256985,bonus_id=40/13668/12830,content_tuning=4240
+#
+# Ula'tek's Bind (295)
+# finger1=,id=279010,enchant_id=7967,gem_id=240900,bonus_id=6652/13668/12834,content_tuning=5381
+#
+# Preyhunter's Ring (292)
+# finger1=,id=275528,bonus_id=12833/6652/13668,content_tuning=5236
+#
+# Colubrine Band (295)
+# finger1=,id=272147,bonus_id=12834/6652/13668,content_tuning=6015
+#
+# Fiber of Living Agony (308)
+# trinket1=,id=265657,bonus_id=6652/12838,content_tuning=6015
+#
+# Spirit-Rending Poison (295)
+# trinket1=,id=274497,bonus_id=12834/6652,content_tuning=6015
+#
+# Lost Idol of the Hash'ey (295)
+# trinket1=,id=251783,bonus_id=12834/6652,content_tuning=6015
+#
+# Void-Reaper's Libram (295)
+# trinket1=,id=251785,bonus_id=12834/6652,content_tuning=6015
+#
+# Crucible of Erratic Energies (295)
+# trinket1=,id=264507,bonus_id=12830,content_tuning=4240
+
+### Additional Character Info
+#
+# catalyst_currencies=2813:8/3269:8/3116:8/3378:8/3465:5
+#
+# upgrade_currencies=c:2122:13/c:3442:31/c:3445:18/c:3443:15/c:3444:42/c:3446:22/i:274476:1
+#
+# slot_high_watermarks=0:321:321/1:311:315/2:321:321/3:321:321/4:305:331/5:295:311/6:305:311/7:305:305/8:295:308/9:318:318/10:308:321/11:305:315/12:331:331/13:16:233/14:295:331/15:295:311/16:42:263
+#
+# upgrade_achievements=19326/19397/19398/19577/19578/40107/40115/40118/40942/40943/40944/40945/41886/41887/41888/41892/42767/42768/42769/42770/61809/62410/62411
+#
+# bonus_roll_currencies=3418:1/3511:0
+
+# Checksum: b34adbf9

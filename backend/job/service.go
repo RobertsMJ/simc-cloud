@@ -13,7 +13,7 @@ import (
 )
 
 type GearsetCounter interface {
-	CountGearsets(baseline simc.Loadout, options models.Candidates) (int, error)
+	CountGearsets(baseline simc.Loadout, options models.Candidates) int
 }
 
 type Service struct {
@@ -42,9 +42,7 @@ func NewService(
 
 func (s *Service) CreateJob(ctx context.Context, spec models.JobSpec) (models.Job, error) {
 	// Check that the number of possible gearsets is within acceptable limits
-	if count, err := s.gearsetService.CountGearsets(spec.Base, spec.Options); err != nil {
-		return models.Job{}, err
-	} else if count > s.config.MaxGearsets {
+	if count := s.gearsetService.CountGearsets(spec.Base, spec.Options); count > s.config.MaxGearsets {
 		return models.Job{}, fmt.Errorf("too many possible gearsets: %d", count)
 	}
 
