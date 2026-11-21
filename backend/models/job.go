@@ -26,7 +26,7 @@ type JobSpec struct {
 	Config    simc.Config    `json:"config"`
 }
 type Candidates struct {
-	Items   []simc.Item          `json:"items"`
-	Talents []simc.Talent        `json:"talents"`
-	Omnium  []simc.OmniumTalents `json:"omnium"`
+	Items         []simc.Item          `json:"items"`
+	Talents       []simc.Talent        `json:"talents"`
+	OmniumTalents []simc.OmniumTalents `json:"omnium_talents"`
 }

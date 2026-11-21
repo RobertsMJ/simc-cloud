@@ -3,21 +3,21 @@ package main_test
 import (
 	"testing"
 
-	main "github.com/RobertsMJ/simc-cloud/backend/cmd/write-result"
+	main "github.com/RobertsMJ/simc-cloud/backend/cmd/target-dummy"
 	"github.com/RobertsMJ/simc-cloud/backend/platform"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/fx"
 )
 
-type WriteResultTestSuite struct {
+type RunSimTestSuite struct {
 	suite.Suite
 }
 
-func TestWriteResultTestSuite(t *testing.T) {
-	suite.Run(t, new(WriteResultTestSuite))
+func TestRunSimTestSuite(t *testing.T) {
+	suite.Run(t, new(RunSimTestSuite))
 }
 
-func (s *WriteResultTestSuite) TestApp() {
+func (s *RunSimTestSuite) TestApp() {
 	combinedOptions := append(platform.DefaultOptions(), main.BuildOptions()...)
 	s.NoError(fx.ValidateApp(combinedOptions...))
 }

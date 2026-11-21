@@ -34,16 +34,16 @@ appDefaults:
     LOG_LEVEL: "INFO"
 
 streams:
-  simc-job-stream:
-    subjects: ["simc.*"]
+  simc-stream:
+    subjects: ["simc.>"]
     storage: file
     maxAge: 4h
     retention: limits
   # TODO
   # simc-dlq:
   #   subjects:
-  #     - $JS.EVENT.ADVISORY.CONSUMER.MAX_DELIVERIES.simc-job-stream.*
-  #     - $JS.EVENT.ADVISORY.CONSUMER.MSG_TERMINATED.simc-job-stream.*
+  #     - $JS.EVENT.ADVISORY.CONSUMER.MAX_DELIVERIES.simc-stream.*
+  #     - $JS.EVENT.ADVISORY.CONSUMER.MSG_TERMINATED.simc-stream.*
   #   storage: file
   #   maxAge: 1
 
@@ -55,10 +55,10 @@ autoscaling:
   natsMonitoringEndpoint: nats-headless.nats.svc.cluster.local:8222
 
 apps:
-  run-sim:
+  target-dummy:
     component: worker
     image:
-      repository: run-sim
+      repository: target-dummy
     autoscaling:
       minReplicas: 0
       maxReplicas: 4
@@ -76,39 +76,39 @@ apps:
     shutdownTailSeconds: 10
     maxRuntimeSeconds: 290
     consumer:
-      streamName: simc-job-stream
-      durableName: simc-job-consumer
-      filterSubject: simc.job
+      streamName: simc-stream
+      durableName: target-dummy
+      filterSubject: simc.sims.requested
       maxDeliver: 3
       ackWait: 10s
     publisher:
-      results:
-        streamName: simc-job-stream
-        subject: simc.results
+      farseer:
+        streamName: simc-stream
+        subject: simc.sims.completed
     probes:
       liveness:
         timeoutSeconds: 5
         failureThreshold: 6
-  write-result:
+  farseer:
     component: db
     image:
-      repository: write-result
+      repository: farseer
     consumer:
-      streamName: simc-job-stream
-      durableName: simc-jobs-results
-      filterSubject: simc.results
-  generate-gearsets:
+      streamName: simc-stream
+      durableName: farseer
+      filterSubject: simc.sims.completed
+  blacksmith:
     component: worker
     image:
-      repository: generate-gearsets
+      repository: blacksmith
     consumer:
-      streamName: simc-job-stream
-      durableName: simc-generate-gearsets-consumer
-      filterSubject: simc.generate-gearsets
+      streamName: simc-stream
+      durableName: blacksmith
+      filterSubject: simc.jobs.created
     publisher:
-      run-sim:
-        streamName: simc-job-stream
-        subject: simc.job
+      target-dummy:
+        streamName: simc-stream
+        subject: simc.sims.requested
   api:
     component: api
     image:
@@ -122,6 +122,6 @@ apps:
                 type: PathPrefix
                 value: /api
     publisher:
-      generate-gearsets:
-        streamName: simc-job-stream
-        subject: simc.generate-gearsets
+      blacksmith:
+        streamName: simc-stream
+        subject: simc.jobs.created

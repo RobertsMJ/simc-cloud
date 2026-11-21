@@ -13,7 +13,7 @@ import (
 )
 
 type GearsetGenerator interface {
-	GenerateGearsets(baseline simc.Loadout, options models.Candidates) ([]simc.Loadout, error)
+	GenerateGearsets(baseline simc.Loadout, options models.Candidates) []simc.Loadout
 }
 
 type Handler struct {
@@ -36,10 +36,7 @@ func (h *Handler) Handle(ctx context.Context, req models.GenerateGearsetsRequest
 	log := h.log.With("job_id", req.JobID)
 	log.Info("handling gearset generation")
 
-	gearsets, err := h.generator.GenerateGearsets(req.Spec.Base, req.Spec.Options)
-	if err != nil {
-		return err
-	}
+	gearsets := h.generator.GenerateGearsets(req.Spec.Base, req.Spec.Options)
 	log.Info("generated gearsets", "count", len(gearsets))
 	profileSets := make(map[string]simc.Loadout)
 	for i, gs := range gearsets {
@@ -54,8 +51,7 @@ func (h *Handler) Handle(ctx context.Context, req models.GenerateGearsetsRequest
 	}
 
 	var b strings.Builder
-	err = simc.Render(&b, siminput)
-	if err != nil {
+	if err := simc.Render(&b, siminput); err != nil {
 		return errors.Join(err, errors.New("failed to marshal simulation profile"))
 	}
 

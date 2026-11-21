@@ -3,23 +3,23 @@ package main
 import (
 	"go.uber.org/fx"
 
-	"github.com/RobertsMJ/simc-cloud/backend/gearset"
 	"github.com/RobertsMJ/simc-cloud/backend/models"
 	"github.com/RobertsMJ/simc-cloud/backend/platform"
 	"github.com/RobertsMJ/simc-cloud/backend/platform/natsx"
+	"github.com/RobertsMJ/simc-cloud/backend/sim"
+	"github.com/RobertsMJ/simc-cloud/backend/sim/simcexec"
 )
 
 func BuildOptions() []fx.Option {
 	return []fx.Option{
 		natsx.Module,
 		fx.Provide(
-			fx.Annotate(
-				gearset.NewService,
-				fx.As(new(gearset.GearsetGenerator)),
-			),
+			simcexec.NewConfig,
+			sim.NewConfig,
+			fx.Annotate(simcexec.New, fx.As(new(sim.Simulator))),
 		),
-		natsx.NewConsumerModule[models.GenerateGearsetsRequest](gearset.NewHandler),
-		natsx.NewPublisherModule[models.SimRequest]("run-sim"),
+		natsx.NewPublisherModule[models.SimResult]("farseer"),
+		natsx.NewConsumerModule[models.SimRequest](sim.NewService),
 	}
 }
 

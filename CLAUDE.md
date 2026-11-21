@@ -23,9 +23,9 @@ Pipeline:
 
 1. Frontend: user picks gear options and constraints, POSTs to create-job.
 2. `create-job`: validates the request, creates the job, hands the job configuration to the gearset generator, and returns the job ID to the frontend for finding status and results.
-3. `generate-gearsets`: expands per-slot gear options into combinations that satisfy constraints (e.g. minimum 2- or 4-piece set bonus, at most 2 crafted embellishments, an upgrade-currency budget), builds a combined SimC document and publishes it to the simulation jobs stream.
-4. `run-sim`: Stream consumer that takes simulation profiles, runs simc, and publishes results to a results stream. Autoscaled via keda based on consumer lag.
-5. `write-result`: Idempotent on (job_id, gearset_id). Consumes results and writes result records plus job completion counters to the database. It's a separate service from `run-sim` so a DB write failure can't lose a finished simulation. Unprocessable messages go to a dead-letter stream.
+3. `blacksmith`: expands per-slot gear options into combinations that satisfy constraints (e.g. minimum 2- or 4-piece set bonus, at most 2 crafted embellishments, an upgrade-currency budget), builds a combined SimC document and publishes it to the simulation jobs stream.
+4. `target-dummy`: Stream consumer that takes simulation profiles, runs simc, and publishes results to a results stream. Autoscaled via keda based on consumer lag.
+5. `farseer`: Idempotent on (job_id, gearset_id). Consumes results and writes result records plus job completion counters to the database. It's a separate service from `target-dummy` so a DB write failure can't lose a finished simulation. Unprocessable messages go to a dead-letter stream.
 6. Frontend: navigates to `/{job-id}` page, listens to SSE for job status and progress updates, and displays final results when processing completes.
 
 Planned deployment tooling: Helm chart for the app, GitOps + FluxCD (see `homelab` repository), CI with Github Actions using GHCR, local development with port-forwarded k8s resources.

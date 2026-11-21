@@ -486,7 +486,6 @@
         "id": 267640,
         "bonus_id": "13578/13649",
         "content_tuning": "3085",
-        "equipped": true,
         "equippedSlot": "head",
         "name": "Tarnished Silvermoon Sunveil",
         "icon": "inv_helm_mail_questbloodelf_b_01",
@@ -535,7 +534,6 @@
       {
         "id": 50228,
         "bonus_id": "12785/13439/6652/13668/12699",
-        "equipped": true,
         "equippedSlot": "neck",
         "name": "Barbed Ymirheim Choker",
         "icon": "inv_jewelry_necklace_22",
@@ -699,7 +697,6 @@
       {
         "id": 249986,
         "bonus_id": "13340/13574/6652/13439/12785/3131",
-        "equipped": true,
         "equippedSlot": "shoulder",
         "name": "Primal Sentry's Trophies",
         "icon": "inv_shoulder_mail_raidhuntermidnight_d_01",
@@ -1018,7 +1015,6 @@
       {
         "id": 260312,
         "bonus_id": "12785/13439/6652/13577/12699",
-        "equipped": true,
         "equippedSlot": "back",
         "name": "Defiant Defender's Drape",
         "icon": "inv_cape_plate_dungeonharronir_c_01",
@@ -1263,7 +1259,6 @@
       {
         "id": 249991,
         "bonus_id": "13336/13575/6652/13439/12785/3131",
-        "equipped": true,
         "equippedSlot": "chest",
         "name": "Primal Sentry's Scaleplate",
         "icon": "inv_chest_mail_raidhuntermidnight_d_01",
@@ -1490,7 +1485,6 @@
       {
         "id": 251079,
         "bonus_id": "12785/13439/6652/12667/13577/12699",
-        "equipped": true,
         "equippedSlot": "wrist",
         "name": "Amberfrond Bracers",
         "icon": "inv_bracer_mail_dungeonharronir_c_01",
@@ -1681,7 +1675,6 @@
         "bonus_id": "6652/13609/7756",
         "drop_level": "88",
         "content_tuning": "2872",
-        "equipped": true,
         "equippedSlot": "hands",
         "name": "Gauntlets of Deftness",
         "icon": "inv_gauntlets_11",
@@ -1732,7 +1725,6 @@
         "id": 267481,
         "bonus_id": "13578/13649",
         "content_tuning": "3087",
-        "equipped": true,
         "equippedSlot": "waist",
         "name": "Aspiring Hara'ti Defender's Belt",
         "icon": "inv_belt_mail_dungeonharronir_c_01",
@@ -1758,7 +1750,6 @@
       {
         "id": 249987,
         "bonus_id": "13339/13575/6652/13439/12785/3131",
-        "equipped": true,
         "equippedSlot": "legs",
         "name": "Primal Sentry's Legguards",
         "icon": "inv_pant_mail_raidhuntermidnight_d_01",
@@ -2063,7 +2054,6 @@
       {
         "id": 193715,
         "bonus_id": "12785/13439/6652/13577/12699",
-        "equipped": true,
         "equippedSlot": "feet",
         "name": "Boots of Explosive Growth",
         "icon": "inv_mail_dragondungeon_c_01_boot",
@@ -2339,7 +2329,6 @@
       {
         "id": 251212,
         "bonus_id": "12785/13439/6652/12701",
-        "equipped": true,
         "equippedSlot": "main_hand",
         "name": "Radiant Slicer",
         "icon": "inv_knife_1h_dungeonharronir_c_01",
@@ -2798,7 +2787,6 @@
       {
         "id": 251122,
         "bonus_id": "12785/13439/43/12701",
-        "equipped": true,
         "equippedSlot": "off_hand",
         "name": "Shadowslash Slicer",
         "icon": "inv_sword_1h_domanaar_b_01",
@@ -3156,7 +3144,6 @@
       {
         "id": 193708,
         "bonus_id": "12785/13439/6652/13668/12699",
-        "equipped": true,
         "equippedSlot": "finger1",
         "name": "Platinum Star Band",
         "icon": "inv_10_dungeonjewelry_explorer_ring_1_color1",
@@ -3534,7 +3521,6 @@
         "bonus_id": "6652/8812/13668/13609/7756",
         "drop_level": "84",
         "content_tuning": "6053",
-        "equipped": true,
         "equippedSlot": "finger2",
         "name": "Bloodied Wedding Ring",
         "icon": "inv_10_dungeonjewelry_tuskarr_ring_1_color1",
@@ -3571,7 +3557,6 @@
       {
         "id": 151307,
         "bonus_id": "12785/13439/6652/12699",
-        "equipped": true,
         "equippedSlot": "trinket1",
         "name": "Void Stalker's Contract",
         "icon": "inv_enchant_formulaepic_01",
@@ -3907,7 +3892,6 @@
       {
         "id": 250226,
         "bonus_id": "12785/13439/6652/12699",
-        "equipped": true,
         "equippedSlot": "trinket2",
         "name": "Latch's Crooked Hook",
         "icon": "inv_archaeology_70_tauren_moosebonefishhook",
