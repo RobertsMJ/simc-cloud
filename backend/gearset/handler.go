@@ -3,7 +3,6 @@ package gearset
 import (
 	"context"
 	"errors"
-	"fmt"
 	"log/slog"
 	"strings"
 
@@ -39,8 +38,8 @@ func (h *Handler) Handle(ctx context.Context, req models.GenerateGearsetsRequest
 	gearsets := h.generator.GenerateGearsets(req.Spec.Base, req.Spec.Options)
 	log.Info("generated gearsets", "count", len(gearsets))
 	profileSets := make(map[string]simc.Loadout)
-	for i, gs := range gearsets {
-		profileSets[fmt.Sprintf("set_%d", i)] = gs
+	for _, gs := range gearsets {
+		profileSets[gs.Hash()] = gs
 	}
 
 	siminput := simc.SimInput{

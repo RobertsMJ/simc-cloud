@@ -39,6 +39,9 @@ data:
 {{- if .app.publisher }}
 {{- $env = merge $env (include "simc-chart.app.publisherData" . | fromYaml) -}}
 {{- end }}
+{{- if .app.scylla }}
+{{- $env = merge $env (include "simc-chart.scylla.connectionData" .root | fromYaml) -}}
+{{- end }}
 {{- with $env -}}
 {{- toYaml . }}
 {{- end }}

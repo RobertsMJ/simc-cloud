@@ -16,7 +16,7 @@ App common labels
 */}}
 {{- define "simc-chart.app.version" -}}
 {{- $_ := required "simc-chart.app.labels: expected app context" .app -}}
-{{ .app.image.tag | replace "+" "_" | trunc 63 | trimSuffix "-" | quote }}
+{{ include "simc-chart.app.imageTag" . | replace "+" "_" | trunc 63 | trimSuffix "-" | quote }}
 {{- end }}
 
 {{/*

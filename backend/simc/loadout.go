@@ -1,6 +1,7 @@
 package simc
 
 import (
+	"crypto/sha256"
 	"fmt"
 	"maps"
 	"slices"
@@ -12,6 +13,10 @@ type Loadout struct {
 	Items         map[ItemSlot]Item `json:"items"`
 	Talents       Talent            `json:"talents"`
 	OmniumTalents OmniumTalents     `json:"omnium_talents"`
+}
+
+func (l Loadout) Hash() string {
+	return fmt.Sprintf("%x", sha256.Sum256([]byte(l.render())))
 }
 
 func (l Loadout) getStrings() []string {

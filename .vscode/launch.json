@@ -27,6 +27,18 @@
             "program": "${workspaceFolder}/backend/cmd/blacksmith",
             "envFile": "${workspaceFolder}/backend/cmd/blacksmith/.env",
             "console": "integratedTerminal"
+        },
+        {
+            "name": "Debug migrate",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/backend/cmd/migrate",
+            "envFile": [
+                "${workspaceFolder}/backend/cmd/migrate/.env",
+                "${workspaceFolder}/backend/cmd/migrate/.env.local"
+            ],
+            "console": "integratedTerminal"
         }
     ]
 }

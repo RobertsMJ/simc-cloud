@@ -23,3 +23,7 @@ tasks:
     desc: Port forward the NATS service
     cmds:
       - kubectl --context k3d-dev-cluster -n nats port-forward svc/nats 4222:4222
+  port-forward-scylla:
+    desc: Port forward the Scylla client service
+    cmds:
+      - kubectl --context k3d-dev-cluster -n scylla port-forward svc/dev-cluster-client 9042:9042 19042:19042

@@ -43,6 +43,26 @@ Create app fullname.
 {{- end }}
 
 {{/*
+App image tag. Defaults to the chart's appVersion, which CI sets to the tag of the images it built alongside the chart.
+{{ include "simc-chart.app.imageTag" $ctx }}
+*/}}
+{{- define "simc-chart.app.imageTag" -}}
+{{- $_ := required "simc-chart.app.imageTag: expected app context (dict root/name/app)" .root -}}
+{{- $image := required (printf "%s: image must be defined" .name) .app.image -}}
+{{- $image.tag | default .root.Chart.AppVersion -}}
+{{- end }}
+
+{{/*
+App image reference: registry/repository:tag
+{{ include "simc-chart.app.image" $ctx }}
+*/}}
+{{- define "simc-chart.app.image" -}}
+{{- $registry := required (printf "%s: image.registry must be defined" .name) .app.image.registry -}}
+{{- $repository := required (printf "%s: image.repository must be defined" .name) .app.image.repository -}}
+{{- printf "%s/%s:%s" $registry $repository (include "simc-chart.app.imageTag" .) -}}
+{{- end }}
+
+{{/*
 Create stream fullname
 {{ include "simc-chart.stream.fullname" $ctx }}
 */}}
