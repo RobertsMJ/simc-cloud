@@ -18,10 +18,11 @@ It's a learning project for system design and distributed systems. The service t
 ## Invariants
 
 - One simc run per job: gearsets are profilesets in a single document, so simc shares setup across them and KEDA scales across jobs, not within one.
-- Every JetStream consumer sees at-least-once delivery, so handlers must tolerate duplicates. `farseer` is the dedupe point, idempotent on `job_id`.
+- Every JetStream consumer sees at-least-once delivery, so handlers must tolerate duplicates. `farseer` is the dedupe point, idempotent on `job_id`. Dedupe is enforced by the database (unique keys, conditional updates), never a read-then-write check, which concurrent redeliveries would race.
 - Persistence stays out of `target-dummy`, so a DB write failure can't lose a finished simulation.
 - Streams and consumers are declared in `chart/values.yaml`; services bind to them and never create them. The id passed to `natsx.NewPublisherModule` must match its `publisher:` key in the chart.
-- Cluster infrastructure (NATS, KEDA, Flux, gateway, monitoring) is installed from the `homelab` repo, expected at `../homelab`. This repo only ships the app chart.
+- Cluster infrastructure (NATS, KEDA, CloudNativePG, Flux, gateway, monitoring) is installed from the `homelab` repo, expected at `../homelab`. This repo only ships the app chart.
+- Persistence is Postgres on CloudNativePG: the workload is low-volume and per-job, and relies on transactions. `homelab` provisions the Postgres cluster, the database, and its owner credentials, since instances, storage, and replication are facts about the cluster. This repo owns everything inside the database: schema, migrations (run as the owner), and any app roles' grants.
 
 ## Roadmap
 
@@ -29,7 +30,7 @@ Planned; parts may exist, so check the code.
 
 - `blacksmith` filters combinations by constraints: minimum 2- or 4-piece set bonus, at most 2 crafted embellishments, an upgrade-currency budget.
 - Fan-out: chunking a job's gearsets across multiple simc runs.
-- ScyllaDB for persistence of results and job status.
+- Postgres persistence of results and job status.
 - SSE event stream for live job progress.
 - Dead-letter stream for messages `farseer` or `target-dummy` can't process.
 - Frontend: picks gear options and constraints, then follows progress and results on a `/{job-id}` page.
