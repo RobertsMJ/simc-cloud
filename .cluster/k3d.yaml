@@ -3,7 +3,7 @@ kind: Simple
 metadata:
   name: dev-cluster
 servers: 1
-agents: 2
+agents: 0
 kubeAPI:
   # host: "k3d.localhost"
   hostIP: "127.0.0.1"
