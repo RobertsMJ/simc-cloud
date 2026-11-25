@@ -48,9 +48,9 @@ spec:
             - configMapRef:
                 name: {{ include "simc-chart.app.envName" $ }}
           {{- end }}
-          {{- if .app.scylla }}
+          {{- if .app.db }}
           env:
-            {{- include "simc-chart.scylla.credentialsEnv" $ | nindent 12 }}
+            {{- include "simc-chart.postgres.connectionData" $ | nindent 12 }}
           {{- end }}
           ports:
             - name: admin

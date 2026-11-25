@@ -48,5 +48,5 @@ spec:
             - name: {{ $key }}
               value: {{ $value | quote }}
             {{- end }}
-            {{- include "simc-chart.scylla.credentialsEnv" . | nindent 12 }}
+            {{- include "simc-chart.postgres.connectionData" . | nindent 12 }}
 {{- end }}

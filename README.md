@@ -16,7 +16,7 @@ Platform scope:
 1. Deploy Prometheus/Grafana for basic observability
 1. Use Istio service mesh for mTLS w/ kiali for observability
 1. NATS Jetstream message queue - easy enough to deploy and maintain
-1. ScyllaDB for job/results storage - nosql db, we'll see how it goes
+1. Postgres for job/results storage (cnpg)
 1. Wrap application in a Helm chart for deployment
 1. FluxCD + gitops for deployment management
 1. native workflow for local development

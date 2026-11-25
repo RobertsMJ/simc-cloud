@@ -39,8 +39,8 @@ data:
 {{- if .app.publisher }}
 {{- $env = merge $env (include "simc-chart.app.publisherData" . | fromYaml) -}}
 {{- end }}
-{{- if .app.scylla }}
-{{- $env = merge $env (include "simc-chart.scylla.connectionData" .root | fromYaml) -}}
+{{- if .app.db }}
+{{- $env = merge $env (include "simc-chart.postgres.connectionData" . | fromYaml) -}}
 {{- end }}
 {{- with $env -}}
 {{- toYaml . }}

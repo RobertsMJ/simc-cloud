@@ -35,8 +35,7 @@
             "mode": "auto",
             "program": "${workspaceFolder}/backend/cmd/migrate",
             "envFile": [
-                "${workspaceFolder}/backend/cmd/migrate/.env",
-                "${workspaceFolder}/backend/cmd/migrate/.env.local"
+                "${workspaceFolder}/backend/cmd/migrate/.env"
             ],
             "console": "integratedTerminal"
         }

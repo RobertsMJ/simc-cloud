@@ -5,9 +5,6 @@ appDefaults:
     pullPolicy: Always
   env:
     LOG_LEVEL: info
-scylla:
-  hosts: dev-cluster-client.scylla.svc.cluster.local
-  keyspace: simc
 gateway:
   hostnames:
     - simc.k3d.localhost

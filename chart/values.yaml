@@ -33,19 +33,12 @@ appDefaults:
     QUEUE_URL: "nats://nats.nats.svc.cluster.local:4222"
     LOG_LEVEL: "INFO"
 
-# Connection settings for every app with a `scylla` block. An app's `scylla.existingSecret` names the Secret, with
-# `username` and `password` keys, that homelab tenant onboarding provisions for the role the app connects as.
-scylla:
-  hosts:
-  keyspace:
-
-# Schema migrations, run as a pre-install/pre-upgrade hook Job
+# Schema migrations run as a pre-install/pre-upgrade hook Job
 migrate:
   image:
     repository: migrate
-  scylla:
-    # Keyspace owner role, for schema changes; only the migrate Job uses it
-    existingSecret: simc-scylla-owner
+  db:
+    existingSecret: simc-app
   resources:
     requests:
       memory: 64Mi
@@ -114,8 +107,8 @@ apps:
     component: db
     image:
       repository: farseer
-    scylla:
-      existingSecret: simc-scylla-app
+    db:
+      existingSecret: simc-app
     consumer:
       streamName: simc-stream
       durableName: farseer
@@ -136,8 +129,8 @@ apps:
     component: api
     image:
       repository: api
-    scylla:
-      existingSecret: simc-scylla-app
+    db:
+      existingSecret: simc-app
     ports:
       http: 8080
     route:
