@@ -9,6 +9,7 @@ import (
 	"github.com/RobertsMJ/simc-cloud/backend/platform"
 	"github.com/RobertsMJ/simc-cloud/backend/platform/httpx"
 	"github.com/RobertsMJ/simc-cloud/backend/platform/natsx"
+	"github.com/RobertsMJ/simc-cloud/backend/platform/postgresx"
 	"github.com/RobertsMJ/simc-cloud/backend/profile"
 	"go.uber.org/fx"
 )
@@ -24,6 +25,7 @@ func AsApiHandler(h any) any {
 func BuildOptions() []fx.Option {
 	return []fx.Option{
 		natsx.Module,
+		postgresx.Module,
 		fx.Provide(
 			api.NewConfig,
 			job.NewConfig,

@@ -14,6 +14,7 @@ var Module = fx.Module(
 	fx.Provide(
 		NewConfig,
 		NewPostgresConnection,
+		readiness.AsChecker(NewConnChecker),
 	),
 	fx.Invoke(func(lc fx.Lifecycle, pool *pgxpool.Pool) error {
 		lc.Append(fx.Hook{
