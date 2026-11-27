@@ -18,8 +18,8 @@ func BuildOptions() []fx.Option {
 			sim.NewConfig,
 			fx.Annotate(simcexec.New, fx.As(new(sim.Simulator))),
 		),
-		natsx.NewPublisherModule[models.SimResult]("farseer"),
-		natsx.NewConsumerModule[models.SimRequest](sim.NewService),
+		natsx.NewPublisherModule[models.SimCompleted]("farseer"),
+		natsx.NewConsumerModule[models.RunSim](sim.NewService),
 	}
 }
 

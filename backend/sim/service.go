@@ -12,13 +12,13 @@ import (
 
 type Service struct {
 	simulator Simulator
-	resultPub queue.Publisher[models.SimResult]
+	resultPub queue.Publisher[models.SimCompleted]
 	config    *Config
 }
 
-var _ queue.Handler[models.SimRequest] = (*Service)(nil)
+var _ queue.Handler[models.RunSim] = (*Service)(nil)
 
-func NewService(simulator Simulator, resultPub queue.Publisher[models.SimResult], config *Config) *Service {
+func NewService(simulator Simulator, resultPub queue.Publisher[models.SimCompleted], config *Config) *Service {
 	return &Service{
 		simulator: simulator,
 		resultPub: resultPub,
@@ -26,7 +26,7 @@ func NewService(simulator Simulator, resultPub queue.Publisher[models.SimResult]
 	}
 }
 
-func (s *Service) Handle(ctx context.Context, req models.SimRequest) error {
+func (s *Service) Handle(ctx context.Context, req models.RunSim) error {
 	slog.Info("handling sim message", "job_id", req.JobID)
 	simCtx, simCancel := context.WithTimeout(ctx, s.config.MaxRuntime)
 	defer simCancel()
@@ -44,9 +44,9 @@ func (s *Service) Handle(ctx context.Context, req models.SimRequest) error {
 		err = context.DeadlineExceeded
 	}
 
-	simResult := models.SimResult{
+	simResult := models.SimCompleted{
 		JobID:    req.JobID,
-		Metadata: req.Metadata,
+		Gearsets: req.Gearsets,
 	}
 	if err != nil {
 		simResult.Status = models.StatusError
@@ -55,8 +55,7 @@ func (s *Service) Handle(ctx context.Context, req models.SimRequest) error {
 		slog.Error("sim error", "job_id", req.JobID, "error", err)
 	} else {
 		simResult.Status = models.StatusDone
-		simResult.Statistics = out.Statistics
-		simResult.Result = out.Report
+		simResult.Result = out
 	}
 
 	publishCtx, publishCancel := context.WithTimeout(ctx, 1*time.Second)

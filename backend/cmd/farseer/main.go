@@ -15,7 +15,7 @@ func BuildOptions() []fx.Option {
 		fx.Provide(
 			fx.Annotate(db.NewResultRepository, fx.As(new(result.Repo))),
 		),
-		natsx.NewConsumerModule[models.SimResult](result.NewService),
+		natsx.NewConsumerModule[models.SimCompleted](result.NewService),
 	}
 }
 

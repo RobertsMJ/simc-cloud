@@ -52,7 +52,7 @@ func BuildOptions() []fx.Option {
 				fx.ParamTags(``, ``, `group:"api"`),
 			),
 		),
-		natsx.NewPublisherModule[models.GenerateGearsetsRequest]("blacksmith"),
+		natsx.NewPublisherModule[models.GenerateGearsets]("blacksmith"),
 		httpx.New("api"),
 	}
 }

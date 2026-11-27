@@ -27,7 +27,7 @@ tasks:
         docker run --rm \
           -v "$(realpath {{.CLI_ARGS}}):/input.simc:ro" \
           -v "$(realpath profiles/results):/output" \
-          simulationcraftorg/simc:latest \
+          simulationcraftorg/simc:1215-2026-10-23-73a372b \
           /input.simc json2=/output/result.json html=/dev/null
 
   deploy:

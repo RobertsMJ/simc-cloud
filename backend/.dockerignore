@@ -3,4 +3,4 @@
 !go.mod
 !go.sum
 !**/*.go
-!**/*.cql
+!**/*.sql

@@ -1,6 +1,11 @@
 package result
 
-// TODO: figure out interface
+import (
+	"context"
+
+	"github.com/RobertsMJ/simc-cloud/backend/models"
+)
+
 type Repo interface {
-	Create() error
+	RecordResult(ctx context.Context, result models.JobResult) (bool, error)
 }

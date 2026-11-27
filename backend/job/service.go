@@ -20,7 +20,7 @@ type Service struct {
 	log            *slog.Logger
 	config         *Config
 	repo           Repo
-	publisher      queue.Publisher[models.GenerateGearsetsRequest]
+	publisher      queue.Publisher[models.GenerateGearsets]
 	gearsetService GearsetCounter
 }
 
@@ -28,7 +28,7 @@ func NewService(
 	log *slog.Logger,
 	config *Config,
 	repo Repo,
-	publisher queue.Publisher[models.GenerateGearsetsRequest],
+	publisher queue.Publisher[models.GenerateGearsets],
 	gearsetService GearsetCounter,
 ) *Service {
 	return &Service{
@@ -40,7 +40,7 @@ func NewService(
 	}
 }
 
-func (s *Service) CreateJob(ctx context.Context, spec models.JobSpec) (models.Job, error) {
+func (s *Service) Create(ctx context.Context, spec models.JobSpec) (models.Job, error) {
 	// Check that the number of possible gearsets is within acceptable limits
 	if count := s.gearsetService.CountGearsets(spec.Base, spec.Options); count > s.config.MaxGearsets {
 		return models.Job{}, fmt.Errorf("too many possible gearsets: %d", count)
@@ -50,11 +50,12 @@ func (s *Service) CreateJob(ctx context.Context, spec models.JobSpec) (models.Jo
 	job := models.Job{
 		ID:        uuid.NewString(),
 		Status:    models.StatusPending,
-		CreatedAt: time.Now().Format(time.RFC3339),
+		Spec:      spec,
+		CreatedAt: time.Now(),
 	}
 
 	// Create the generate gearset request that will be published to the queue
-	gen := models.GenerateGearsetsRequest{
+	gen := models.GenerateGearsets{
 		JobID: job.ID,
 		Spec:  spec,
 	}
