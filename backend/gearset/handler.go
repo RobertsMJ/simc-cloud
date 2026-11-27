@@ -3,7 +3,6 @@ package gearset
 import (
 	"context"
 	"errors"
-	"fmt"
 	"log/slog"
 	"strings"
 
@@ -18,13 +17,13 @@ type GearsetGenerator interface {
 
 type Handler struct {
 	log       *slog.Logger
-	publisher queue.Publisher[models.SimRequest]
+	publisher queue.Publisher[models.RunSim]
 	generator GearsetGenerator
 }
 
-var _ queue.Handler[models.GenerateGearsetsRequest] = (*Handler)(nil)
+var _ queue.Handler[models.GenerateGearsets] = (*Handler)(nil)
 
-func NewHandler(log *slog.Logger, publisher queue.Publisher[models.SimRequest], generator GearsetGenerator) *Handler {
+func NewHandler(log *slog.Logger, publisher queue.Publisher[models.RunSim], generator GearsetGenerator) *Handler {
 	return &Handler{
 		log:       log,
 		publisher: publisher,
@@ -32,15 +31,15 @@ func NewHandler(log *slog.Logger, publisher queue.Publisher[models.SimRequest], 
 	}
 }
 
-func (h *Handler) Handle(ctx context.Context, req models.GenerateGearsetsRequest) error {
+func (h *Handler) Handle(ctx context.Context, req models.GenerateGearsets) error {
 	log := h.log.With("job_id", req.JobID)
 	log.Info("handling gearset generation")
 
 	gearsets := h.generator.GenerateGearsets(req.Spec.Base, req.Spec.Options)
 	log.Info("generated gearsets", "count", len(gearsets))
 	profileSets := make(map[string]simc.Loadout)
-	for i, gs := range gearsets {
-		profileSets[fmt.Sprintf("set_%d", i)] = gs
+	for _, gs := range gearsets {
+		profileSets[gs.Hash()] = gs
 	}
 
 	siminput := simc.SimInput{
@@ -55,8 +54,9 @@ func (h *Handler) Handle(ctx context.Context, req models.GenerateGearsetsRequest
 		return errors.Join(err, errors.New("failed to marshal simulation profile"))
 	}
 
-	return h.publisher.Publish(ctx, models.SimRequest{
-		JobID: req.JobID,
-		Input: b.String(),
+	return h.publisher.Publish(ctx, models.RunSim{
+		JobID:    req.JobID,
+		Gearsets: profileSets,
+		Input:    b.String(),
 	})
 }

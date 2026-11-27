@@ -39,7 +39,7 @@ spec:
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          image: "{{.app.image.registry}}/{{ .app.image.repository }}:{{ .app.image.tag }}"
+          image: {{ include "simc-chart.app.image" $ | quote }}
           {{- with .app.image.pullPolicy }}
           imagePullPolicy: {{ . }}
           {{- end }}
@@ -47,6 +47,10 @@ spec:
           envFrom:
             - configMapRef:
                 name: {{ include "simc-chart.app.envName" $ }}
+          {{- end }}
+          {{- if .app.db }}
+          env:
+            {{- include "simc-chart.postgres.connectionData" $ | nindent 12 }}
           {{- end }}
           ports:
             - name: admin

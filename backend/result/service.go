@@ -18,9 +18,28 @@ func NewService(repo Repo) *Service {
 	}
 }
 
-var _ queue.Handler[models.SimResult] = (*Service)(nil)
+var _ queue.Handler[models.SimCompleted] = (*Service)(nil)
 
-func (s *Service) Handle(ctx context.Context, result models.SimResult) error {
+func (s *Service) Handle(ctx context.Context, result models.SimCompleted) error {
 	slog.Info("handling sim result", "result", result)
-	return nil
+
+	gs := make([]models.GearsetResult, 0, len(result.Result.Sim.Profilesets.Results))
+	for _, res := range result.Result.Sim.Profilesets.Results {
+		gs = append(gs, models.GearsetResult{
+			JobID:     result.JobID,
+			ID:        res.Name,
+			Loadout:   result.Gearsets[res.Name],
+			DPS:       res.Mean,
+			DPSStdErr: res.MeanStdDev,
+		})
+	}
+
+	_, err := s.repo.RecordResult(ctx, models.JobResult{
+		JobID:             result.JobID,
+		SimcVersion:       result.Result.GitRevision,
+		BaselineDPS:       result.Result.Sim.Statistics.RaidDPS.Mean,
+		BaselineDPSStdErr: result.Result.Sim.Statistics.RaidDPS.StdDev,
+		Gearsets:          gs,
+	})
+	return err
 }

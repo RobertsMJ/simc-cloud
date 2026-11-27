@@ -18,8 +18,8 @@ func BuildOptions() []fx.Option {
 				fx.As(new(gearset.GearsetGenerator)),
 			),
 		),
-		natsx.NewConsumerModule[models.GenerateGearsetsRequest](gearset.NewHandler),
-		natsx.NewPublisherModule[models.SimRequest]("target-dummy"),
+		natsx.NewConsumerModule[models.GenerateGearsets](gearset.NewHandler),
+		natsx.NewPublisherModule[models.RunSim]("target-dummy"),
 	}
 }
 

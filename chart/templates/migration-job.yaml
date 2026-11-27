@@ -1,0 +1,52 @@
+{{- $app := mergeOverwrite (deepCopy $.Values.appDefaults) .Values.migrate }}
+{{- $ctx := dict "root" $ "name" "migrate" "app" $app }}
+{{- $_ := required "simc-chart.migration-job: expected app context (dict root/name/app)" $ctx.root }}
+{{- with $ctx }}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "simc-chart.app.fullname" . }}
+  labels:
+    {{- include "simc-chart.app.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  backoffLimit: 3
+  template:
+    metadata:
+      name: {{ include "simc-chart.app.fullname" . }}
+      labels:
+        {{- include "simc-chart.app.podLabels" . | nindent 8 }}
+        {{- with .app.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      restartPolicy: OnFailure
+      # Hooks run before the release's own resources exist, so the app ServiceAccount and env ConfigMap
+      # aren't there yet: use the namespace default SA without its token, and inline the env.
+      automountServiceAccountToken: false
+      {{- with .app.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: migrate
+          {{- with .app.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          image: {{ include "simc-chart.app.image" . | quote }}
+          imagePullPolicy: {{ .app.image.pullPolicy }}
+          command: ["/app/main"] # Adjust to your binary/subcommand
+          resources:
+            {{- toYaml .app.resources | nindent 12 }}
+          env:
+            {{- range $key, $value := include "simc-chart.app.envData" . | fromYaml }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- include "simc-chart.postgres.connectionData" . | nindent 12 }}
+{{- end }}

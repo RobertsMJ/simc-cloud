@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/RobertsMJ/simc-cloud/backend/models"
+	"github.com/RobertsMJ/simc-cloud/backend/simc"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -23,17 +24,17 @@ func (s *ServiceTestSuite) SetupTest() {
 	s.publisher = &resultPublisher{}
 }
 
-type simulatorFunc func(context.Context, Input) (Output, error)
+type simulatorFunc func(context.Context, Input) (simc.Report, error)
 
-func (f simulatorFunc) Run(ctx context.Context, in Input) (Output, error) {
+func (f simulatorFunc) Run(ctx context.Context, in Input) (simc.Report, error) {
 	return f(ctx, in)
 }
 
 type resultPublisher struct {
-	results []models.SimResult
+	results []models.SimCompleted
 }
 
-func (p *resultPublisher) Publish(_ context.Context, result models.SimResult) error {
+func (p *resultPublisher) Publish(_ context.Context, result models.SimCompleted) error {
 	p.results = append(p.results, result)
 	return nil
 }
@@ -42,14 +43,14 @@ func (s *ServiceTestSuite) TestHandle_CallerCancellationIsReturned() {
 	ctx, cancel := context.WithCancel(context.Background())
 	cancel()
 	service := NewService(
-		simulatorFunc(func(context.Context, Input) (Output, error) {
-			return Output{}, nil
+		simulatorFunc(func(context.Context, Input) (simc.Report, error) {
+			return simc.Report{}, nil
 		}),
 		s.publisher,
 		&Config{MaxRuntime: time.Second},
 	)
 
-	err := service.Handle(ctx, models.SimRequest{})
+	err := service.Handle(ctx, models.RunSim{})
 
 	s.ErrorIs(err, context.Canceled)
 	s.Empty(s.publisher.results)

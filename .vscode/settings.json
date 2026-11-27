@@ -1,29 +1,7 @@
 {
     "yaml.schemas": {
-        "https://raw.githubusercontent.com/aws/serverless-application-model/main/samtranslator/schema/schema.json": "file:///${workspaceFolder}/template.yaml",
         "https://raw.githubusercontent.com/rancher/k3d/main/pkg/config/config.versions.schema.json": "file:///${workspaceFolder}/.cluster/k3d.yaml"
     },
-    "yaml.customTags": [
-        "!Base64 scalar",
-        "!Cidr scalar",
-        "!And sequence",
-        "!Equals sequence",
-        "!If sequence",
-        "!Not sequence",
-        "!Or sequence",
-        "!Condition scalar",
-        "!FindInMap sequence",
-        "!GetAtt",
-        "!GetAtt sequence",
-        "!GetAZs scalar",
-        "!ImportValue scalar",
-        "!Join sequence",
-        "!Select sequence",
-        "!Split sequence",
-        "!Sub scalar",
-        "!Transform mapping",
-        "!Ref scalar",
-    ],
     "gopls": {
         "ui.semanticTokens": true,
     },

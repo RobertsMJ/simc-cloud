@@ -28,14 +28,14 @@ func New(config *Config) *SimcExec {
 	}
 }
 
-func (s SimcExec) Run(ctx context.Context, in sim.Input) (sim.Output, error) {
+func (s SimcExec) Run(ctx context.Context, in sim.Input) (simc.Report, error) {
 	if in.Profile == "" {
-		return sim.Output{}, fmt.Errorf("empty simc profile")
+		return simc.Report{}, fmt.Errorf("empty simc profile")
 	}
 
 	tmpDir, err := os.MkdirTemp("", "simc-*")
 	if err != nil {
-		return sim.Output{}, fmt.Errorf("create temp dir: %w", err)
+		return simc.Report{}, fmt.Errorf("create temp dir: %w", err)
 	}
 	defer func() {
 		if err := os.RemoveAll(tmpDir); err != nil {
@@ -45,7 +45,7 @@ func (s SimcExec) Run(ctx context.Context, in sim.Input) (sim.Output, error) {
 
 	inputPath := tmpDir + "/input.simc"
 	if err := os.WriteFile(inputPath, []byte(in.Profile), 0644); err != nil {
-		return sim.Output{}, fmt.Errorf("write input file: %w", err)
+		return simc.Report{}, fmt.Errorf("write input file: %w", err)
 	}
 
 	slog.Debug("running simulation with threads", "threads", s.config.Threads)
@@ -57,11 +57,11 @@ func (s SimcExec) Run(ctx context.Context, in sim.Input) (sim.Output, error) {
 
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
-		return sim.Output{}, fmt.Errorf("stdout pipe: %w", err)
+		return simc.Report{}, fmt.Errorf("stdout pipe: %w", err)
 	}
 
 	if err := cmd.Start(); err != nil {
-		return sim.Output{}, fmt.Errorf("simc execute: %w", err)
+		return simc.Report{}, fmt.Errorf("simc execute: %w", err)
 	}
 
 	scanner := bufio.NewScanner(stdout)
@@ -91,34 +91,31 @@ func (s SimcExec) Run(ctx context.Context, in sim.Input) (sim.Output, error) {
 
 	if err := cmd.Wait(); err != nil {
 		if ctxErr := context.Cause(ctx); ctxErr != nil {
-			return sim.Output{}, fmt.Errorf("simc cancelled: %w", ctxErr)
+			return simc.Report{}, fmt.Errorf("simc cancelled: %w", ctxErr)
 		}
 
 		if exitErr, ok := errors.AsType[*exec.ExitError](err); ok {
-			return sim.Output{}, &ExecError{ExitCode: exitErr.ExitCode(), Stderr: stderr.String(), Err: err}
+			return simc.Report{}, &ExecError{ExitCode: exitErr.ExitCode(), Stderr: stderr.String(), Err: err}
 		}
-		return sim.Output{}, fmt.Errorf("wait for simc: %w", err)
+		return simc.Report{}, fmt.Errorf("wait for simc: %w", err)
 	}
 
 	outputBytes, err := os.ReadFile(outputPath)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
-			return sim.Output{}, fmt.Errorf("simc produced no report: %s", strings.TrimSpace(stderr.String()))
+			return simc.Report{}, fmt.Errorf("simc produced no report: %s", strings.TrimSpace(stderr.String()))
 		}
-		return sim.Output{}, fmt.Errorf("read simc output: %w", err)
+		return simc.Report{}, fmt.Errorf("read simc output: %w", err)
 	}
 
 	res, err := simc.ParseReport(bytes.NewReader(outputBytes))
 	if err != nil {
-		return sim.Output{}, fmt.Errorf("report parse: %w", err)
+		return simc.Report{}, fmt.Errorf("report parse: %w", err)
 	}
 
 	slog.Info("sim completed successfully", "threads", s.config.Threads, "cpu_time", res.Sim.Statistics.ElapsedCPUSeconds)
 
-	return sim.Output{
-		Statistics: res.Sim.Statistics,
-		Report:     outputBytes,
-	}, nil
+	return res, nil
 }
 
 type ExecError struct {

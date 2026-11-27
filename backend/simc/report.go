@@ -7,9 +7,22 @@ import (
 )
 
 type Report struct {
-	Sim struct {
-		Statistics Statistics `json:"statistics"`
+	Version     string `json:"version"`
+	GitRevision string `json:"git_revision"`
+	Sim         struct {
+		Statistics  Statistics  `json:"statistics"`
+		Profilesets Profilesets `json:"profilesets"`
 	} `json:"sim"`
+}
+
+type Profilesets struct {
+	Results []ProfilesetResult `json:"results"`
+}
+
+type ProfilesetResult struct {
+	Name       string  `json:"name"`
+	Mean       float64 `json:"mean"`
+	MeanStdDev float64 `json:"mean_stddev"`
 }
 
 func ParseReport(r io.Reader) (Report, error) {
