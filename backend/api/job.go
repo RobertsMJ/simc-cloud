@@ -12,7 +12,7 @@ import (
 )
 
 type JobService interface {
-	CreateJob(context.Context, models.JobSpec) (models.Job, error)
+	Create(context.Context, models.JobSpec) (models.Job, error)
 }
 
 type JobHandler struct {
@@ -54,7 +54,7 @@ func (h *JobHandler) HandleCreateJob(ctx context.Context, request *CreateJobRequ
 	}
 
 	// pass the character, baseline, and options to the job service to handle the business logic
-	job, err := h.jobService.CreateJob(ctx, request.Body)
+	job, err := h.jobService.Create(ctx, request.Body)
 	if err != nil {
 		return nil, err
 	}

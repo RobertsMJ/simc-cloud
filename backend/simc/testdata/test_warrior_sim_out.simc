@@ -20,10 +20,10 @@ trinket1=,id=273795,bonus_id=13440/6652/12699/12846,content_tuning=1279
 trinket2=,id=265657,bonus_id=6652/12846,content_tuning=6015
 waist=,id=237830,bonus_id=12214/13667/12497/13751/14001/13767/8960/8790/13836/13696,content_tuning=3615,crafted_stats=40/49,crafting_quality=5
 wrist=,id=237834,bonus_id=12214/13667/12497/13751/14001/12715/8790/13696,content_tuning=3615,crafted_stats=32/49,crafting_quality=5
-talents=CcEAAAAAAAAAAAAAAAAAAAAAAgZmZmFzYmZGAAAghphxYmZzMzMzYmxMDAAAAgxyMDMhxy2AbgBMDTIzgNwMDDDmlZ2GgZGAMDDA
+talents=CcEASWsDSHNyPDXnbxuIhH3ZdjZmZmFzYmZGAAAghphxYmZzMzMzYmxMDAAAAgxyMDMhxy2AbgBMDTIzgNwMDDDmlZ2GgZGAMDDA
 omnium_talents=136814:1/136821:1/136817:1/136819:1/136822:1
 profileset."option1"=trinket1=,id=193701,bonus_id=13440/6652/12699/13654
 profileset."option1"+=trinket2=,id=249343,bonus_id=6652/13334/13653
-profileset."option1"+=talents=CcEAAAAAAAAAAAAAAAAAAAAAAgZmxsMzMzYGAAAghphxYmZzMzMzYmxMDAAAAgxmZgJLAbmxwCMwMajGDWAzMMMGzmZbwMDAwMMA
+profileset."option1"+=talents=CcEASWsDSHNyPDXnbxuIhH3ZdjZmZmFzYmZGAAAghphxYmZzMzMzYmxMDAAAAgxyMDMhxy2AbgBMDTIzgNwMDDDmlZ2GgZGAMDDA
 profileset."option1"+=omnium_talents=136814:1/136821:1/136817:1/136819:1/136822:1
 target_error=0.10

@@ -43,7 +43,7 @@ func (r *JobRepository) FindByID(ctx context.Context, id string) (*models.Job, e
 }
 
 func (r *JobRepository) RecordResult(ctx context.Context, result models.JobResult) (bool, error) {
-	pgx.BeginFunc(ctx, r.pool, func(tx pgx.Tx) error {
+	if err := pgx.BeginFunc(ctx, r.pool, func(tx pgx.Tx) error {
 		tag, err := tx.Exec(
 			ctx,
 			`UPDATE jobs SET status='done', completed_at=now(),
@@ -54,6 +54,9 @@ func (r *JobRepository) RecordResult(ctx context.Context, result models.JobResul
 			result.BaselineDPS,
 			result.BaselineDPSStdErr,
 		)
+		if err != nil {
+			return err
+		}
 		if tag.RowsAffected() == 0 {
 			return nil
 		} // already recorded
@@ -81,6 +84,8 @@ func (r *JobRepository) RecordResult(ctx context.Context, result models.JobResul
 		)
 
 		return err
-	})
+	}); err != nil {
+		return false, err
+	}
 	return true, nil
 }

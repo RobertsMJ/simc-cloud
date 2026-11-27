@@ -39,6 +39,7 @@ func (s *Service) Handle(ctx context.Context, result models.SimCompleted) error 
 		SimcVersion:       result.Result.GitRevision,
 		BaselineDPS:       result.Result.Sim.Statistics.RaidDPS.Mean,
 		BaselineDPSStdErr: result.Result.Sim.Statistics.RaidDPS.StdDev,
+		Gearsets:          gs,
 	})
 	return err
 }
